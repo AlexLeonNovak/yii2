@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\testusers\models;
+namespace backend\modules\testusers\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\testusers\models\Questions;
+use backend\modules\testusers\models\Questions;
 
 /**
  * QuestionsSearch represents the model behind the search form of `app\modules\testusers\models\Questions`.

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\testusers\models;
+namespace backend\modules\testusers\models;
 
 use Yii;
 use app\modules\users\models\UsersGroup;

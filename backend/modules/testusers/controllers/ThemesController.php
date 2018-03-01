@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\testusers\controllers;
+namespace backend\modules\testusers\controllers;
 
 use Yii;
-use app\modules\testusers\models\Themes;
-use app\modules\testusers\models\ThemesSearch;
-use app\modules\users\models\UsersGroupSearch;
+use backend\modules\testusers\models\Themes;
+use backend\modules\testusers\models\ThemesSearch;
+use backend\modules\users\models\UsersGroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

@@ -13,7 +13,7 @@ return [
     'bootstrap' => ['log'],
     'modules' => [
         'testusers' => [
-            'class' => 'app\modules\testusers\Test',
+            'class' => 'backend\modules\testusers\Test',
             'defaultRoute' => 'themes',
         ],
         'users' => [

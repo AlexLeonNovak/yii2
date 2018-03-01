@@ -1,12 +1,38 @@
+<?php
+
+use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\bootstrap\Collapse;
+
+$this->title = "Модуль тестирования сотрудников";
+
+
+?>
 <div class="testusers-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
+    <h1><?= $this->title ?></h1>
+    <p class="lead">
+        <?= Yii::$app->user->identity->username; ?>, добро пожаловать в модуль
+        тестирования сотрудников.</p>
     <p>
-        This is the view content for action "<?= $this->context->action->id ?>".
-        The action belongs to the controller "<?= get_class($this->context) ?>"
-        in the "<?= $this->context->module->id ?>" module.
+        Для начала выберете тест
     </p>
-    <p>
-        You may customize this page by editing the following file:<br>
-        <code><?= __FILE__ ?></code>
-    </p>
+    
+    <?php 
+    foreach ($tests as $test){
+        $content[$test->id_theme][] = Html::a($test->name,
+                Url::to(['test', 'id_test' => $test->id])); 
+    }
+    foreach ($themes as $theme){
+        $items[] = 
+            [
+                'label' => $theme['name'],
+                'content' => $content[$theme->id],
+            ];
+    }
+    ?>
+    <?= Collapse::widget([
+        'items' => $items,        
+    ]);
+    ?>
+
 </div>

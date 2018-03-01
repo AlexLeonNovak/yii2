@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Answers', [
                 'create', 
-                'id_question' => $this->context->actionParams['id_question'], 
+                'id_question' => Yii::$app->getRequest()->get('id_question'), 
             ],
             ['class' => 'btn btn-success']) ?>
     </p>

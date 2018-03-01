@@ -82,6 +82,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
+    
+    public static function getUserGroup(){
+        
+        $user_group = User::find()->where(['id' => Yii::$app->user->identity->id])->one();
+        return $user_group->id_group;
+    }
 
     /**
      * Finds user by password reset token

@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?//= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php ActiveForm::end(); ?>
         </div>
     </div>
-    <?
+    <?php /*
     echo $form->field($model, 'username')->widget(TinyMce::className(), [
         'options' => ['rows' => 15],
         'language' => 'ru',
@@ -62,6 +62,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 
         ]
-    ]);
+    ]);*/
     ?>
 </div>

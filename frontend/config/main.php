@@ -14,6 +14,15 @@ return [
     'modules' => [
         'testusers' => [
             'class' => 'app\modules\testusers\TestUsers',
+            'as access' => [ // if you need to set access
+                'class' => 'yii\filters\AccessControl',
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'] // all auth users
+                    ],
+                ],
+            ],
         ],  
     ],
     'components' => [

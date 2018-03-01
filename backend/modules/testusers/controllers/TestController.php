@@ -1,14 +1,14 @@
 <?php
 
-namespace app\modules\testusers\controllers;
+namespace backend\modules\testusers\controllers;
 
 use Yii;
-use app\modules\testusers\models\test;
-use app\modules\testusers\models\TestSearch;
+use backend\modules\testusers\models\test;
+use backend\modules\testusers\models\TestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\modules\testusers\models\ThemesSearch;
+use backend\modules\testusers\models\ThemesSearch;
 
 /**
  * TestController implements the CRUD actions for test model.

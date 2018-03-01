@@ -5,25 +5,23 @@ namespace backend\modules\testusers\models;
 use Yii;
 
 /**
- * This is the model class for table "test_questions".
+ * This is the model class for table "test_timestamp".
  *
  * @property int $id
  * @property int $id_test
- * @property string $question
+ * @property int $timestamp
  *
- * @property TestAnswers[] $testAnswers
  * @property Test $test
  * @property TestUserAswer[] $testUserAswers
  */
-class Questions extends \yii\db\ActiveRecord
+class Timestamp extends \yii\db\ActiveRecord
 {
-    public $test_name;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'test_questions';
+        return 'test_timestamp';
     }
 
     /**
@@ -32,9 +30,8 @@ class Questions extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_test', 'question'], 'required'],
-            [['id_test'], 'integer'],
-            [['question'], 'string', 'max' => 255],
+            [['id_test', 'timestamp'], 'required'],
+            [['id_test', 'timestamp'], 'integer'],
             [['id_test'], 'exist', 'skipOnError' => true, 'targetClass' => Test::className(), 'targetAttribute' => ['id_test' => 'id']],
         ];
     }
@@ -47,16 +44,8 @@ class Questions extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'id_test' => 'Id Test',
-            'question' => 'Вопрос',
+            'timestamp' => 'Timestamp',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTestAnswers()
-    {
-        return $this->hasMany(TestAnswers::className(), ['id_question' => 'id']);
     }
 
     /**
@@ -72,6 +61,6 @@ class Questions extends \yii\db\ActiveRecord
      */
     public function getTestUserAswers()
     {
-        return $this->hasMany(TestUserAswer::className(), ['id_question' => 'id']);
+        return $this->hasMany(TestUserAswer::className(), ['id_timestamp' => 'id']);
     }
 }
