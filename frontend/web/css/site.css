@@ -118,3 +118,10 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+.timer{
+    font-size: 24px;
+    display: inline-block;
+    margin-top: -6px;
+    float: right;
+    margin-right: -15px;
+}

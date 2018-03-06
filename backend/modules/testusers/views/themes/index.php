@@ -12,6 +12,11 @@ use app\modules\users\models\UsersGroup;
 
 $this->title = 'Список тем тестов';
 $this->params['breadcrumbs'][] = $this->title;
+
+Yii::$app->session['breadcrumbs-themes'] = [
+            'label' => $this->title,
+            'url'   => Yii::$app->request->url,
+    ];
 ?>
 <div class="themes-index">
 
@@ -28,7 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             
-            'name',
+            'name' => [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function($model){
+                    return Html::a($model->name, Url::to(['test/index', 'id_theme' => $model->id]),
+                                ['title' => 'Просмотр тестов']);
+                }
+            ],
             //'id',
             //'id_group',
             'group_name' => [

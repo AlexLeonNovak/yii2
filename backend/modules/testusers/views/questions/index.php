@@ -10,9 +10,15 @@ use backend\modules\testusers\models\AnswersSearch;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\testusers\models\QuestionsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-//var_dump($this->context->actionParams['id_test']);die;
+
 $this->title = 'Вопросы теста "' . $test_name . '"';
+$this->params['breadcrumbs'][] = Yii::$app->session['breadcrumbs-themes'];
+$this->params['breadcrumbs'][] = Yii::$app->session['breadcrumbs-test'];
 $this->params['breadcrumbs'][] = $this->title;
+Yii::$app->session['breadcrumbs-question'] = [
+            'label' => $this->title,
+            'url'   => Yii::$app->request->url,
+    ];
 
 ?>
 <div class="questions-index">
@@ -73,16 +79,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ['class' => 'yii\grid\ActionColumn',
             'header'=> 'Действия',
-            'template' => '{view} {update} {delete} {addanswer}',
+            'template' => '{view} {update} {delete}',
             'buttons' => [
                 'view' => function($url, $model){
-                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
+                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>Просмотр ответов',
                             Url::to(['answers/index', 'id_question' => $model->id]),
                             ['title' => 'Просмотр ответов']
                             );
                 },
-                'addanswer' => function($url, $model){
-                    return Html::a('<span class="glyphicon glyphicon-plus"></span>',
+                'update' => function($url, $model){
+                    return Html::a('<span class="glyphicon glyphicon-pencil"></span> Редактор ответов',
                             Url::to(['answers/create', 'id_question' => $model->id]),
                             ['title' => 'Добавить ответ']
                             );

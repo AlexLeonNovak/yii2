@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\base\Model;
 use yii\web\Response;
+use yii\bootstrap\ActiveForm;
+use yii\helpers\ArrayHelper;
 
 /**
  * AnswersController implements the CRUD actions for Answers model.
@@ -64,36 +66,55 @@ class AnswersController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id_question) {
-        $error = 0;
-        $model = new Answers();
-        $model->id_question = $id_question;
-        // создаем на каждый набор данных в массиве модель
-        if($data = Yii::$app->request->post('Answers')["answers_form"]){
-            //var_dump($data);die;
-            
+    public function actionCreate($id_question) 
+    {
+        $models = Answers::findAll(['id_question' => $id_question]);
+        if(!$models){
             $models = [new Answers()];
-            foreach ($data as $key => $value) {
-                //var_dump($value['answer']);die;
-                $models[$key] = new Answers();
-                $models[$key]->answer = $value['answer'];
-                $models[$key]->correct = $value['correct'];
-                $models[$key]->id_question = $id_question;
-                //var_dump($models[$key]);die;
-                if ($models[$key]->validate() && $models[$key]->save()) {
-                    
-                } else {
-                    $error++;
+        }
+        $request = Yii::$app->getRequest();
+        if ($request->isPost && $request->post('ajax') !== null) {
+            $data = Yii::$app->request->post('Answers', []);
+            foreach (array_keys($data) as $index) {
+                $models[$index] = new Answers();
+            }
+            Model::loadMultiple($models, Yii::$app->request->post());
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $result = ActiveForm::validateMultiple($models);
+            return $result;
+        }
+        if ($request->isPost){
+            $data = Yii::$app->request->post('Answers', []);
+            if (Model::loadMultiple($models, Yii::$app->request->post())) {
+                try {
+                    Answers::deleteAll([
+                        'AND',
+                        ['id_question' => $id_question],
+                        ['not in', 'id', ArrayHelper::getColumn($data,'id')]
+                ]);        
+                } catch (\yii\db\Exception $e) {
+                    Yii::$app->session->setFlash('danger', "Одно или несколько записей не были удалены!"
+                            . "<br /><small>Возможно, что кто-то уже выбрал один из ответов"
+                            . "<br />Попробуйте изменить ответ или удалить другой ответ</small>");
                 }
             }
-            //var_dump($error);die;
-           if($error == 0){
-                return $this->actionIndex($id_question);
+                foreach ($data as $dat){
+                    if ($dat['id'] != null){
+                        $model = Answers::findOne(['id' => $dat['id']]);
+                    } else {
+                        $model = new Answers();
+                        $model->answer = $dat['answer'];
+                    }
+                    $model->correct = $dat['correct'];
+                    $model->id_question = $id_question;
+                    $model->save(false);
+                }
+                $models = Answers::findAll(['id_question' => $id_question]);
+                Yii::$app->session->setFlash('success', "Данные сохранены");
             }
-        }
-                
+        
         return $this->render('create', [
-            'model' => $model,
+            'models' => $models,
         ]);
     }
 

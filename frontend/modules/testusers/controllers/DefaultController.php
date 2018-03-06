@@ -14,6 +14,7 @@ use backend\modules\testusers\models\Timestamp;
 use common\models\User;
 use yii\db\Expression;
 use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 
 
 /**
@@ -21,6 +22,9 @@ use yii\data\ArrayDataProvider;
  */
 class DefaultController extends Controller
 {
+    const NOT_ANSWER = 0; //Нет ответа на вопрос
+    private $ids_answer = [];       //массив с ид ответами, на которые пользователь ответил
+    private $questions_showed = []; //массив с ид вопросами, которые были показаны
     /**
      * Renders the index view for the module
      * @return string
@@ -51,30 +55,47 @@ class DefaultController extends Controller
             'tests' => $tests,
         ]);
     }
-    
-    public function actionTest($id_test)
+    private function getQuestion($id_test = null, $id_theme = null){
+        if(Yii::$app->getRequest()->post('id_answer')){ //получаем ид ответа, который пользователь выбрал
+                $this->ids_answer[] = Yii::$app->getRequest()->post('id_answer'); //записываем в масив
+            } else {
+                $this->ids_answer[] = self::NOT_ANSWER;  //если таймер обновил страницу, то пользователь ничего не выбрал
+            }
+        Yii::$app->session['ids_answer'] = $this->ids_answer; //записываем в сессию ответы
+        $question_query = Questions::find();
+        if ($id_test != null) {
+            $question_query->Where(['id_test' => $id_test]);
+        } elseif ($id_theme !=null){
+            $ids_tests = Test::find(['id_theme' => $id_theme])->asArray()->all();
+            $question_query->where(['id_test' => ArrayHelper::getColumn($ids_tests, 'id')]);
+        } else { return false; }
+        if (Yii::$app->session['questions']){
+            $this->questions_showed = Yii::$app->session['questions'];
+            $question_query->andFilterWhere(['not in', 'id', Yii::$app->session['questions']]);
+            $this->ids_answer = Yii::$app->session['ids_answer'];
+        }
+        $question = $question_query->orderBy(new Expression('rand()'))->one();   
+        //var_dump($question);
+        $this->questions_showed[] = $question->id; //записываем в массив показаные вопросы
+        Yii::$app->session['questions'] = $this->questions_showed; //запмсь в сессию этот массив (по другому почему-то не работает...)
+        if (!Yii::$app->session['count_questions']){
+            Yii::$app->session['count_questions'] = $question_query->count();
+            Yii::$app->session['item_question'] = 1;
+        }
+        if (!$question) {
+            return false;
+        } else {
+            Yii::$app->session['item_question']++;
+            return $question;
+        }
+    }
+
+    public function actionTest($id_test = null, $id_theme = null)
     {
-        $ids_answer = [];       //массив с ид ответами, на которые пользователь ответил
-        $not_in = [];           //массив для условия выборки
-        $questions_showed = []; //массив с ид вопросами, которые были показаны
         if (!Yii::$app->session['timestamp']){
             Yii::$app->session['timestamp'] = time();
         }
-        if (Yii::$app->session['questions']){
-            $questions_showed = Yii::$app->session['questions'];
-            $not_in = ['not in', 'id', Yii::$app->session['questions']];
-            $ids_answer = Yii::$app->session['ids_answer'];
-            if(Yii::$app->getRequest()->post('id_answer')){ //получаем ид ответа, который пользователь выбрал
-                $ids_answer[] = Yii::$app->getRequest()->post('id_answer'); //записываем в масив
-            } else {
-                $ids_answer[] = 0;  //если таймер обновил страницу, то пользователь ничего не выбрал
-            }
-            Yii::$app->session['ids_answer'] = $ids_answer; //записываем в сессию ответы
-        }
-        $question = Questions::find()->Where(['id_test' => $id_test])
-                ->andFilterWhere($not_in)
-                ->orderBy(new Expression('rand()'))->one();            
-           
+        $question = $this->getQuestion($id_test, $id_theme);
         if (!$question){
             $timestamp = new Timestamp;
             $timestamp->id_test = $id_test;
@@ -94,8 +115,7 @@ class DefaultController extends Controller
             Yii::$app->session->remove('timestamp');
             return $this->actionResult($id_test, $timestamp->id); //отправляем на страницу результатов
         }
-        $questions_showed[] = $question->id; //записываем в массив показаные вопросы
-        Yii::$app->session['questions'] = $questions_showed; //запмсь в сессию этот массив (по другому почему-то не работает...)
+        
         $answers = Answers::findAll(['id_question' => $question->id]);
         $test_name = Test::findOne(['id' => $id_test])->name;
         return $this->render('test',[
@@ -113,37 +133,45 @@ class DefaultController extends Controller
         } 
         $times = $timestamp->all();
         $provider = [];
-        $date = [];
-        foreach ($times as $time){
+        $dates = [];
+        $result = [];
+        foreach ($times as $key => $time){
             $user_answers = UserAswer::findAll([
                         'id_user' => Yii::$app->user->identity->id,
                         'id_timestamp' => $time->id,
                     ]);
-            $date[] = 
-            $result = [];
+            $dates[] = Yii::$app->formatter->asDatetime($time->timestamp, 'php:d.m.Y H:i:s');
+            
             foreach ($user_answers as $user_answer){
                 $question = Questions::findOne([
                             'id' => $user_answer->id_question,
                             'id_test' => $id_test,
                         ]);
-                $answer = Answers::findOne(['id' => $user_answer->id_answer]);
-                $result[] = [
-                    'question'      => $question->question,
-                    'answer'        => $answer->answer,
-                    'is_correct'    => $answer->correct,
+                if ($user_answer->id_answer){
+                    $answer = Answers::findOne(['id' => $user_answer->id_answer]);
+                } else {
+                    $answer->answer = '<b><i>(Вы не ответили на этот вопрос)</i></b>';
+                    $answer->correct = false;
+                }
+                $result[$key][] = [ 
+                        'question'      => $question->question,
+                        'answer'        => $answer->answer,
+                        'is_correct'    => $answer->correct,
                 ];
+                
             }
             $provider[] = new ArrayDataProvider([
-                    'allModels' => $result,
+                    'allModels' => $result[$key],
                     'pagination' => [
                         'pageSize' => 10,
                     ],
                 ]);
         }
-           // var_dump($result);
+        $test_name = Test::findOne(['id' => $id_test])->name;
         return $this->render('result',[
-            'result'    => $result,
+            'test_name' => $test_name,
             'provider'  => $provider,
+            'dates'     => $dates,
         ]);
     }
     

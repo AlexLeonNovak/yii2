@@ -8,7 +8,13 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\testusers\models\TestSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title = 'Тесты на тему "'. $theme_name . '"';
+$this->params['breadcrumbs'][] = Yii::$app->session['breadcrumbs-themes'];
 $this->params['breadcrumbs'][] = $this->title;
+
+Yii::$app->session['breadcrumbs-test'] = [
+        'label' => $this->title,
+        'url'   => Yii::$app->request->url,
+];
 ?>
 <div class="test-index">
 
@@ -28,7 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
-            'name',
+            'name' => [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function($model){
+                    return Html::a($model->name, Url::to(['questions/index', 'id_test' => $model->id]),
+                                ['title' => 'Просмотр вопросов']);
+                }
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',

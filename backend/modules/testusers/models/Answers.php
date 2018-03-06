@@ -19,7 +19,7 @@ use Yii;
 class Answers extends \yii\db\ActiveRecord
 {
     public $answers;
-    //public $corrects;
+    public $corrects;
     /**
      * @inheritdoc
      */
