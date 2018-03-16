@@ -73,7 +73,7 @@ a.desc:after {
 }
 
 .grid-view td {
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .grid-view .filters input,
@@ -121,7 +121,7 @@ a.desc:after {
 .timer{
     font-size: 24px;
     display: inline-block;
-    margin-top: -6px;
+    margin-top: -7px;
     float: right;
     margin-right: -15px;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\testusers;
+namespace frontend\modules\testusers;
 
 /**
  * testusers module definition class
@@ -10,7 +10,7 @@ class TestUsers extends \yii\base\Module
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'app\modules\testusers\controllers';
+    public $controllerNamespace = 'frontend\modules\testusers\controllers';
 
     /**
      * @inheritdoc

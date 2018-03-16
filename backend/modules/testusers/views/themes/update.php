@@ -5,10 +5,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\testusers\models\Themes */
 
-$this->title = 'Update Themes: {nameAttribute}';
-$this->params['breadcrumbs'][] = ['label' => 'Themes', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Редактировать название темы';
+$this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="themes-update">
 

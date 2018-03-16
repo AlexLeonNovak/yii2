@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\users\models\UsersGroup */
+/* @var $model backend\modules\users\models\UsersGroup */
 
 $this->title = 'Update Users Group: {nameAttribute}';
 $this->params['breadcrumbs'][] = ['label' => 'Users Groups', 'url' => ['index']];

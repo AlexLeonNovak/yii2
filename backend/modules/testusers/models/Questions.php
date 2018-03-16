@@ -54,9 +54,9 @@ class Questions extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestAnswers()
+    public function getAnswers()
     {
-        return $this->hasMany(TestAnswers::className(), ['id_question' => 'id']);
+        return $this->hasMany(Answers::className(), ['id_question' => 'id']);
     }
 
     /**

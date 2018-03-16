@@ -3,7 +3,7 @@
 namespace backend\modules\testusers\controllers;
 
 use Yii;
-use backend\modules\testusers\models\test;
+use backend\modules\testusers\models\Test;
 use backend\modules\testusers\models\TestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -68,9 +68,10 @@ class TestController extends Controller
      */
     public function actionCreate($id_theme)
     {
-        $model = new test();
+        $model = new Test();
         $model->id_theme = $id_theme;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Данные сохранены");
             return $this->actionIndex($id_theme);
         }
 
@@ -91,7 +92,11 @@ class TestController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect([
+                        'index',
+                        'id_theme' => Yii::$app->request->get('id_theme')
+                    ]);
         }
 
         return $this->render('update', [
@@ -109,8 +114,11 @@ class TestController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        Yii::$app->session->setFlash('success', "Данные удалены");
+        return $this->redirect([
+                'index',
+                'id_theme' => Yii::$app->request->get('id_theme'),
+            ]);
     }
 
     /**

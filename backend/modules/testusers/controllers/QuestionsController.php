@@ -78,6 +78,7 @@ class QuestionsController extends Controller
         $model->test_name = $test->findOne($id_test)->name;
         //var_dump(Yii::$app->request->post());die;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Данные сохранены");
             return $this->actionIndex($id_test);
         }
 
@@ -98,7 +99,12 @@ class QuestionsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect([
+                        'index',
+                        'id_test' => Yii::$app->request->get('id_test'),
+                        'id_theme' => Yii::$app->request->get('id_theme'),
+                    ]);
         }
 
         return $this->render('update', [
@@ -115,9 +121,16 @@ class QuestionsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        if($this->findModel($id)->delete()){
+            Yii::$app->session->setFlash('success', "Данные удалены");
+        } else {
+            Yii::$app->session->setFlash('danger', "Удаление невозможно");
+        }
+        return $this->redirect([
+                'index',
+                'id_test' => Yii::$app->request->get('id_test'),
+                'id_theme' => Yii::$app->request->get('id_theme'),
+            ]);
     }
 
     /**

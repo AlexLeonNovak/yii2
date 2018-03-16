@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use app\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersGroup;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\testusers\models\ThemesSearch */
@@ -13,13 +13,10 @@ use app\modules\users\models\UsersGroup;
 $this->title = 'Список тем тестов';
 $this->params['breadcrumbs'][] = $this->title;
 
-Yii::$app->session['breadcrumbs-themes'] = [
-            'label' => $this->title,
-            'url'   => Yii::$app->request->url,
-    ];
+
 ?>
 <div class="themes-index">
-
+    <?=$this->render('../testmenu.php'); ?>
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 

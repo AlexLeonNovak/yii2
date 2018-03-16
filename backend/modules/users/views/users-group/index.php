@@ -1,13 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\users\models\UsersGroupSearch */
+/* @var $searchModel backend\modules\users\models\UsersGroupSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Групы пользователей';
+$this->title = 'Должности сотрудников';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-group-index">
@@ -16,19 +16,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Users Group', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Добавить должность', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= GridView::widget([
+    <?= ListView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'name',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
+        //'filterModel' => $searchModel,
+        'itemOptions' => ['class' => 'item'],
+        'itemView' => function ($model, $key, $index, $widget) {
+            return Html::a(Html::encode($model->name), ['view', 'id' => $model->id]);
+        },
     ]); ?>
 </div>

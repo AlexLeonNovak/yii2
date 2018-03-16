@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-backend',
+    'name' => 'Perspectiva Impereal',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
@@ -17,7 +18,8 @@ return [
             'defaultRoute' => 'themes',
         ],
         'users' => [
-            'class' => 'app\modules\users\Users',
+            'class' => 'backend\modules\users\Users',
+            'defaultRoute' => 'user',
         ],
     ],
     'components' => [

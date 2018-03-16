@@ -5,7 +5,6 @@ namespace backend\modules\testusers\controllers;
 use Yii;
 use backend\modules\testusers\models\Themes;
 use backend\modules\testusers\models\ThemesSearch;
-use backend\modules\users\models\UsersGroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -38,9 +37,6 @@ class ThemesController extends Controller
     {
         $searchModel = new ThemesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//        $usersGroup = new UsersGroupSearch();
-//        $usersGroupName = $usersGroup->search($dataProvider->id);
-//        var_dump($dataProvider);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -70,7 +66,8 @@ class ThemesController extends Controller
         $model = new Themes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->actionIndex();
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -90,7 +87,8 @@ class ThemesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -108,7 +106,7 @@ class ThemesController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->setFlash('success', "Данные удалены");
         return $this->redirect(['index']);
     }
 

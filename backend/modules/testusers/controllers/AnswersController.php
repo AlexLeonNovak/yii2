@@ -103,14 +103,19 @@ class AnswersController extends Controller
                         $model = Answers::findOne(['id' => $dat['id']]);
                     } else {
                         $model = new Answers();
-                        $model->answer = $dat['answer'];
                     }
+                    $model->answer = $dat['answer'];
                     $model->correct = $dat['correct'];
                     $model->id_question = $id_question;
                     $model->save(false);
                 }
                 $models = Answers::findAll(['id_question' => $id_question]);
                 Yii::$app->session->setFlash('success', "Данные сохранены");
+                return $this->redirect([
+                        '/testusers/questions/index',
+                        'id_test' => Yii::$app->request->get('id_test'),
+                        'id_theme' => Yii::$app->request->get('id_theme'),
+                    ]);
             }
         
         return $this->render('create', [

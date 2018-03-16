@@ -1,8 +1,9 @@
 <?php
 
-namespace app\modules\users\controllers;
+namespace backend\modules\users\controllers;
 
 use yii\web\Controller;
+use common\models\User;
 
 /**
  * Default controller for the `users` module

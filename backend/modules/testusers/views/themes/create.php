@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\testusers\models\Themes */
 
-$this->title = 'Create Themes';
-$this->params['breadcrumbs'][] = ['label' => 'Themes', 'url' => ['index']];
+$this->title = 'Создать тему';
+$this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="themes-create">

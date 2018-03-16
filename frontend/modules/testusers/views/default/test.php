@@ -7,7 +7,7 @@ $this->title = $test_name;
 ?>
 
 <h1><?=$this->title; ?></h1>
-<div style="float: right;">Вопрос <b><?=Yii::$app->session['item_question']; ?></b> из <b><?=Yii::$app->session['count_questions']; ?></b></div>
+<div class="row" style="text-align:right;margin:5px;">Вопрос <b><?=Yii::$app->session['item_question']; ?></b> из <b><?=Yii::$app->session['count_questions']; ?></b></div>
 <div class="row">
     <div class="col-sm-1">
         <span class="timer">00:00</span>
@@ -54,7 +54,8 @@ $script = <<< JS
         $('.timer').text((m<10?"0"+m:m) + ':' + (s<10?"0"+s:s));
       } else {
         clearInterval(counterBack);
-        location.reload(true);
+        $('button[type="submit"]').val('0').submit();
+        //location.reload(true);
       }
     }, 100);
         

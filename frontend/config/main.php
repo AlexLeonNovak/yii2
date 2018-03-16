@@ -8,12 +8,13 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'name' => 'Perspectiva Impereal',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
         'testusers' => [
-            'class' => 'app\modules\testusers\TestUsers',
+            'class' => 'frontend\modules\testusers\TestUsers',
             'as access' => [ // if you need to set access
                 'class' => 'yii\filters\AccessControl',
                 'rules' => [

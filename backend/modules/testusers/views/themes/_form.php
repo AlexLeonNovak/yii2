@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersGroup;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */

@@ -6,6 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use backend\modules\users\models\UsersGroup;
 
 /**
  * User model
@@ -53,6 +54,20 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['id_group'], 'exist', 'skipOnError' => true, 'targetClass' => UsersGroup::className(), 'targetAttribute' => ['id_group' => 'id']],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels() 
+    {
+        return [
+            'username' => 'Логин',
+            'email' => 'Электронная почта',
+            'id_group' => 'Должность',
+            'status' => 'Статус',
         ];
     }
 
@@ -83,10 +98,15 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
     
-    public static function getUserGroup(){
+    public static function getCurrentUserGroupId(){
         
         $user_group = User::find()->where(['id' => Yii::$app->user->identity->id])->one();
         return $user_group->id_group;
+    }
+    
+    public function getUsersGroup()
+    {
+        return $this->hasOne(UsersGroup::className(), ['id' => 'id_group']);
     }
 
     /**

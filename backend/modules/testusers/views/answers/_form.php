@@ -42,7 +42,7 @@ use unclead\multipleinput\TabularColumn;
         [
             'name'  => 'correct',
             'title' => '.',
-            'type'  => TabularColumn::TYPE_RADIO,
+            'type'  => TabularColumn::TYPE_CHECKBOX,
             'options' => [
                 'labelOptions' => [
                     'class' => 'btn btn-default',
@@ -72,15 +72,29 @@ $script = <<< JS
         $(document).on('click', 'input[type=radio]', function(){
            // $('input[type=radio]:checked').closest('label').removeClass('btn-default').addClass('btn-success');
             $('input[type=radio]').change(function() {
-                $('input[type=radio]:checked').not(this).prop('checked', false);
+               // $('input[type=radio]:checked').not(this).prop('checked', false);
                 $('input[type=radio]:checked').closest('label').removeClass('btn-default').addClass('btn-success').attr('style', 'opacity:1');
                 $('input[type=radio]').not(this).closest('label').removeClass('btn-success').addClass('btn-default').removeAttr('style');
+            });
+        });
+        $('input[type=checkbox]:checked').closest('label').removeClass('btn-default').addClass('btn-success').attr('style', 'opacity:1');
+        $(document).one('click', 'input[type=checkbox]', function(){
+           // $('input[type=checkbox]:checked').closest('label').removeClass('btn-default').addClass('btn-success');
+            $('input[type=checkbox]').change(function() {
+               // $('input[type=checkbox]:checked').not(this).prop('checked', false);
+                //$('input[type=checkbox]:checked').closest('label').removeClass('btn-default').addClass('btn-success').attr('style', 'opacity:1');
+                //$(this).closest('label').toggleClass('btn-success btn-default');
+                if ($(this).closest('label').attr('style')){
+                    $(this).closest('label').removeClass('btn-success').addClass('btn-default').removeAttr('style');
+                } else {
+                    $(this).closest('label').removeClass('btn-default').addClass('btn-success').attr('style', 'opacity:1');
+                }
             });
         });
 JS;
 $this->registerJs($script);
 $css = <<< CSS
-        .multiple-input-list__item .radio{
+        .multiple-input-list__item .radio, .multiple-input-list__item .checkbox{
             margin: 0;
         }
         label.btn{

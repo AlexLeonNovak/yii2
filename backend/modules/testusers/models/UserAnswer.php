@@ -1,8 +1,9 @@
 <?php
 
-namespace app\modules\testusers\models;
+namespace backend\modules\testusers\models;
 
 use Yii;
+use common\models\User;
 
 /**
  * This is the model class for table "test_user_aswer".
@@ -16,7 +17,7 @@ use Yii;
  * @property TestAnswers $answer
  * @property TestQuestions $question
  */
-class TestUserAswer extends \yii\db\ActiveRecord
+class UserAnswer extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -32,11 +33,12 @@ class TestUserAswer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_question', 'id_answer'], 'required'],
-            [['id_user', 'id_question', 'id_answer'], 'integer'],
+            //[['id_user', 'id_question', 'id_timestamp'], 'required'],
+            [['id_user', 'id_question', 'id_timestamp'], 'integer'],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id']],
-            [['id_answer'], 'exist', 'skipOnError' => true, 'targetClass' => TestAnswers::className(), 'targetAttribute' => ['id_answer' => 'id']],
-            [['id_question'], 'exist', 'skipOnError' => true, 'targetClass' => TestQuestions::className(), 'targetAttribute' => ['id_question' => 'id']],
+            //[['id_answer'], 'exist', 'skipOnError' => true, 'targetClass' => Answers::className(), 'targetAttribute' => ['id_answer' => 'id']],
+            [['id_question'], 'exist', 'skipOnError' => true, 'targetClass' => Questions::className(), 'targetAttribute' => ['id_question' => 'id']],
+            [['id_timestamp'], 'exist', 'skipOnError' => true, 'targetClass' => Timestamp::className(), 'targetAttribute' => ['id_timestamp' => 'id']],
         ];
     }
 
@@ -50,6 +52,7 @@ class TestUserAswer extends \yii\db\ActiveRecord
             'id_user' => 'Id User',
             'id_question' => 'Id Question',
             'id_answer' => 'Id Answer',
+            'id_timestamp' => 'ID timestamp',
         ];
     }
 
@@ -66,14 +69,24 @@ class TestUserAswer extends \yii\db\ActiveRecord
      */
     public function getAnswer()
     {
-        return $this->hasOne(TestAnswers::className(), ['id' => 'id_answer']);
+        return $this->hasOne(Answers::className(), ['id' => 'id_answer']);
     }
 
+    public function getAnswers()
+    {
+        return $this->hasMany(Answers::className(), ['id_question' => 'id'])->via('question');
+    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getQuestion()
     {
-        return $this->hasOne(TestQuestions::className(), ['id' => 'id_question']);
+        return $this->hasOne(Questions::className(), ['id' => 'id_question']);
+    }
+    
+    public function getTimestamp()
+    {
+        return $this->hasOne(Timestamp::className(), ['id' => 'id_timestamp']);
     }
 }

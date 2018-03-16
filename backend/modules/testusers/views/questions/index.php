@@ -6,19 +6,18 @@ use yii\bootstrap\Collapse;
 use yii\helpers\Url;
 use yii\grid\GridView;
 use backend\modules\testusers\models\AnswersSearch;
-
+use backend\modules\testusers\models\Themes;
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\testusers\models\QuestionsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Вопросы теста "' . $test_name . '"';
-$this->params['breadcrumbs'][] = Yii::$app->session['breadcrumbs-themes'];
-$this->params['breadcrumbs'][] = Yii::$app->session['breadcrumbs-test'];
-$this->params['breadcrumbs'][] = $this->title;
-Yii::$app->session['breadcrumbs-question'] = [
-            'label' => $this->title,
-            'url'   => Yii::$app->request->url,
+$this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
+$this->params['breadcrumbs'][] = [
+        'label' => Themes::findOne(['id' => Yii::$app->request->get('id_theme')])->name,
+        'url' => ['/testusers/test/index', 'id_theme' => Yii::$app->request->get('id_theme')]
     ];
+$this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="questions-index">
@@ -30,6 +29,7 @@ Yii::$app->session['breadcrumbs-question'] = [
         <?= Html::a('Создать вопрос', [
                     'create',
                     'id_test' => Yii::$app->getRequest()->get('id_test'),
+                    'id_theme' => Yii::$app->request->get('id_theme')
                 ],
                 ['class' => 'btn btn-success']) ?>
     </p>
@@ -47,9 +47,7 @@ Yii::$app->session['breadcrumbs-question'] = [
                         'items' => [
                             [
                                 'label' => $model->question,
-                                'content' => ArrayHelper::map(
-                                        AnswersSearch::findAll(['id_question'=> $model->id]),
-                                            'id', 'answer'),
+                                'content' => collapseContent($model),                                    
                                 'options' => [
                                     'class' => 'panel-info',
                                 ]
@@ -60,36 +58,25 @@ Yii::$app->session['breadcrumbs-question'] = [
                         ]
                     ]);
                 },
-//                'value' => function ($model){
-//                    $html = '<div class="panel panel-info">';
-//                    $html .= '<div class="panel-heading">' . $model->question . '</div>';
-//                    $answers = AnswersSearch::findAll(['id_question'=> $model->id]);
-//                    $html .= '<ul class="list-group">';
-//                    foreach ($answers as $a){
-//                        $html .= '<li class="list-group-item';
-//                        if ($a['correct']){
-//                            $html .= ' list-group-item-success';
-//                        }
-//                        $html .= '">' . $a['answer'] . '</li>';
-//                    }
-//                    $html .= '</ul></div>';
-//                    return $html;
-//                }
-                ],
+            ],
 
             ['class' => 'yii\grid\ActionColumn',
             'header'=> 'Действия',
-            'template' => '{view} {update} {delete}',
+            'template' => '{view} {update} {delete} {ans}',
+            'urlCreator' => function($action, $model, $key){
+                return Url::to([$action, 'id' => $model->id,
+                        'id_theme' => Yii::$app->request->get('id_theme'),
+                        'id_test'  => Yii::$app->request->get('id_test'),
+                        ]);
+            },
             'buttons' => [
-                'view' => function($url, $model){
-                    return Html::a('<span class="glyphicon glyphicon-eye-open"></span>Просмотр ответов',
-                            Url::to(['answers/index', 'id_question' => $model->id]),
-                            ['title' => 'Просмотр ответов']
-                            );
-                },
-                'update' => function($url, $model){
+                'ans' => function($url, $model){
                     return Html::a('<span class="glyphicon glyphicon-pencil"></span> Редактор ответов',
-                            Url::to(['answers/create', 'id_question' => $model->id]),
+                            Url::to(['answers/create',
+                                        'id_question' => $model->id,
+                                        'id_theme' => Yii::$app->request->get('id_theme'),
+                                        'id_test'  => Yii::$app->request->get('id_test'),
+                                    ]),
                             ['title' => 'Добавить ответ']
                             );
                 },
@@ -98,3 +85,23 @@ Yii::$app->session['breadcrumbs-question'] = [
         ],
     ]); ?>
 </div>
+
+<?php 
+
+function collapseContent($m){
+    $answers = AnswersSearch::findAll(['id_question'=> $m->id]);
+    $result = [];
+    foreach ($answers as $key => $a){
+        $result[$key] = '<span';
+        if ($a['correct']){
+            $result[$key] .= ' class="success"';
+        }
+        $result[$key] .= '>' . $a['answer'] . '</span>';
+    }
+    return $result;                     
+ }
+$script = <<< JS
+        $('span[class="success"').closest('li').addClass('list-group-item-success');
+JS;
+$this->registerJs($script);
+?>
