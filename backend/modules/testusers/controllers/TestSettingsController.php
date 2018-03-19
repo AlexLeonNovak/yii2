@@ -1,20 +1,18 @@
 <?php
 
-namespace backend\modules\users\controllers;
+namespace backend\modules\testusers\controllers;
 
 use Yii;
-use common\models\User;
-use backend\modules\users\models\UserSearch;
-use backend\modules\users\models\SignupForm;
+use backend\modules\testusers\models\TestSettings;
+use backend\modules\testusers\models\TestSettingsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use backend\modules\users\models\UsersGroup;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * TestSettingsController implements the CRUD actions for TestSettings model.
  */
-class UserController extends Controller
+class TestSettingsController extends Controller
 {
     /**
      * @inheritdoc
@@ -32,12 +30,12 @@ class UserController extends Controller
     }
 
     /**
-     * Lists all User models.
+     * Lists all TestSettings models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
+        $searchModel = new TestSettingsSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -47,7 +45,7 @@ class UserController extends Controller
     }
 
     /**
-     * Displays a single User model.
+     * Displays a single TestSettings model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -60,16 +58,16 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new User model.
+     * Creates a new TestSettings model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new TestSettings();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -78,7 +76,7 @@ class UserController extends Controller
     }
 
     /**
-     * Updates an existing User model.
+     * Updates an existing TestSettings model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -89,17 +87,16 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
-        $group = UsersGroup::find()->all();
+
         return $this->render('update', [
             'model' => $model,
-            'group' => $group,
         ]);
     }
 
     /**
-     * Deletes an existing User model.
+     * Deletes an existing TestSettings model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -113,39 +110,18 @@ class UserController extends Controller
     }
 
     /**
-     * Finds the User model based on its primary key value.
+     * Finds the TestSettings model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return User the loaded model
+     * @return TestSettings the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = User::findOne($id)) !== null) {
+        if (($model = TestSettings::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
-    public function actionSignup()
-    {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->signup()) {
-                Yii::$app->session->setFlash('success', 'Сотрудник успешно зарегистрирован');
-                return $this->redirect('index');
-            }
-        }
-        $group = UsersGroup::find()->all();
-        return $this->render('signup', [
-            'model' => $model,
-            'group' => $group
-        ]);
-    }
-
 }

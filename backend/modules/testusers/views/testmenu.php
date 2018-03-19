@@ -19,7 +19,7 @@ use yii\bootstrap\Nav;
         ],
         [
             'label' => 'Настройки',
-            'url'   => ['/testusers/options/settings'],
+            'url'   => ['/testusers/test-settings'],
         ]
     ]
 ]); ?>

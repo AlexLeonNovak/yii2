@@ -11,11 +11,13 @@ use backend\modules\users\models\UsersGroup;
 /* @var $searchModel backend\modules\users\models\TimestampSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $model backend\modules\testusers\models\Timestamp */
-
+$this->title = 'Статистика';
+$this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?=$this->render('../testmenu.php'); ?>
-
+<h1><?= Html::encode($this->title) ?></h1>
 <?= GridView::widget([
     'dataProvider'  => $dataProvider,
     'filterModel'   => $searchModel,

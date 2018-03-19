@@ -11,6 +11,7 @@ use backend\modules\testusers\models\Questions;
 use backend\modules\testusers\models\Answers;
 use backend\modules\testusers\models\UserAnswer;
 use backend\modules\testusers\models\Timestamp;
+use backend\modules\testusers\models\TestSettings;
 use common\models\User;
 use yii\db\Expression;
 use yii\data\ArrayDataProvider;
@@ -37,6 +38,7 @@ class DefaultController extends Controller
         $searchModel = new ThemesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_group = User::getCurrentUserGroupId();
+        Yii::$app->session['timer'] = TestSettings::find(['id_group' => $user_group])->one()->timer;
         $themes = Themes::findAll(['id_group' => $user_group]);
         foreach ($themes as $theme){
             $themes_ids[] = $theme->id;

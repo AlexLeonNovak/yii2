@@ -15,6 +15,9 @@ use yii\bootstrap\Collapse;
 /* @var $questions array */
 
 $this->title = 'Детальная статистика';
+$this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
+$this->params['breadcrumbs'][] = ['label' => 'Статистика', 'url' => ['/testusers/options/statistic']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <?=$this->render('../testmenu.php'); ?>
@@ -77,7 +80,7 @@ $this->title = 'Детальная статистика';
                 'format' => 'raw',
                 'value' => function ($model) {
                     $progress = round($model->answersCorrectCount/count($model->userAnswers)*100);
-                    $html = '<div class="progress" style="margin-bottom:0">';
+                    $html = '<div class="progress" style="margin-bottom:0;background-color:#aaa;">';
                     $html .= '<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:';
                     $html .= $progress . '%;">' . $progress . '%</div></div>';
                     return $html;

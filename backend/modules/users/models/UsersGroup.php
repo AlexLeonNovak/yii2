@@ -60,4 +60,12 @@ class UsersGroup extends \yii\db\ActiveRecord
     {
         return $this->hasMany(User::className(), ['id_group' => 'id']);
     }
+    
+    /**
+     * @return Array
+     */
+    public function getUsersGroupArray()
+    {
+        return $this->find()->asArray()->all();    
+    }
 }

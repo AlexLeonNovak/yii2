@@ -36,8 +36,9 @@ $this->title = $test_name;
 </div>
 
 <?php 
+$timer = Yii::$app->session['timer'] ? Yii::$app->session['timer'] : 60;
 $script = <<< JS
-    var i = 10 * 60; // Вместо цифры 60 можно указать переменную (в секундах)
+    var i = 10 * $timer; // Вместо цифры 60 можно указать переменную (в секундах)
     var t = i;
     var counterBack = setInterval(function(){
       i--;

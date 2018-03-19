@@ -9,6 +9,7 @@ use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 
 $this->title = 'Регистрация нового сотрудника';
+$this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-signup">
