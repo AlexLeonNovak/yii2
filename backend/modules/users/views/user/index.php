@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use backend\modules\users\models\UsersGroup;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\modules\users\models\UserSearch */
@@ -19,7 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Зарегистрировать нового сотрудника', ['signup'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Зарегистрировать нового сотрудника', ['signup'], ['class' => 'btn btn-success']); ?>
+        <?= Html::a('Должности сотрудников', ['/users/users-group/index'], ['class' => 'btn btn-primary']); ?>
     </p>
 
     <?= GridView::widget([
@@ -27,22 +29,33 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'username',
+            [
+                'attribute' => 'fullName',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->lastName ? $model->fullName :
+                            '<span class="text-danger"><i>(Не указано)</i></span>', 
+                            Url::to(['view', 'id' => $model->id]));
+                }
+            ],
+            [
+                'attribute' => 'username',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->username,Url::to(['view', 'id' => $model->id]));
+                }
+            ],
             'email:email',
-
             [
                 'attribute' => 'id_group',
-               // 'value' => $model->usersGroup,
                 'filter' => ArrayHelper::map(UsersGroup::find()->select(['name', 'id'])->groupBy('id')->all(), 'id', 'name'),
                 'value' => 'usersGroup.name',
-                
             ],
             [
-                'attribute' => 'status',
-                'value' => 'status'
+                'attribute' => 'dateOfBirth',
+                'format' => ['Datetime', 'php:d.m.Y'],
             ],
-
-
+            'status',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

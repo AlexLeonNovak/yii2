@@ -10,6 +10,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersContact;
+use yii\db\ActiveRecord;
+use yii\data\ActiveDataProvider;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -39,7 +42,8 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        //var_dump($searchModel->dateOfBirth);
+       
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -54,8 +58,13 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $model->getContacts(),
+        ]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -67,13 +76,14 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
-
+        //$contacts = $model->getContacts()->all();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
+        var_dump($contacts);
         return $this->render('create', [
             'model' => $model,
+          //  'contacts' => $contacts,
         ]);
     }
 
@@ -87,10 +97,20 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        // Приводим дату к пользовательскому формату
+        if ($model->dateOfBirth){
+            $model->dateOfBirth = \DateTime::createFromFormat('Y-m-d', $model->dateOfBirth)->format('d.m.Y');
         }
+        // Ставим обработчик который после успешной проверки данных в пользовательском формате вернет дату в формат для mysql
+        $model->on(ActiveRecord::EVENT_BEFORE_UPDATE, function () use ($model) {
+            if ($model->dateOfBirth){
+                $model->dateOfBirth = \DateTime::createFromFormat('d.m.Y', $model->dateOfBirth)->format('Y-m-d');
+            }
+        });
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index']);
+        }
+        
         $group = UsersGroup::find()->all();
         return $this->render('update', [
             'model' => $model,

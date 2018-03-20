@@ -12,6 +12,7 @@ use common\models\User;
  */
 class UserSearch extends User
 {
+    public $fullName;
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class UserSearch extends User
     {
         return [
             [['id', 'id_group', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email'], 'safe'],
+            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'fullName'], 'safe'],
         ];
     }
 
@@ -48,15 +49,29 @@ class UserSearch extends User
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $dataProvider->setSort([
+            'attributes' => [
+                'id',
+                'fullName' => [     //сортировка ФИО
+                    'asc' => ['firstName' => SORT_ASC, 'lastName' => SORT_ASC, 'middleName' => SORT_ASC],
+                    'desc' => ['firstName' => SORT_DESC, 'lastName' => SORT_DESC, 'middleName' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'username',
+                'email',
+                'id_group',
+                'dateOfBirth',
+                'status'
+            ]
+        ]);
         $this->load($params);
-
+        
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
         }
-
+    
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
@@ -70,7 +85,12 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'auth_key', $this->auth_key])
             ->andFilterWhere(['like', 'password_hash', $this->password_hash])
             ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
-            ->andFilterWhere(['like', 'email', $this->email]);
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['or',                         //фильтр для ФИО
+                    ['like', 'firstName', $this->fullName],
+                    ['like', 'middleName', $this->fullName],
+                    ['like', 'lastName', $this->fullName]
+                ]);
 
         return $dataProvider;
     }

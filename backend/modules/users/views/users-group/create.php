@@ -6,8 +6,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model backend\modules\users\models\UsersGroup */
 
-$this->title = 'Create Users Group';
-$this->params['breadcrumbs'][] = ['label' => 'Users Groups', 'url' => ['index']];
+$this->title = 'Создать должность';
+$this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['/users/user/index']];
+$this->params['breadcrumbs'][] = ['label' => 'Должности сотрудников', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-group-create">

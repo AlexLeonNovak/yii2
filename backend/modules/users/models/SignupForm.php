@@ -44,10 +44,10 @@ class SignupForm extends Model
     public function attributeLabels() 
     {
         return [
-            'username' => 'Логин',
-            'email' => 'Электронная почта',
-            'id_group' => 'Должность',
-            'password' => 'Пароль',
+            'username'  => 'Логин',
+            'email'     => 'Электронная почта',
+            'id_group'  => 'Должность',
+            'password'  => 'Пароль',
         ];
     }
 

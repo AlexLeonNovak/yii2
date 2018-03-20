@@ -7,6 +7,8 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use backend\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersContact;
+use yii\helpers\StringHelper;
 
 /**
  * User model
@@ -21,13 +23,17 @@ use backend\modules\users\models\UsersGroup;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property date $dateOfBirth Y-m-d
+ * @property string $firstName
+ * @property string $middleName
+ * @property string $lastName
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
-
+    //public $dateOfBirth;
     /**
      * @inheritdoc
      */
@@ -45,7 +51,18 @@ class User extends ActiveRecord implements IdentityInterface
             TimestampBehavior::className(),
         ];
     }
-
+    
+//    public function beforeSave($param) 
+//    {
+//        
+//        if ($this->dateOfBirth){
+//            //var_dump($this->dateOfBirth);
+//            $this->dateOfBirth = date('Y-m-d', strtotime($this->dateOfBirth));
+//            //var_dump($this->dateOfBirth);
+//        }var_dump($this);
+//        parent::save();
+//    }
+    
     /**
      * @inheritdoc
      */
@@ -55,6 +72,8 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['id_group'], 'exist', 'skipOnError' => true, 'targetClass' => UsersGroup::className(), 'targetAttribute' => ['id_group' => 'id']],
+            [['firstName', 'middleName', 'lastName'], 'string', 'max' => 50],
+            [['dateOfBirth'], 'date', 'format' => 'dd.mm.yyyy'],
         ];
     }
 
@@ -64,13 +83,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels() 
     {
         return [
-            'username' => 'Логин',
-            'email' => 'Электронная почта',
-            'id_group' => 'Должность',
-            'status' => 'Статус',
+            'username'      => 'Логин',
+            'email'         => 'Электронная почта',
+            'id_group'      => 'Должность',
+            'status'        => 'Статус',
+            'firstName'     => 'Имя',
+            'middleName'    => 'Отчество',
+            'lastName'      => 'Фамилия',
+            'dateOfBirth'   => 'Дата рождения',
+            'fullName'      => 'ФИО',
+            'fullNameInitials' => 'ФИО',
+            'created_at'    => 'Зарегистрирован',
+            'updated_at'    => 'Обновление данных'
         ];
     }
-
+    
     /**
      * @inheritdoc
      */
@@ -108,7 +135,24 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(UsersGroup::className(), ['id' => 'id_group']);
     }
-
+    
+    public function getFullName()
+    {
+        return $this->lastName . ' ' . $this->firstName . ' ' . $this->middleName;
+    }
+    
+    public function getFullNameInitials() 
+    {
+        return $this->lastName . ' ' . StringHelper::truncate($this->firstName, 1, '. ') 
+                . StringHelper::truncate($this->middleName, 1, '.');
+    }
+    
+    public function getContacts() 
+    {
+        return $this->hasMany(UsersContact::className(), ['id_user' => 'id']);
+        
+    }
+    
     /**
      * Finds user by password reset token
      *

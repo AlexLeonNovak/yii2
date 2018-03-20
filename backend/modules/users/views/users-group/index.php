@@ -2,12 +2,14 @@
 
 use yii\helpers\Html;
 use yii\widgets\ListView;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\modules\users\models\UsersGroupSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Должности сотрудников';
+$this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['/users/user/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-group-index">
@@ -19,12 +21,20 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Добавить должность', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= ListView::widget([
+    <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
-        'itemOptions' => ['class' => 'item'],
-        'itemView' => function ($model, $key, $index, $widget) {
-            return Html::a(Html::encode($model->name), ['view', 'id' => $model->id]);
-        },
+        'filterModel' => $searchModel,
+        'tableOptions' => [
+            'class' => 'table table-striped table-condensed'
+        ],
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'name',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Действия',
+                'template' => '{update} {delete}',
+            ],
+        ],
     ]); ?>
 </div>

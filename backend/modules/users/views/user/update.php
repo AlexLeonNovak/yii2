@@ -7,7 +7,10 @@ use yii\helpers\Html;
 
 $this->title = 'Редактор данных о сотруднике';
 $this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = [
+            'label' => $model->lastName ? $model->fullNameInitials : $model->username,
+            'url' => ['view', 'id' => $model->id]
+        ];
 $this->params['breadcrumbs'][] = 'Редактирование';
 ?>
 <div class="user-update">

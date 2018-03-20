@@ -53,16 +53,18 @@ AppAsset::register($this);
                 ],
             ]
         ];
-             
+       // var_dump(Yii::$app->user->identity->fullNameInitials);
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Выйти (' . (Yii::$app->user->identity->lastName ? 
+                    Yii::$app->user->identity->fullNameInitials : 
+                    Yii::$app->user->identity->username) . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
             . '</li>';
-        $menuItems[] = ['label' => 'Перейти в CRM', 'url' => ['../../']];
+        $menuItems[] = ['label' => 'Перейти в CRM', 'url' => ['/../../']];
             
     }
     echo Nav::widget([
