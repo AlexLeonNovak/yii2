@@ -8,6 +8,7 @@ use backend\modules\testusers\models\ThemesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * ThemesController implements the CRUD actions for Themes model.
@@ -105,8 +106,19 @@ class ThemesController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', "Данные удалены");
+        try {
+            $this->findModel($id)->delete();
+            Yii::$app->session->setFlash('success', "Данные удалены");
+        } catch (\yii\db\Exception $e) {
+            Yii::$app->session->setFlash('danger',
+                     "<strong>Невозможно удалить тему, т.к. уже кто-то проходил один из тестов из этой темы!</strong>"
+//                     . "<hr />Мы можем "
+//                     . Html::a('посмотреть результаты', ['/testusers/options/statistic-detail', 'id' => $id],
+//                            ['class' => 'alert-link'])
+//                     . " кто проходил."
+            );
+        }
+        
         return $this->redirect(['index']);
     }
 

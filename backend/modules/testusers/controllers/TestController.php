@@ -113,8 +113,18 @@ class TestController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        Yii::$app->session->setFlash('success', "Данные удалены");
+        try {
+            $this->findModel($id)->delete();
+            Yii::$app->session->setFlash('success', "Данные удалены");
+        } catch (\yii\db\Exception $e) {
+            Yii::$app->session->setFlash('danger',
+                     "<strong>Невозможно удалить тест, т.к. уже кто-то проходил этот тест!</strong>"
+//                     . "<hr />Мы можем "
+//                     . Html::a('посмотреть результаты', ['/testusers/options/statistic-detail', 'id' => $id],
+//                            ['class' => 'alert-link'])
+//                     . " кто проходил."
+            );
+        }
         return $this->redirect([
                 'index',
                 'id_theme' => Yii::$app->request->get('id_theme'),
@@ -130,7 +140,7 @@ class TestController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = test::findOne($id)) !== null) {
+        if (($model = Test::findOne($id)) !== null) {
             return $model;
         }
 

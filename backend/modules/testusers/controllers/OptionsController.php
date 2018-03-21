@@ -4,20 +4,10 @@ namespace backend\modules\testusers\controllers;
 
 use Yii;
 use yii\web\Controller;
-use yii\data\ArrayDataProvider;
 use yii\data\ActiveDataProvider;
-use yii\helpers\ArrayHelper;
 use backend\modules\testusers\models\UserAnswer;
-use backend\modules\testusers\models\UserAnswerSearch;
-use backend\modules\testusers\models\Answers;
-use backend\modules\testusers\models\Questions;
-use backend\modules\testusers\models\Test;
-use backend\modules\testusers\models\Themes;
 use backend\modules\testusers\models\Timestamp;
 use backend\modules\testusers\models\TimestampSearch;
-use frontend\modules\testusers\controllers\DefaultController;
-use common\models\User;
-use backend\modules\users\models\UsersGroup;
 
 /**
  * Description of StatisticController
@@ -45,10 +35,7 @@ class OptionsController extends Controller {
             $dataProviderAnswers[$user_answer->id] = new ActiveDataProvider([
                 'query' => $user_answer->getAnswers(),
             ]);
-            //$questions[$user_answer->id] = $user_answer->question->question;
         }
-        //var_dump($questions);
-        //$model_questions = Questions::findAll($model->questions);
 
         return $this->render('statistic-detail',[
             'model'                 => $model,
@@ -59,8 +46,4 @@ class OptionsController extends Controller {
         ]);
     }
     
-    public function actionSettings()
-    {
-        return $this->render('settings');
-    }
 }

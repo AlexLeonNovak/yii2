@@ -121,10 +121,17 @@ class QuestionsController extends Controller
      */
     public function actionDelete($id)
     {
-        if($this->findModel($id)->delete()){
+        try {
+            $this->findModel($id)->delete();
             Yii::$app->session->setFlash('success', "Данные удалены");
-        } else {
-            Yii::$app->session->setFlash('danger', "Удаление невозможно");
+        } catch (\yii\db\Exception $e) {
+            Yii::$app->session->setFlash('danger',
+                     "<strong>Невозможно удалить вопрос, т.к. уже кто-то отвечал на него!</strong>"
+//                     . "<hr />Мы можем "
+//                     . Html::a('посмотреть результаты', ['/testusers/options/statistic-detail', 'id' => $id],
+//                            ['class' => 'alert-link'])
+//                     . " кто проходил."
+            );
         }
         return $this->redirect([
                 'index',
