@@ -89,4 +89,14 @@ class UserAnswer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Timestamp::className(), ['id' => 'id_timestamp']);
     }
+    
+    public function getTests()
+    {
+        return $this->hasMany(Test::className(), ['id' => 'id_test'])->via('question');
+    }
+    
+    public function getThemes() 
+    {
+        return $this->hasMany(Themes::className(), ['id' => 'id_theme'])->via('tests');
+    }
 }

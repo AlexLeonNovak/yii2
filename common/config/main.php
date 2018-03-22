@@ -1,5 +1,6 @@
 <?php
 return [
+    'name' => 'PERSPEKTIVA IMPEREAL',
     'language' => 'ru-RU',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',

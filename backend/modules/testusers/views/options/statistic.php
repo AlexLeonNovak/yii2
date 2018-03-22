@@ -6,6 +6,11 @@ use yii\bootstrap\Html;
 use yii\helpers\Url;
 use common\models\User;
 use backend\modules\users\models\UsersGroup;
+use backend\modules\testusers\models\Themes;
+use backend\modules\testusers\models\Test;
+
+$arrayFilterThemeAndTest['Тесты'] = ArrayHelper::map(Test::find()->all(), 'id', 'name');
+$arrayFilterThemeAndTest['Темы'] = ArrayHelper::map(Themes::find()->all(), 'id', 'name');
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\modules\users\models\TimestampSearch */
@@ -48,6 +53,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'timestamp',
             'format' => ['Datetime', 'php:d.m.Y H:i:s'],
         ],
+        [
+            'attribute' => 'themeOrTest.name',
+            'value' => function ($model){
+                return $model->for ? 'Тема: ' . $model->themeOrTest->name : 'Тест: ' . $model->themeOrTest->name;
+            },
+            'label' => 'Тема/Тест',
+//            'filter' => Html::activeDropDownList($searchModel,
+//                        'for',
+//                        ArrayHelper::map($model->getThemeOrTest()->all(), 'id', 'name' , $model->for),
+//                        $arrayFilterThemeAndTest,
+//                        //[0 => 'Тест', 1 => 'Тема'],
+//                        ['class' => 'form-control','prompt' => 'Все']
+//                        ),
+        ],
+//        [
+//            'attribute' => 'themeOrTest.name',
+//        ],
         [
             'label' => 'Ответы (П/Н/%)',
             'format' => 'html',

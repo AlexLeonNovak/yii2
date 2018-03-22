@@ -41,7 +41,6 @@ class OptionsController extends Controller {
             'model'                 => $model,
             'dataProvider'          => $dataProvider,
             'dataProviderAnswers'   => $dataProviderAnswers,
-            'questions'             => $questions,
             'user_answers'          => $user_answers,
         ]);
     }

@@ -9,6 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
+use backend\modules\testusers\models\Questions;
+use backend\modules\testusers\models\Answers;
+use backend\modules\testusers\models\UserAnswer;
+use backend\modules\testusers\models\Timestamp;
+use backend\modules\testusers\models\Test;
 
 /**
  * ThemesController implements the CRUD actions for Themes model.
@@ -100,7 +105,7 @@ class ThemesController extends Controller
     /**
      * Deletes an existing Themes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param integer $id id_test
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -110,15 +115,32 @@ class ThemesController extends Controller
             $this->findModel($id)->delete();
             Yii::$app->session->setFlash('success', "Данные удалены");
         } catch (\yii\db\Exception $e) {
+
             Yii::$app->session->setFlash('danger',
                      "<strong>Невозможно удалить тему, т.к. уже кто-то проходил один из тестов из этой темы!</strong>"
-//                     . "<hr />Мы можем "
-//                     . Html::a('посмотреть результаты', ['/testusers/options/statistic-detail', 'id' => $id],
-//                            ['class' => 'alert-link'])
-//                     . " кто проходил."
+                     . "<hr />Мы можем "
+                     . Html::a('удалить эти записи', ['delete-test-users', 'id' => $id],
+                            [
+                                'class' => 'alert-link',
+                                'linkOptions' => [
+                                    'data-method' => 'post'
+                                    ]
+                            ])
+                     . " безвозвратно."
             );
         }
         
+        return $this->redirect(['index']);
+    }
+    
+    public function actionDeleteTestUsers($id)
+    {
+        if (Timestamp::deleteUserAnswers($id)){
+            Yii::$app->session->setFlash('success', "<strong>Данные удалены</strong>"
+                    . "<br />Теперь можно удалить тему");
+        } else {
+            Yii::$app->session->setFlash('danger', "Что-то пошло не так");
+        }
         return $this->redirect(['index']);
     }
 

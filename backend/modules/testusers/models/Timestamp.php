@@ -20,6 +20,9 @@ use backend\modules\users\models\UsersGroup;
  */
 class Timestamp extends \yii\db\ActiveRecord
 {
+    const THEME = 1;
+    const TEST  = 0;
+
     /**
      * @inheritdoc
      */
@@ -58,7 +61,7 @@ class Timestamp extends \yii\db\ActiveRecord
      */
     public function getThemeOrTest()
     {
-        if ($this->for){
+        if ($this->for == self::THEME){
             return $this->hasOne(Themes::className(), ['id' => 'id_theme_test']);
         } else {
             return $this->hasOne(Test::className(), ['id' => 'id_theme_test']);
@@ -97,12 +100,32 @@ class Timestamp extends \yii\db\ActiveRecord
         return $this->hasMany(Answers::className(), ['id' => 'id_answer'])->where(['correct' => '1'])
                 ->via('userAnswers')->count();
     }
-//    public function getAnswersIncorrectCount() 
-//    {
-//        return $this->hasMany(UserAnswer::className(), ['id_timestamp' => 'id'])//->where(['correct' => '0'])
-//                ->count();// - $this->getAnswersCorrectCount();
-//    }
+
     public function getUsersGroup() {
         return $this->hasOne(UsersGroup::className(), ['id' => 'id_group'])->via('user');
+    }
+    
+    /**
+     * @param $id_theme Значение указывает что удалять, если false то Тест, по умолчанию Тема
+     * @param $id_theme_test ИД темы или ИД теста, изходя из параметра $id_theme
+     * @return boolean
+     */
+    public function deleteUserAnswers($id_theme_test, $id_theme = self::THEME) 
+    {
+        //ищем запись о прохождении темы или теста
+        $ids_test = Test::find()->where(['id_theme' => $id_theme_test])->select('id')->column();
+
+        $ids_timestamp = Timestamp::find()->where([
+            'or',
+            ['for' => self::THEME, 'id_theme_test' => $id_theme_test],
+            ['for' => self::TEST, 'id_theme_test' => $ids_test],
+            ])->select('id')->column();
+        try {
+            UserAnswer::deleteAll(['id_timestamp' => $ids_timestamp]);
+            Timestamp::deleteAll(['id' => $ids_timestamp]);
+        } catch(\yii\db\Exception $e) {
+            return false;
+        }
+        return true;
     }
 }

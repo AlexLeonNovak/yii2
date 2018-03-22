@@ -32,7 +32,8 @@ class TimestampSearch extends Timestamp
             [['id', 'id_theme_test', 'timestamp', 'id_user', 'id_group'], 'integer'],
 //            [['username', 'group_name', 'date', 'for', 'questions_count', 
 //                'answers_count', 'answers_correct_count'], 'safe'],
-//            [['id_user', 'id_group'],'safe'],
+//            [['themeOrTest'],'string'],
+            [['for'], 'boolean'],
         ];
     }
     /**
@@ -70,10 +71,12 @@ class TimestampSearch extends Timestamp
                     'desc' => ['user.id_group' => SORT_DESC],
                 ],
                 'timestamp',
+                'for',
+//                'themeOrTest'
             ],
         ]);
         $this->load($params);
-        //$query->count(['userAnswers.id_answer']);
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -87,6 +90,7 @@ class TimestampSearch extends Timestamp
             'timestamp' => $this->timestamp,
             'user.id' => $this->id_user,
             'user.id_group' => $this->id_group,
+//            'themeOrTest.name' => $this->themeOrTest->name,
         ]);
         
         $query->distinct(['id']);
