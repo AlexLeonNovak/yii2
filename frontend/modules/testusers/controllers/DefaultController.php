@@ -15,6 +15,7 @@ use backend\modules\testusers\models\TestSettings;
 use common\models\User;
 use yii\db\Expression;
 use yii\data\ArrayDataProvider;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 
 
@@ -26,6 +27,7 @@ class DefaultController extends Controller
     const NOT_ANSWER = null; //Нет ответа на вопрос
     const TEST  = 0; //Пользователь проходил только тест
     const THEME = 1; //Пользователь проходил всю тему со всеми тестами
+    const DEFAULT_TIMER = 60; // Время по-умолчанию в с. для показа вопроса если не указано в настройках
     private $ids_answer = [];       //массив с ид ответами, на которые пользователь ответил
     private $questions_showed = []; //массив с ид вопросами, которые были показаны
     /**
@@ -38,7 +40,11 @@ class DefaultController extends Controller
         $searchModel = new ThemesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_group = User::getCurrentUserGroupId();
-        Yii::$app->session['timer'] = TestSettings::find(['id_group' => $user_group])->one()->timer;
+        if ($timer = TestSettings::find()->where(['id_group' => $user_group])->one()->timer) { 
+            Yii::$app->session['timer'] = $timer;
+        } else {
+            Yii::$app->session['timer'] = self::DEFAULT_TIMER;
+        }
         $themes = Themes::findAll(['id_group' => $user_group]);
         foreach ($themes as $theme){
             $themes_ids[] = $theme->id;
@@ -136,61 +142,23 @@ class DefaultController extends Controller
             'test_name' => $test_name,
         ]);
     }
-    public function getResults($id_test, $for = false, $id_timestamp = null) 
-    {
-        $timestamp = Timestamp::find()->where(['id_theme_test' => $id_test, 'for' => $for]);
-        if($id_timestamp){
-            $timestamp->andWhere(['id' => $id_timestamp]);
-        } 
-        $times = $timestamp->all();
-        $provider = [];
-        $dates = [];
-        $result = [];
-        foreach ($times as $key => $time){
-            $user_answers = UserAnswer::findAll([
-                        'id_user' => Yii::$app->user->identity->id,
-                        'id_timestamp' => $time->id,
-                    ]);
-            $dates[] = Yii::$app->formatter->asDatetime($time->timestamp, 'php:d.m.Y H:i:s');
-            foreach ($user_answers as $user_answer){
-                $question = Questions::findOne([
-                            'id' => $user_answer->id_question,
-                        ]);
-                if ($user_answer->id_answer){
-                    $answer = Answers::findOne(['id' => $user_answer->id_answer]);
-                } else {
-                    $answer = new \stdClass();
-                    $answer->answer = '<b><i>(Вы не ответили на этот вопрос)</i></b>';
-                    $answer->correct = false;
-                }
-                $result[$key][] = [ 
-                        'question'      => $question->question,
-                        'answer'        => $answer->answer,
-                        'is_correct'    => $answer->correct,
-                ];
-            }
-            $provider[] = new ArrayDataProvider([
-                    'allModels' => $result[$key],
-                    'pagination' => [
-                        'pageSize' => 50,
-                    ],
-                ]);
-        }
-        return ['provider' => $provider, 'dates' => $dates];
-    }
+    
     public function actionResult($id_test = null, $id_theme = null, $id_timestamp = null)
     {
+        $query_timestamp = Timestamp::find();
+        if($id_timestamp){
+            $query_timestamp->andWhere(['id' => $id_timestamp]);
+        } 
         if ($id_test != null){
-            $result = $this->getResults($id_test, false, $id_timestamp);
-            $test_name = Test::findOne(['id' => $id_test])->name;
+            $query_timestamp->andWhere(['id_theme_test' => $id_test, 'for' => Timestamp::TEST]);
         } elseif ($id_theme != null) {
-            $result = $this->getResults($id_theme, true, $id_timestamp);
-            $test_name = Themes::findOne(['id' => $id_theme])->name;
+            $query_timestamp->andWhere(['id_theme_test' => $id_theme, 'for' => Timestamp::THEME]);
         }
+        $model = $query_timestamp->one();
+        $dates = $query_timestamp->select(['id','timestamp'])->all();
         return $this->render('result',[
-            'test_name' => $test_name,
-            'provider'  => $result['provider'],
-            'dates'     => $result['dates'],
+            'dates'     => $dates,
+            'model' => $model,
         ]);
     }
     

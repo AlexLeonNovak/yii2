@@ -55,6 +55,7 @@ foreach ($themes as $key => $theme){
     <p class="lead">
         <?= Yii::$app->user->identity->username; ?>, добро пожаловать в модуль
         тестирования сотрудников.</p>
+<?php if ($items) { ?>
     <p>
         Для начала выберете тест
     </p>
@@ -63,5 +64,8 @@ foreach ($themes as $key => $theme){
         'items' => $items,        
     ]);
     ?>
+<?php } else { ?>
+    <div class="alert alert-danger">Для вашей должности пока еще не созданы тесты</div>
+<?php } ?>
 
 </div>

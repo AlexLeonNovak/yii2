@@ -106,8 +106,8 @@ class Timestamp extends \yii\db\ActiveRecord
     }
     
     /**
-     * @param $id_theme Значение указывает что удалять, если false то Тест, по умолчанию Тема
      * @param $id_theme_test ИД темы или ИД теста, изходя из параметра $id_theme
+     * @param $id_theme Значение указывает что удалять, если false то Тест, по умолчанию Тема
      * @return boolean
      */
     public function deleteUserAnswers($id_theme_test, $id_theme = self::THEME) 

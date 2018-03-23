@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use backend\modules\testusers\models\Themes;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\testusers\models\test */
+/* @var $model app\modules\testusers\models\Test */
 
 $this->title = 'Редактирование названия теста';
 $this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
