@@ -9,14 +9,9 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\testusers\models\TestSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title = 'Тесты на тему "'. $theme_name . '"';
-//$this->params['breadcrumbs'][] = Yii::$app->session['breadcrumbs-themes'];
 $this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
 $this->params['breadcrumbs'][] = $this->title;
 
-//Yii::$app->session['breadcrumbs-test'] = [
-//        'label' => $this->title,
-//        'url'   => Yii::$app->request->url,
-//];
 ?>
 <div class="test-index">
 
@@ -65,12 +60,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ['title' => 'Просмотр вопросов']
                                 );
                     },
-//                    'delete' => function($url, $model){
-//                        return Html::a('<span class="glyphicon glyphicon-trash"></span>',
-//                                Url::to([$url, 'id_theme' => $model->id]),
-//                                ['title' => 'Удалить']
-//                                );
-//                    },
                     'addquestion' => function($url, $model){
                         return Html::a('<span class="glyphicon glyphicon-plus"></span>',
                                 Url::to(['questions/create', 

@@ -7,6 +7,7 @@ namespace backend\modules\users;
  */
 class Users extends \yii\base\Module
 {
+    public $layout = 'userlayout.php';
     /**
      * @inheritdoc
      */

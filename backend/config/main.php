@@ -55,7 +55,9 @@ return [
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
-
+//        'as AccessBehavior' => [
+//            'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
+//        ]
     ],
     'params' => $params,
 ];

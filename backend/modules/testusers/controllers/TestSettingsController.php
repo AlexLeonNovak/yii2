@@ -5,6 +5,7 @@ namespace backend\modules\testusers\controllers;
 use Yii;
 use backend\modules\testusers\models\TestSettings;
 use backend\modules\testusers\models\TestSettingsSearch;
+use backend\modules\testusers\models\TestMsg;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,6 +30,21 @@ class TestSettingsController extends Controller
         ];
     }
 
+    function actions(){
+        return [
+            'msg-update' => [
+                'class' => 'pheme\settings\SettingsAction',
+                'modelClass' => 'backend\modules\testusers\models\TestMsg',
+                //'scenario' => 'site',	// Change if you want to re-use the model for multiple setting form.
+                'viewName' => 'msg-update'	// The form we need to render
+            ],
+        ];
+    }
+    public function beforeAction($action)
+    {
+        Yii::$app->getModule('settings')->init(); // make sure this module is init first
+        return parent::beforeAction($action);
+    }
     /**
      * Lists all TestSettings models.
      * @return mixed
@@ -94,7 +110,18 @@ class TestSettingsController extends Controller
             'model' => $model,
         ]);
     }
-
+//    public function actionMsgUpdate()
+//    {
+////        $model = TestMsg
+////        var_dump($model);
+////        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+////            return $this->redirect(['index']);
+////        }
+//
+//        return $this->render('msg-update', [
+//            'model' => $model,
+//        ]);
+//    }
     /**
      * Deletes an existing TestSettings model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

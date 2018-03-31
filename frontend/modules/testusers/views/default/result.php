@@ -7,6 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model backend\modules\testusers\models\Timestamp */
 /* @var $dates[] backend\modules\testusers\models\Timestamp */
 /* @var $dataProvider backend\modules\testusers\models\UserAnswer */
+/* @var $this yii\web\View */
 
 //var_dump($provider);
 $this->title = 'Результаты прохождения ' . ($model->for ? 'темы' : 'теста') . ' "'
@@ -16,8 +17,13 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="testusers-default-result">
     <h1><?= $this->title; ?></h1>
-
     <?php foreach ($dates as $i => $date) { ?>
+        <?php if($date->violation){ ?>
+    <div class="alert alert-danger">
+        <strong>НАРУШЕНИЕ!!!</strong><br>
+        <?= Yii::$app->settings->get('TestMsg.msgViolation'); ?>
+    </div>
+    <?php } ?>
         <div class="panel panel-info">
             <div class="panel-heading">Дата и время прохождения теста: <b>
         <?= Yii::$app->formatter->asDatetime($date->timestamp, 'php:d.m.Y H:i:s'); ?></b></div>
@@ -26,14 +32,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 DetailView::widget([
                     'model' => $date,
                     'attributes' => [
+                        'totaltime',
+                        [
+                            'value' => $model->totaltime ? count($model->userAnswers) / $model->totaltime : 0,
+                            'label' => 'Среднее время затраченное на вопрос',
+                        ],
                         [
                             'attribute' => 'answersCorrectCount',
                             'label' => 'Правильных ответов',
                             'contentOptions' => [
-                                'class' => 'text-success col-sm-9',
+                                'class' => 'text-success col-sm-8',
                             ],
                             'captionOptions' => [
-                                'class' => 'col-sm-3',
+                                'class' => 'col-sm-4',
                             ],
                         ],
                         [

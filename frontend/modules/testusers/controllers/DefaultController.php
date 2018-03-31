@@ -58,6 +58,7 @@ class DefaultController extends Controller
             'tests' => $tests,
         ]);
     }
+    
     private function getQuestion($id_test = null, $id_theme = null)
     {
         $question_query = Questions::find();
@@ -96,38 +97,76 @@ class DefaultController extends Controller
         }
     }
 
+    public function saveResult($id_test = null, $id_theme = null, $violation = Timestamp::VIOLATION_FALSE) 
+    {
+        $timestamp = new Timestamp;
+        if ($id_test != null){
+            $timestamp->for = self::TEST;
+            $timestamp->id_theme_test = $id_test;
+        } elseif ($id_theme != null){
+            $timestamp->for = self::THEME;
+            $timestamp->id_theme_test = $id_theme;
+        }
+        $this->questions_showed = Yii::$app->session['questions'];
+        if ($violation){
+            $timestamp->violation = Timestamp::VIOLATION_TRUE;
+            $this->questions_showed = Yii::$app->session['questions'];
+            array_pop($this->questions_showed);
+            Yii::$app->session['questions'] = $this->questions_showed;
+        }
+        if (Yii::$app->session['totaltime']){
+            $timestamp->totaltime = Yii::$app->session['totaltime'];
+        }
+        $timestamp->timestamp = Yii::$app->session['timestamp'];
+        $timestamp->save();
+
+        $count = Yii::$app->session['count_questions']; //получаем количество вопросов
+        for ($i = 0; $i < $count; $i++){ //перебираем все вопросы и записываем в БД
+            $user_answer = new UserAnswer;
+            if (Yii::$app->session['ids_answer'][$i]){
+                $user_answer->id_answer = Yii::$app->session['ids_answer'][$i];
+                $user_answer->id_question = Yii::$app->session['questions'][$i];
+            } else {//Yii::$app->session['ids_questions']
+                $this->getQuestion($id_test, $id_theme);
+                $user_answer->id_answer = self::NOT_ANSWER;
+                $user_answer->id_question = Yii::$app->session['questions'][$i];
+            }
+            $user_answer->id_user = Yii::$app->user->identity->id;
+            $user_answer->id_timestamp = $timestamp->id;
+            $user_answer->save();
+        }
+        Yii::$app->session->destroy();
+        return $this->redirect(['result',  //отправляем на страницу результатов
+            'id_test' => $id_test,
+            'id_theme' => $id_theme,
+            'id_timestamp' => $timestamp->id,
+        ]);
+    }
+    public function actionTotal($id_test = null, $id_theme = null) 
+    {
+        $request = Yii::$app->request;
+        if ($request->isAjax){
+            if($request->post('out')){
+                //return $this->redirect('index');
+                $this->saveResult($id_test, $id_theme, Timestamp::VIOLATION_TRUE);
+            }
+            if(!Yii::$app->session['totaltime']){
+                Yii::$app->session['totaltime'] = $request->post('totaltime');
+            } else {
+                $totaltime = Yii::$app->session['totaltime'] + $request->post('totaltime');
+                Yii::$app->session['totaltime'] = $totaltime;
+            }
+        }
+    }
     public function actionTest($id_test = null, $id_theme = null)
     {
+        $this->layout = 'testlayout';
         if (!Yii::$app->session['timestamp']){
             Yii::$app->session['timestamp'] = time();
         }
         $question = $this->getQuestion($id_test, $id_theme);
         if (!$question){
-            $timestamp = new Timestamp;
-            if ($id_test != null){
-                $timestamp->for = self::TEST;
-                $timestamp->id_theme_test = $id_test;
-            } elseif ($id_theme != null){
-                $timestamp->for = self::THEME;
-                $timestamp->id_theme_test = $id_theme;
-            }
-            $timestamp->timestamp = Yii::$app->session['timestamp'];
-            $timestamp->save();
-            $count = Yii::$app->session['count_questions']; //получаем количество вопросов
-            for ($i = 0; $i < $count; $i++){ //перебираем все вопросы и записываем в БД
-                $user_answer = new UserAnswer; 
-                $user_answer->id_answer = Yii::$app->session['ids_answer'][$i];
-                $user_answer->id_question = Yii::$app->session['questions'][$i];
-                $user_answer->id_user = Yii::$app->user->identity->id;
-                $user_answer->id_timestamp = $timestamp->id;
-                $user_answer->save();
-            }
-            Yii::$app->session->destroy();
-            return $this->redirect(['result',  //отправляем на страницу результатов
-                'id_test' => $id_test,
-                'id_theme' => $id_theme,
-                'id_timestamp' => $timestamp->id,
-            ]);
+            $this->saveResult($id_test, $id_theme);
         }
         
         $answers = Answers::findAll(['id_question' => $question->id]);
@@ -155,9 +194,9 @@ class DefaultController extends Controller
             $query_timestamp->andWhere(['id_theme_test' => $id_theme, 'for' => Timestamp::THEME]);
         }
         $model = $query_timestamp->one();
-        $dates = $query_timestamp->select(['id','timestamp'])->all();
+        $dates = $query_timestamp->all();
         return $this->render('result',[
-            'dates'     => $dates,
+            'dates' => $dates,
             'model' => $model,
         ]);
     }

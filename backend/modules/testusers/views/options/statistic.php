@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Список тем тестов',
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?=$this->render('../testmenu.php'); ?>
+
 <h1><?= Html::encode($this->title) ?></h1>
 <?= GridView::widget([
     'dataProvider'  => $dataProvider,

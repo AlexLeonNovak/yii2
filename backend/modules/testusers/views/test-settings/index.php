@@ -3,21 +3,21 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
+use yii\widgets\ActiveForm;
 use backend\modules\users\models\UsersGroup;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\modules\testusers\models\TestSettingsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $form yii\widgets\ActiveForm */
 
-$this->title = 'Настройки';
+$this->title = 'Настройки таймера';
 $this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="test-settings-index">
-    <?=$this->render('../testmenu.php'); ?>
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
         <?= Html::a('Добавить настройку', ['create'], ['class' => 'btn btn-success']) ?>
     </p>

@@ -22,7 +22,8 @@ class Timestamp extends \yii\db\ActiveRecord
 {
     const THEME = 1;
     const TEST  = 0;
-
+    const VIOLATION_TRUE = 1;
+    const VIOLATION_FALSE = 0;
     /**
      * @inheritdoc
      */
@@ -49,10 +50,12 @@ class Timestamp extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'for' => '0-test 1-theme',
+            'id'            => 'ID',
+            'for'           => '0-test 1-theme',
             'id_theme_test' => 'Тема или тест', //ID theme or ID Test
-            'timestamp' => 'Дата и время прохождения',
+            'timestamp'     => 'Дата и время прохождения',
+            'totaltime'     => 'Общее время затраченное на тестирование',
+            'violation'     => 'Нарушение'
         ];
     }
 

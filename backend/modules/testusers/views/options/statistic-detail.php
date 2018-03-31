@@ -20,7 +20,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Статистика', 'url' => ['
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?=$this->render('../testmenu.php'); ?>
 
 <div class="statistic-detail-view">
 
@@ -42,10 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'user.username',
                 'contentOptions' => [
-                    'class' => 'col-sm-9',
+                    'class' => 'col-sm-8',
                 ],
                 'captionOptions' => [
-                    'class' => 'col-sm-3',
+                    'class' => 'col-sm-4 align-right',
                 ],
                 'label' => 'Сотрудник',
             ],
@@ -56,6 +55,11 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'value' => $model->themeOrTest->name,
                 'label' => $model->for ? 'Тема' : 'Тест',
+            ],
+            'totaltime',
+            [
+                'value' => $model->totaltime ? count($model->userAnswers) / $model->totaltime : 0,
+                'label' => 'Среднее время затраченное на вопрос',
             ],
             [
                 'attribute' => 'answersCorrectCount',

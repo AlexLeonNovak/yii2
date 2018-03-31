@@ -2,11 +2,19 @@
 
 use yii\bootstrap\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
+use frontend\modules\testusers\TestAsset;
 
+/* @var $this yii\web\View */
+/* @var $answers[] \backend\modules\testusers\models\Answers */
+/* @var $question \backend\modules\testusers\models\Questions */
+
+TestAsset::register($this);
 $this->title = $test_name;
 ?>
 
 <h1><?=$this->title; ?></h1>
+<?php Pjax::begin(); ?>
 <div class="row" style="text-align:right;margin:5px;">Вопрос <b><?=Yii::$app->session['item_question']; ?></b> из <b><?=Yii::$app->session['count_questions']; ?></b></div>
 <div class="row">
     <div class="col-sm-1">
@@ -34,34 +42,7 @@ $this->title = $test_name;
         <?php ActiveForm::end() ?>
     </div>
 </div>
-
+<?php Pjax::end(); ?>
 <?php 
-$timer = Yii::$app->session['timer'];
-$script = <<< JS
-    var i = 10 * $timer; // Вместо цифры 60 можно указать переменную (в секундах)
-    var t = i;
-    var counterBack = setInterval(function(){
-      i--;
-      if (i >= 0){
-        $('.progress-bar').css('width', 100*i/t + '%');
-        if (100*i/t <10) {
-            $('.progress-bar').addClass('progress-bar-danger').removeClass('progress-bar-warning');
-            $('.timer').addClass('text-danger');
-        } else if (100*i/t <30) {
-            $('.progress-bar').addClass('progress-bar-warning');
-        }
-        m = Math.floor(i/10/60) ^ 0;
-        s = (i/10 % 60) ^ 0;
-        $('.timer').text((m<10?"0"+m:m) + ':' + (s<10?"0"+s:s));
-      } else {
-        clearInterval(counterBack);
-        $('button[type="submit"]').val('0').submit();
-        //location.reload(true);
-      }
-    }, 100);
-        
-JS;
 
-$this->registerJs($script);
-        
-?>
+$this->registerJs('var timer = ' . Yii::$app->session['timer'] . ';',  $this::POS_HEAD);
