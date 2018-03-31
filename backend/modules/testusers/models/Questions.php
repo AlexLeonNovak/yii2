@@ -70,6 +70,14 @@ class Questions extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getTheme()
+    {
+        return $this->hasOne(Themes::className(), ['id' => 'id_theme'])->via('test');
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getTestUserAswers()
     {
         return $this->hasMany(TestUserAswer::className(), ['id_question' => 'id']);

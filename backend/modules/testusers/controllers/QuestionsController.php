@@ -9,6 +9,7 @@ use backend\modules\testusers\models\TestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * QuestionsController implements the CRUD actions for Questions model.
@@ -73,13 +74,10 @@ class QuestionsController extends Controller
     public function actionCreate($id_test)
     {
         $model = new Questions();
-        $test = new TestSearch();
         $model->id_test = $id_test;
-        $model->test_name = $test->findOne($id_test)->name;
-        //var_dump(Yii::$app->request->post());die;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('success', "Данные сохранены");
-            return $this->actionIndex($id_test);
+            return $this->redirect(ArrayHelper::merge(['index'] ,Yii::$app->request->queryParams));
         }
 
         return $this->render('create', [

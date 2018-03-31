@@ -26,11 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Создать вопрос', [
-                    'create',
-                    'id_test' => Yii::$app->getRequest()->get('id_test'),
-                    'id_theme' => Yii::$app->request->get('id_theme')
-                ],
+        <?= Html::a('Создать вопрос', Url::to(ArrayHelper::merge(['create'] ,Yii::$app->request->queryParams)),
                 ['class' => 'btn btn-success']) ?>
     </p>
 
