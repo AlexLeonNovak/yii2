@@ -40,11 +40,11 @@ class TestSettingsController extends Controller
             ],
         ];
     }
-    public function beforeAction($action)
-    {
-        Yii::$app->getModule('settings')->init(); // make sure this module is init first
-        return parent::beforeAction($action);
-    }
+//    public function beforeAction($action)
+//    {
+//        Yii::$app->getModule('settings')->init(); // make sure this module is init first
+//        return parent::beforeAction($action);
+//    }
     /**
      * Lists all TestSettings models.
      * @return mixed
