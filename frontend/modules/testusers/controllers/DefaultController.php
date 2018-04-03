@@ -167,7 +167,7 @@ class DefaultController extends Controller
             Yii::$app->session['timestamp'] = time();
         }
         $question = $this->getQuestion($id_test, $id_theme);
-        var_dump($question);
+        
         if (!$question) {
             $this->saveResult($id_test, $id_theme);
         }
