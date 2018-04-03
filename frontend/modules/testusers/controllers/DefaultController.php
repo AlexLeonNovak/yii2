@@ -40,8 +40,10 @@ class DefaultController extends Controller
         $searchModel = new ThemesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_group = User::getCurrentUserGroupId();
-        if ($timer = TestSettings::find()->where(['id_group' => $user_group])->one()->timer) { 
-            Yii::$app->session['timer'] = $timer;
+        
+        //var_dump($timer);        die();
+        if ($timer = TestSettings::find()->where(['id_group' => $user_group])->one()) {
+            Yii::$app->session['timer'] = $timer->timer;
         } else {
             Yii::$app->session['timer'] = self::DEFAULT_TIMER;
         }
@@ -80,7 +82,7 @@ class DefaultController extends Controller
             Yii::$app->session['ids_answer'] = $this->ids_answer; //записываем в сессию ответы
         }
         $question = $question_query->orderBy(new Expression('rand()'))->one();
-        if ($question->id == null){return false;}
+        if ($question == null){return false;}
         $this->questions_showed[] = $question->id; //записываем в массив показаные вопросы
         Yii::$app->session['questions'] = $this->questions_showed; //запмсь в сессию этот массив (по другому почему-то не работает...)
         if (!Yii::$app->session['count_questions']){
@@ -89,7 +91,7 @@ class DefaultController extends Controller
         }
         $item_question = Yii::$app->session['item_question'];
         $item_question++;
-        if (!$question) {
+        if (!isset($question)) {
             return false;
         } else {
             Yii::$app->session['item_question'] = $item_question;
@@ -123,7 +125,7 @@ class DefaultController extends Controller
         $count = Yii::$app->session['count_questions']; //получаем количество вопросов
         for ($i = 0; $i < $count; $i++){ //перебираем все вопросы и записываем в БД
             $user_answer = new UserAnswer;
-            if (Yii::$app->session['ids_answer'][$i]){
+            if (isset(Yii::$app->session['ids_answer'][$i])){
                 $user_answer->id_answer = Yii::$app->session['ids_answer'][$i];
                 $user_answer->id_question = Yii::$app->session['questions'][$i];
             } else {//Yii::$app->session['ids_questions']
@@ -165,10 +167,10 @@ class DefaultController extends Controller
             Yii::$app->session['timestamp'] = time();
         }
         $question = $this->getQuestion($id_test, $id_theme);
-        if (!$question){
+        var_dump($question);
+        if (!$question) {
             $this->saveResult($id_test, $id_theme);
         }
-        
         $answers = Answers::findAll(['id_question' => $question->id]);
         if ($id_test != null) {
             $test_name = Test::findOne(['id' => $id_test])->name;

@@ -42,7 +42,5 @@ $this->title = $test_name;
         <?php ActiveForm::end() ?>
     </div>
 </div>
-<?php Pjax::end(); ?>
-<?php 
-
-$this->registerJs('var timer = ' . Yii::$app->session['timer'] . ';',  $this::POS_HEAD);
+<?php $this->registerJs('var timer = ' . Yii::$app->session['timer'] . ';',  $this::POS_HEAD); ?>
+<?php Pjax::end(); 

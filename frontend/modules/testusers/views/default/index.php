@@ -7,6 +7,8 @@ use yii\bootstrap\Modal;
 use frontend\modules\testusers\TestAsset;
 
 /* @var $this yii\web\View */
+/* @var $themes[] backend\modules\testusers\models\Themes */
+/* @var $tests[] backend\modules\testusers\models\Test */
 
 TestAsset::register($this);
 $onClick = 'fullscreen(document.documentElement);';
@@ -36,7 +38,7 @@ foreach ($tests as $test){
 }
 
 foreach ($themes as $key => $theme){
-    if ($content[$theme->id]){
+    if (isset($content[$theme->id])){
         $items[] = 
             [
                 'encode' => false,
