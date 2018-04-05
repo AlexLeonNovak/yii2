@@ -24,7 +24,6 @@ if (timer) {
         $.post('total', {totaltime:(t-i)/10});
         btn_click = true;
     });
-    
     $(window).mouseleave(function(e){
         var strGET = window.location.search.replace( '?', ''); 
         var out = false;
@@ -35,6 +34,7 @@ if (timer) {
 //                console.log('the mouse left the window');
             }
     });
+
 }
 
 var _href = $('#test-modal').find('.modal-footer a').attr('href');
