@@ -36,7 +36,7 @@ foreach ($tests as $test){
 }
 
 foreach ($themes as $key => $theme){
-    if ($content[$theme->id]){
+    if (isset($content[$theme->id])){
         $items[] = 
             [
                 'encode' => false,

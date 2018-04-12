@@ -15,6 +15,9 @@ class TestAsset extends AssetBundle {
     public $js = [
         'common.js',
     ];
+    public $css = [
+        'style.css',
+    ];
     public $depends = [
         'yii\web\JqueryAsset',
     ];

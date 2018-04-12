@@ -3,6 +3,7 @@ if (timer) {
     var t = i;
     var counterBack = setInterval(function () {
         i--;
+        $('#loader').hide();
         if (i >= 0) {
             $('.progress-bar').css('width', 100 * i / t + '%');
             if (100 * i / t < 10) {
@@ -15,12 +16,14 @@ if (timer) {
             s = (i / 10 % 60) ^ 0;
             $('.timer').text((m < 10 ? "0" + m : m) + ':' + (s < 10 ? "0" + s : s));
         } else {
+            $('#loader').show();
             clearInterval(counterBack);
             $('button[type="submit"]').val('0').submit();
         }
     }, 100);
     var btn_click = false;
-    $('button[type="submit"]').click(function(){
+    $('button[type="submit"]').one('click', function(){
+        $('#loader').show();
         $.post('total', {totaltime:(t-i)/10});
         btn_click = true;
     });
@@ -28,7 +31,8 @@ if (timer) {
         var strGET = window.location.search.replace( '?', ''); 
         var out = false;
         //console.log('click: '+btn_click);
-            if (e.toElement === null && btn_click === false) {
+            if (e.toElement === null && btn_click === false && (t-i) > 5) {
+                $('#loader').show();
                 clearInterval(counterBack);
                 $.post('total?' + strGET, {out:true});
 //                console.log('the mouse left the window');

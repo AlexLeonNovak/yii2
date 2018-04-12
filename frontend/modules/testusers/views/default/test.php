@@ -8,6 +8,7 @@ use frontend\modules\testusers\TestAsset;
 /* @var $this yii\web\View */
 /* @var $answers[] \backend\modules\testusers\models\Answers */
 /* @var $question \backend\modules\testusers\models\Questions */
+/* @var $timer integer */
 
 TestAsset::register($this);
 $this->title = $test_name;
@@ -15,6 +16,7 @@ $this->title = $test_name;
 
 <h1><?=$this->title; ?></h1>
 <?php Pjax::begin(); ?>
+<div id="loader"></div>
 <div class="row" style="text-align:right;margin:5px;">Вопрос <b><?=Yii::$app->session['item_question']; ?></b> из <b><?=Yii::$app->session['count_questions']; ?></b></div>
 <div class="row">
     <div class="col-sm-1">
@@ -45,4 +47,4 @@ $this->title = $test_name;
 <?php Pjax::end(); ?>
 <?php 
 
-$this->registerJs('var timer = ' . Yii::$app->session['timer'] . ';',  $this::POS_HEAD);
+$this->registerJs('var timer = ' . $timer . ';',  $this::POS_HEAD);
