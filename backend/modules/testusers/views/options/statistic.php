@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 
-<h1><?= Html::encode($this->title) ?></h1>
+<h1><?= Html::encode($this->title); ?></h1>
 <?= GridView::widget([
     'dataProvider'  => $dataProvider,
     'filterModel'   => $searchModel,
@@ -74,20 +74,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Ответы (П/Н/%)',
             'format' => 'html',
             'value' => function ($model){
+                $percent = count($model->userAnswers) ? round($model->answersCorrectCount/count($model->userAnswers)*100) : 0;
                 return '<span class="text-success">' . $model->answersCorrectCount . '</span> / '
                        .'<span class="text-danger">' . (count($model->userAnswers) - $model->answersCorrectCount) . '</span> / '
-                       .'<b>' . round($model->answersCorrectCount/count($model->userAnswers)*100) . '%</b>' ;
+                       .'<b>' .  $percent . '%</b>' ;
             },
         ],
         [
-            'label' => 'Детально',
-            'format' => 'raw',
-            'value' => function ($model){
-                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
-                        Url::to(['statistic-detail', 'id' => $model->id]),
-                                ['title' => 'Просмотр детальной статистики']
-                        );
-            },
-        ]
+            'class' => 'yii\grid\ActionColumn',
+            'header'=> 'Действия',
+            'template' => '{view} {delete}',
+        ],
     ]
 ]);

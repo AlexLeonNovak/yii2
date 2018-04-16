@@ -26,15 +26,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php } ?>
         <div class="panel panel-info">
             <div class="panel-heading">Дата и время прохождения теста: <b>
-        <?= Yii::$app->formatter->asDatetime($date->timestamp, 'php:d.m.Y H:i:s'); ?></b></div>
+        <?= Yii::$app->formatter->asDatetime($date->timestamp, 'php:d.m.Y H:i:s');?></b></div>
             <div class="panel-body">
                 <?=
                 DetailView::widget([
                     'model' => $date,
                     'attributes' => [
-                        'totaltime',
                         [
-                            'value' => $model->totaltime ? count($model->userAnswers) / $model->totaltime : 0,
+                            'attribute' => 'totaltime',
+                            'value' => $date->totaltime ? $date->totaltime . ' с.' : '0 с.',
+                        ],
+                        [
+                            'value' => $date->totaltime ? round($date->totaltime / count($date->userAnswers), 2) . ' с.' : '0 с.',
                             'label' => 'Среднее время затраченное на вопрос',
                         ],
                         [
@@ -48,14 +51,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             ],
                         ],
                         [
-                            'value' => count($model->userAnswers) - $model->answersCorrectCount,
+                            'value' => count($date->userAnswers) - $date->answersCorrectCount,
                             'label' => 'Неправильных ответов',
                             'contentOptions' => [
                                 'class' => 'text-danger',
                             ],
                         ],
                         [
-                            'value' => count($model->userAnswers),
+                            'value' => count($date->userAnswers),
                             'label' => 'Всего вопросов',
                         ],
                         [
@@ -72,26 +75,39 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]);
                 ?>
-                <?php
-                /*GridView::widget([
+                <?=
+                GridView::widget([
                     'layout' => "{items}",
                     'dataProvider' => new ActiveDataProvider(['query' => $date->getUserAnswers()]),
                     'columns' => [
-                        'question.question',
+                        [
+                            'attribute' => 'question.question',
+                            'contentOptions' => [
+                                'class' => 'col-md-6',
+                            ],
+                        ],
+                        
                         [
                             'format' => 'html',
                             'attribute' => 'answer.answer',
                             'label' => 'Ответ',
                             'contentOptions' => function($model) {
-                                if ($model->answer->correct) {
-                                    return ['class' => 'list-group-item-success'];
-                                } else {
-                                    return ['class' => 'list-group-item-danger'];
+                                if (isset($model->answer->correct)) {
+                                    if ($model->answer->correct) {
+                                        return ['class' => 'list-group-item-success'];
+                                    }
                                 }
+                                return ['class' => 'list-group-item-danger'];
                             },
+                            'value' => function($model) {
+                                if (!isset($model->answer->answer)){
+                                    return '<i>(Нет ответа)</i>';
+                                }
+                                return $model->answer->answer;
+                            }
                         ]
                     ]
-                ]); */
+                ]); 
                 ?>
             </div>
         </div>

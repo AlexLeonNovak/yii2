@@ -193,7 +193,7 @@ class DefaultController extends Controller
             $query_timestamp->andWhere(['id_theme_test' => $id_theme, 'for' => Timestamp::THEME]);
         }
         $model = $query_timestamp->one();
-        $dates = $query_timestamp->all();
+        $dates = $query_timestamp->orderBy(['timestamp' => SORT_DESC])->all();
         return $this->render('result',[
             'dates' => $dates,
             'model' => $model,
