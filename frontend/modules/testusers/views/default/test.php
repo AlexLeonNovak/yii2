@@ -1,9 +1,10 @@
 <?php
 
 use yii\bootstrap\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
 use frontend\modules\testusers\TestAsset;
+use \yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $answers[] \backend\modules\testusers\models\Answers */
@@ -30,21 +31,44 @@ $this->title = $test_name;
         </div>
     </div>
 </div>
+<?php $form = ActiveForm::begin(); ?>
 <div class="panel panel-default">
     <div class="panel-heading"><?=$question->question; ?></div>
-    <div class="list-group">
-        <?php $form = ActiveForm::begin(); ?>
-        <?php foreach ($answers as $answer){ 
-           echo Html::submitButton($answer->answer, [
-                    'class' => 'list-group-item',
-                    'value' => $answer->id,
-                    'name'  => 'id_answer',
-                ]);
-        } ?>
-        <?php ActiveForm::end() ?>
-    </div>
+        <?php //foreach ($answers as $answer){ 
+           // echo Html::listBox($name);
+//           echo Html::submitButton($answer->answer, [
+//                    'class' => 'list-group-item',
+//                    'value' => $answer->id,
+//                    'name'  => 'id_answer',
+//                ]);
+        //} 
+        ?>
+        
+        <?= Html::checkboxList('answer', null, ArrayHelper::map($answers, 'id', 'answer'),[
+            'class' => 'list-group',
+            'item' => function ($index, $label, $name, $checked, $value){
+                    return Html::checkbox($name, $checked, [
+                        'value' => $value,
+                        'label' => $label,
+                        //'label' => '<i class="fa fa-check glyphicon glyphicon-ok"></i>' . $label,
+                        'labelOptions' => [
+                            'class' => 'list-group-item btn btn-default',
+                           ]
+                    ]);
+            },
+        ]); ?>
 </div>
+<div class="align-center">
+<?= Html::submitButton('Ответить',['class' => 'btn btn-primary']) ?>
+</div>
+<?php ActiveForm::end() ?>
 <?php Pjax::end(); ?>
 <?php 
 
 $this->registerJs('var timer = ' . $timer . ';',  $this::POS_HEAD);
+$css = <<< CSS
+        .list-group-item{
+            text-align: left!important;
+        }
+CSS;
+$this->registerCss($css);

@@ -71,7 +71,13 @@ class UserAnswer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Answers::className(), ['id' => 'id_answer']);
     }
-
+    
+    public function getCorrectAnswer()
+    {
+        return $this->hasOne(Answers::className(), ['id_question' => 'id'])->via('question')
+                ->where(['correct' => true]);
+    }
+    
     public function getAnswers()
     {
         return $this->hasMany(Answers::className(), ['id_question' => 'id'])->via('question');

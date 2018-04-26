@@ -20,6 +20,11 @@ return [
             'class' => 'backend\modules\users\Users',
             'defaultRoute' => 'user',
         ],
+        'zadarma' => [
+            'class' => 'backend\modules\zadarma\Zadarma',
+//            '_key' => 'bde6a59e642ed33e2c76',
+//            '_secret' => '4b0f8da464d6c07c3234',
+        ],
     ],
     'components' => [
         'request' => [
@@ -55,6 +60,13 @@ return [
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
+        'assetManager' => [
+             'basePath' => '@webroot/assets',
+             'baseUrl' => '@web/assets'
+        ],  
+        'request' => [
+            'baseUrl' => '/admin'
+        ]
 //        'as AccessBehavior' => [
 //            'class' => \developeruz\db_rbac\behaviors\AccessBehavior::className(),
 //        ]

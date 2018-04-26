@@ -13,6 +13,9 @@ return [
             'class' => 'pheme\settings\Module',
             'sourceLanguage' => 'ru'
         ],
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+        ]
     ],
     'components' => [
         'cache' => [
@@ -34,9 +37,9 @@ return [
                 ],
             ],
         ],
-        'as access' => [
-            'class' => 'mdm\admin\components\AccessControl',
-            'allowActions' => [
+//        'as access' => [
+//            'class' => 'mdm\admin\components\AccessControl',
+//            'allowActions' => [
 //                'site/*',
                 //'admin/*',
                 //'some-controller/some-action',
@@ -45,7 +48,7 @@ return [
                 // But in the earlier stages of your development, you may probably want to
                 // add a lot of actions here until you finally completed setting up rbac,
                 // otherwise you may not even take a first step.
-            ]
-        ],
+//            ]
+//        ],
     ],
 ];

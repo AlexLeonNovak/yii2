@@ -3,7 +3,7 @@
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\DetailView;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\bootstrap\Collapse;
 
 /* @var $this yii\web\View */
@@ -58,9 +58,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => $model->themeOrTest->name,
                 'label' => $model->for ? 'Тема' : 'Тест',
             ],
-            'totaltime',
             [
-                'value' => $model->totaltime ? count($model->userAnswers) / $model->totaltime : 0,
+                'attribute' => 'totaltime',
+                'value' => $model->totaltime ? $model->totaltime . ' с.' : '0 с.',
+            ],
+            [
+                'value' => $model->totaltime ? round($model->totaltime / count($model->userAnswers), 2) . ' с.' : '0 с.',
                 'label' => 'Среднее время затраченное на вопрос',
             ],
             [
@@ -95,67 +98,69 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ])
     ?>
-        <?php foreach ($user_answers as $user_answer) { ?>
-        <div class="panel panel-default">
-            <div class="panel-heading"><?= $user_answer->question->question; ?></div>
-    <?php if (empty($user_answer->answer->id)) { ?>
-                <div class="text-danger bg-danger" style="padding:10px;">
-                    <strong>
-                        <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
-                    </strong>
-                    Сотрудник не ответил на этот вопрос
-                </div>
-            <?php } ?>
-            <?=
-            GridView::widget([
-                'layout' => "{items}",
-                'dataProvider' => $dataProviderAnswers[$user_answer->id],
-                'rowOptions' => function($model) use ($user_answer) {
-                    if (isset($user_answer->answer->answer)) {
-                        if ($model->answer == $user_answer->answer->answer) {
-                            if ($user_answer->answer->correct) {
-                                return ['class' => 'success'];
-                            } else {
-                                return ['class' => 'danger'];
+    <?= 
+        GridView::widget([
+            'layout' => "{items}",
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                [
+                    'attribute' => 'question.question',
+                    'group' => true,
+                ],
+                
+                [
+                    'attribute' => 'answers.answer',
+                    'format' => 'raw',
+                    'value' => function ($model){
+                        $html = '';
+                        foreach ($model->answers as $ans){
+                            $html .= '<div class="list-group-item';
+                            if ($ans->correct){
+                                $html .= ' list-group-item-success';
                             }
+                            $html .= '">' . $ans->answer . '</div>';
                         }
-                    }
-                },
-                'columns' => [
-                    [
-                        'format' => 'raw',
-                        'value' => function ($model) use ($user_answer) {
-                            if (isset($user_answer->answer->answer)) {
-                                if ($model->answer == $user_answer->answer->answer) {
-                                    if ($model->correct) {
-                                        return '<span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>';
-                                    } else {
-                                        return '<span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span>';
-                                    }
-                                }
-                            }
-                            return '';
-                        },
-                        'label' => 'Ответ СОТР',
-                        'contentOptions' => [
-                            'class' => 'text-center col-md-2',
-                        ]
+                        return $html . '';
+                    },
+                    'contentOptions' => [
+                        'class' => 'list-group',
                     ],
-                    [
-                        'value' => 'answer',
-                        'contentOptions' => function($model) {
-                            if ($model->correct) {
+                    'group' => true,
+                ],
+                [
+                    'attribute' => 'answer.answer',
+                    'format' => 'raw',
+                    'contentOptions' => function($model) {
+                            if ($model->answer->correct) {
                                 return ['class' => 'success'];
                             } else { // в PHP 7.2 ошибка, count(null) не проходит
-                                return ['class' => 'default'];
+                                return ['class' => 'danger'];
                             }
                         },
-                        'label' => 'Все ответы',
-                    ],
-                ]
-            ]);
-            ?>
-
-        </div>
-<?php } ?>
+                    'value' => function ($model){
+                            if ($model->answer->correct) {
+                                    return '<span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> ' . $model->answer->answer;
+                                } else {
+                                    return '<span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span> ' . $model->answer->answer;
+                                }
+                        },
+                    'label' => 'Ответ СОТР',
+//                        $html = '<ul class="list-group">';
+//                        var_dump($model->answer->answer);
+//                        foreach ($model->answer as $ans){
+//                            $html .= '<li class="list-group-item';
+////                            if ($ans->correct){
+////                                $html .= ' list-group-item-success';
+////                            }
+//                            $html .= '">' . $ans[3] . '</li>';
+//                        }
+//                        return $html . '</ul>';
+//                    }
+                    //'group' => true,
+                ],
+            ],
+        ]);
+        
+    ?>
+        
 </div>

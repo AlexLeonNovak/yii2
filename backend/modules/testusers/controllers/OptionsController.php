@@ -44,6 +44,8 @@ class OptionsController extends Controller {
     public function actionView($id)
     {
         $model = Timestamp::findOne($id);
+//        $dataProvider = new ActiveDataProvider([
+//            'query' =>  $model->getQuestions()]);
         $dataProvider = new ActiveDataProvider([
             'query' =>  $model->getUserAnswers()]);
         $user_answers = UserAnswer::findAll(['id_timestamp' => $model->id]);

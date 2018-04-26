@@ -14,8 +14,6 @@ use backend\modules\testusers\models\Timestamp;
 use backend\modules\testusers\models\TestSettings;
 use common\models\User;
 use yii\db\Expression;
-use yii\data\ArrayDataProvider;
-use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 
 
@@ -67,17 +65,23 @@ class DefaultController extends Controller
             $this->questions_showed = Yii::$app->session['questions'];
             $question_query->andFilterWhere(['not in', 'id', Yii::$app->session['questions']]);
             $this->ids_answer = Yii::$app->session['ids_answer'];
-            if(Yii::$app->getRequest()->post('id_answer')){ //получаем ид ответа, который пользователь выбрал
-                $this->ids_answer[] = Yii::$app->getRequest()->post('id_answer'); //записываем в масив
+            if(Yii::$app->getRequest()->post('answer')){ //получаем ид ответа, который пользователь выбрал
+                for ($i = 0; $i < count(Yii::$app->getRequest()->post('answer')); $i++){
+                    $this->ids_answer[] = Yii::$app->getRequest()->post('answer')[$i]; //записываем в масив
+                    if ($i > 0) {
+                        $this->questions_showed[] = end($this->questions_showed);
+                    }
+                }
             } else {
                 $this->ids_answer[] = self::NOT_ANSWER;  //если таймер обновил страницу, то пользователь ничего не выбрал
             }
             Yii::$app->session['ids_answer'] = $this->ids_answer; //записываем в сессию ответы
         }
         $question = $question_query->orderBy(new Expression('rand()'))->one();
-        if (!isset($question->id)){return false;}
-        $this->questions_showed[] = $question->id; //записываем в массив показаные вопросы
-        Yii::$app->session['questions'] = $this->questions_showed; //запмсь в сессию этот массив (по другому почему-то не работает...)
+        if (isset($question->id)) {
+            $this->questions_showed[] = $question->id; //записываем в массив показаные вопросы  
+        }
+        Yii::$app->session['questions'] = $this->questions_showed; //запись в сессию этот массив (по другому почему-то не работает...)
         if (!Yii::$app->session['count_questions']){
             Yii::$app->session['count_questions'] = $question_query->count();
             $item_question = 0;
@@ -114,18 +118,11 @@ class DefaultController extends Controller
         }
         $timestamp->timestamp = Yii::$app->session['timestamp'];
         $timestamp->save();
-
-        $count = Yii::$app->session['count_questions']; //получаем количество вопросов
+        $count = count(Yii::$app->session['questions']); //получаем количество вопросов
         for ($i = 0; $i < $count; $i++){ //перебираем все вопросы и записываем в БД
             $user_answer = new UserAnswer;
-            if (isset(Yii::$app->session['ids_answer'][$i])){
-                $user_answer->id_answer = Yii::$app->session['ids_answer'][$i];
-                $user_answer->id_question = Yii::$app->session['questions'][$i];
-            } else {//Yii::$app->session['ids_questions']
-                $this->getQuestion($id_test, $id_theme);
-                $user_answer->id_answer = self::NOT_ANSWER;
-                $user_answer->id_question = Yii::$app->session['questions'][$i];
-            }
+            $user_answer->id_answer = Yii::$app->session['ids_answer'][$i];
+            $user_answer->id_question = Yii::$app->session['questions'][$i];
             $user_answer->id_user = Yii::$app->user->identity->id;
             $user_answer->id_timestamp = $timestamp->id;
             $user_answer->save();
@@ -138,6 +135,10 @@ class DefaultController extends Controller
         $request = Yii::$app->request;
         if ($request->isAjax){
             if($request->post('out')){
+                do {
+                    $question = $this->getQuestion($id_test, $id_theme);
+                }
+                while ($question);
                 return $this->redirect(['result',
                     'id_test' => $id_test,
                     'id_theme' => $id_theme,

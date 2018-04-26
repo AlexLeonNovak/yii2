@@ -27,7 +27,7 @@ if (timer) {
         $.post('total', {totaltime:(t-i)/10});
         btn_click = true;
     });
-    $(window).mouseleave(function(e){
+    $('body').mouseleave(function(e){
         var strGET = window.location.search.replace( '?', ''); 
         var out = false;
         //console.log('click: '+btn_click);

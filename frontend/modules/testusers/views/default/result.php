@@ -1,6 +1,7 @@
 <?php
 
-use yii\grid\GridView;
+//use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\data\ActiveDataProvider;
 use yii\widgets\DetailView;
 
@@ -83,14 +84,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute' => 'question.question',
                             'contentOptions' => [
-                                'class' => 'col-md-6',
+                                'class' => 'col-md-4',
                             ],
+                            'group' => true,
                         ],
-                        
+                        [
+                            'attribute' => 'correctAnswer.answer',
+                            'label' => 'Правильный ответ',
+                            'contentOptions' => [
+                                'class' => 'col-md-4',
+                            ],
+                            'group' => true,
+                        ],
                         [
                             'format' => 'html',
                             'attribute' => 'answer.answer',
-                            'label' => 'Ответ',
+                            'label' => 'Ваш ответ',
                             'contentOptions' => function($model) {
                                 if (isset($model->answer->correct)) {
                                     if ($model->answer->correct) {
@@ -104,8 +113,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     return '<i>(Нет ответа)</i>';
                                 }
                                 return $model->answer->answer;
-                            }
-                        ]
+                            },
+                        ],
                     ]
                 ]); 
                 ?>

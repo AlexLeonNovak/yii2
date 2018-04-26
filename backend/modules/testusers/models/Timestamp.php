@@ -70,6 +70,17 @@ class Timestamp extends \yii\db\ActiveRecord
             return $this->hasOne(Test::className(), ['id' => 'id_theme_test']);
         }
     }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getThemesOrTests()
+    {
+        if ($this->for == self::THEME){
+            return $this->hasMany(Themes::className(), ['id' => 'id_theme_test']);
+        } else {
+            return $this->hasMany(Test::className(), ['id' => 'id_theme_test']);
+        }
+    }
 
     /**
      * @return \yii\db\ActiveQuery
