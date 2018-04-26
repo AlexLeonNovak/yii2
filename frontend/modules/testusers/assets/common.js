@@ -1,6 +1,7 @@
 if (timer) {
     var i = 10 * timer; // timer from view 
     var t = i;
+    var btn_click = false;
     var counterBack = setInterval(function () {
         i--;
         $('#loader').hide();
@@ -15,13 +16,16 @@ if (timer) {
             m = Math.floor(i / 10 / 60) ^ 0;
             s = (i / 10 % 60) ^ 0;
             $('.timer').text((m < 10 ? "0" + m : m) + ':' + (s < 10 ? "0" + s : s));
+            btn_click = false;
         } else {
             $('#loader').show();
             clearInterval(counterBack);
             $('button[type="submit"]').val('0').submit();
         }
     }, 100);
-    var btn_click = false;
+    $('label').click(function(){
+    	btn_click = true;
+    });
     $('button[type="submit"]').one('click', function(){
         $('#loader').show();
         $.post('total', {totaltime:(t-i)/10});
