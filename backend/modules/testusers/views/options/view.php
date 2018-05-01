@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     <?= 
         GridView::widget([
-            'layout' => "{items}",
+            'layout' => "{pager}{items}{pager}",
             'dataProvider' => $dataProvider,
             'columns' => [
                 [
@@ -112,37 +112,42 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute' => 'answers.answer',
                     'format' => 'raw',
                     'value' => function ($model){
-                        $html = '';
-                        foreach ($model->answers as $ans){
-                            $html .= '<div class="list-group-item';
+                        $result = [];
+                        foreach ($model->answers as $key => $ans){
+                            $result[$key] = '<div';
                             if ($ans->correct){
-                                $html .= ' list-group-item-success';
+                                $result[$key] .= ' class="list-group-item-success"';
                             }
-                            $html .= '">' . $ans->answer . '</div>';
+                            $result[$key] .= '>' . $ans->answer . '</div>';
                         }
-                        return $html . '';
+                        return implode('<br>', $result);
                     },
-                    'contentOptions' => [
-                        'class' => 'list-group',
-                    ],
+//                    'contentOptions' => [
+//                        'class' => 'list-group',
+//                    ],
                     'group' => true,
                 ],
                 [
                     'attribute' => 'answer.answer',
                     'format' => 'raw',
                     'contentOptions' => function($model) {
-                            if ($model->answer->correct) {
-                                return ['class' => 'success'];
-                            } else { // в PHP 7.2 ошибка, count(null) не проходит
-                                return ['class' => 'danger'];
+                            if (isset($model->answer->correct)) {
+                                if ($model->answer->correct){
+                                    return ['class' => 'success'];
+                                }     
                             }
+                            return ['class' => 'danger'];
                         },
                     'value' => function ($model){
-                            if ($model->answer->correct) {
+                            if (isset($model->answer->correct)) {
+                                if ($model->answer->correct){
                                     return '<span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> ' . $model->answer->answer;
                                 } else {
                                     return '<span class="glyphicon glyphicon-remove text-danger" aria-hidden="true"></span> ' . $model->answer->answer;
                                 }
+                            } else {
+                                return '<i>(Нет ответа)</i>';
+                            }
                         },
                     'label' => 'Ответ СОТР',
 //                        $html = '<ul class="list-group">';

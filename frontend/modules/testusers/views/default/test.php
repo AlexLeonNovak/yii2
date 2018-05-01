@@ -59,7 +59,7 @@ $this->title = $test_name;
         ]); ?>
 </div>
 <div class="align-center">
-<?= Html::submitButton('Ответить',['class' => 'btn btn-primary']) ?>
+<?= Html::submitButton('Ответить',['class' => 'btn btn-lg btn-primary col-xs-12']) ?>
 </div>
 <?php ActiveForm::end() ?>
 <?php Pjax::end(); ?>
@@ -69,6 +69,7 @@ $this->registerJs('var timer = ' . $timer . ';',  $this::POS_HEAD);
 $css = <<< CSS
         .list-group-item{
             text-align: left!important;
+            white-space: normal;
         }
 CSS;
 $this->registerCss($css);

@@ -23,7 +23,7 @@ if (timer) {
             $('button[type="submit"]').val('0').submit();
         }
     }, 100);
-    $('label').click(function(){
+    $(document).click(function(){
     	btn_click = true;
     });
     $('button[type="submit"]').one('click', function(){

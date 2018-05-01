@@ -47,7 +47,11 @@ class OptionsController extends Controller {
 //        $dataProvider = new ActiveDataProvider([
 //            'query' =>  $model->getQuestions()]);
         $dataProvider = new ActiveDataProvider([
-            'query' =>  $model->getUserAnswers()]);
+            'query' =>  $model->getUserAnswers(),
+            'pagination' => [
+                'pageSize' => 50
+                ]
+            ]);
         $user_answers = UserAnswer::findAll(['id_timestamp' => $model->id]);
         foreach ($user_answers as $user_answer){
             $dataProviderAnswers[$user_answer->id] = new ActiveDataProvider([

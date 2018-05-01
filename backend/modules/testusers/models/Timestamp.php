@@ -5,6 +5,7 @@ namespace backend\modules\testusers\models;
 use Yii;
 use common\models\User;
 use backend\modules\users\models\UsersGroup;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "test_timestamp".
@@ -103,7 +104,7 @@ class Timestamp extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Answers::className(), ['id' => 'id_answer'])->via('userAnswers');
     }
-    
+       
     public function getQuestions()
     {
         return $this->hasMany(Questions::className(), ['id' => 'id_question'])->via('userAnswers');
@@ -111,8 +112,18 @@ class Timestamp extends \yii\db\ActiveRecord
     
     public function getAnswersCorrectCount() 
     {
-        return $this->hasMany(Answers::className(), ['id' => 'id_answer'])->where(['correct' => '1'])
-                ->via('userAnswers')->count();
+        
+        $correct    = $this->hasMany(Answers::className(), ['id' => 'id_answer', 'id_question' => 'id_question']) 
+                        ->where(['correct' => '1'])->via('userAnswers')->asArray()->all();
+        $incorrect  = $this->hasMany(Answers::className(), ['id' => 'id_answer', 'id_question' => 'id_question'])
+                        ->where(['correct' => '0'])->via('userAnswers')->asArray()->all();
+//        $all        = $this->hasMany(Answers::className(), ['id' => 'id_answer', 'id_question' => 'id_question'])
+//                        ->via('userAnswers')->asArray()->all();
+        return count(array_diff_key(ArrayHelper::index($correct, 'id_question'), ArrayHelper::index($incorrect, 'id_question')));
+//        $diff1 = array_diff_key(ArrayHelper::index($all, 'id_question'), ArrayHelper::index($correct, 'id_question'));
+//        $diff2 = array_diff_key(ArrayHelper::index($all, 'id_question'), ArrayHelper::index($incorrect, 'id_question'));
+////        array_diff_key($diff1,$diff2);
+//        return count($diff2);
     }
 
     public function getUsersGroup() {
