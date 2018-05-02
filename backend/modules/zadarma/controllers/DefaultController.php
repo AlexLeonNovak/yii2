@@ -101,7 +101,7 @@ class DefaultController extends Controller
         $request = Yii::$app->getRequest();
         //проверочный код для подтверждения скрипта задармой
         if (null !== $request->get('zd_echo')) { exit($request->get('zd_echo')); }
-        $request = Yii::$app->getRequest();
+        
         if ($request->isPost) {
             // получаем переменные
             // номер звонящего
