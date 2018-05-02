@@ -105,20 +105,23 @@ class DefaultController extends Controller
         if ($request->isPost) {
             // получаем переменные
             // номер звонящего
-            $this->caller_id = Yii::$app->request->post('caller_id'); 
+            $this->caller_id = $request->post('caller_id'); 
             // номер, на который позвонили
-            $this->called_did = Yii::$app->request->post('called_did');
+            $this->called_did = $request->post('called_did');
             // время начала звонка
-            $this->call_start = Yii::$app->request->post('call_start') or die;
+            $this->call_start = $request->post('call_start') or die;
             // id звонка;
-            $this->pbx_call_id = Yii::$app->request->post('pbx_call_id');
+            $this->pbx_call_id = $request->post('pbx_call_id');
             // (опциональный) внутренний номер
-            $this->internal = Yii::$app->request->post('internal');
+            $this->internal = $request->post('internal');
             // (опциональный) набранный номер при исходящих звонках
-            $this->destination = Yii::$app->request->post('destination');
+            $this->destination = $request->post('destination');
 
-            $signature = Yii::$app->request->headers->get('Signature');  // Signature is send only if you have your API key and secret
+            $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
             $signatureTest = base64_encode(hash_hmac('sha1', $this->caller_id . $this->called_did . $this->call_start, self::API_SECRET));
+            var_dump($signature);
+            echo '<br>';
+            var_dump($signatureTest);
             if ($signature == $signatureTest) {
                 $model = new Zadarma();
                 $model->caller_id = $this->caller_id;
