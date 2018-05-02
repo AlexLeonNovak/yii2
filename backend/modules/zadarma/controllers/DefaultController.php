@@ -33,7 +33,7 @@ class DefaultController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['zadarma0d0dfb2682192387a2e4325e97b36b32'],
+                        'actions' => ['0d0dfb2682192387a2e4325e97b36b32'],
                         'allow' => true,
                     ],
                     [
@@ -46,7 +46,11 @@ class DefaultController extends Controller
         ];
     }
     
-    /**
+    public function beforeAction($action) {
+        parent::beforeAction($action);
+    }
+
+        /**
      * Renders the index view for the module
      * @return string
      */
@@ -88,7 +92,7 @@ class DefaultController extends Controller
         
     }
     
-    public function actionZadarma0d0dfb2682192387a2e4325e97b36b32() 
+    public function action0d0dfb2682192387a2e4325e97b36b32() 
     {
         //проверочный код для подтверждения скрипта задармой
         if (isset($_GET['zd_echo'])) {exit($_GET['zd_echo']);}
