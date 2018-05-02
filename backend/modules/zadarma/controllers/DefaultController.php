@@ -126,13 +126,7 @@ class DefaultController extends Controller
             $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
             if ($signature == $signatureTest) {
                 $model = new Zadarma();
-                
-                $model->caller_id = $this->caller_id;
-                $model->called_did = $this->called_did;
-                $model->call_start = $this->call_start;
-                $model->pbx_call_id = $this->pbx_call_id;
-                $model->internal = $this->internal;
-                $model->destination = $this->destination;
+                $model->load(Yii::$app->request->post());
                 $model->save();
             }
         }
