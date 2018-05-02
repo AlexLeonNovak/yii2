@@ -7,12 +7,9 @@ use yii\widgets\DetailView;
 use yii\widgets\Pjax;
 use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
-use backend\modules\zadarma\ZadarmaAsset;
 
 /* @var $balance backend\modules\zadarma\components\Zadarma */
 /* @var $this yii\web\View */
-
-ZadarmaAsset::register($this);
 
 ?>
 
