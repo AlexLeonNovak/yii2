@@ -124,8 +124,6 @@ class DefaultController extends Controller
             // при входящих звонках
             : base64_encode(hash_hmac('sha1', $this->caller_id . $this->called_did . $this->call_start, self::API_SECRET));
             $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
-            Yii::$app->session('signature') = $signature;
-            Yii::$app->session('signatureTest') = $signatureTest;
             if ($signature == $signatureTest) {
                 $model = new Zadarma();
                 
