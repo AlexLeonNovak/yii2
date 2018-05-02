@@ -117,12 +117,9 @@ class DefaultController extends Controller
             // (опциональный) набранный номер при исходящих звонках
             $this->destination = $request->post('destination');
 
-            $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
-            $signatureTest = base64_encode(hash_hmac('sha1', $this->caller_id . $this->called_did . $this->call_start, self::API_SECRET));
-            var_dump($signature);
-            echo '<br>';
-            var_dump($signatureTest);
-            if ($signature == $signatureTest) {
+//            $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
+//            $signatureTest = base64_encode(hash_hmac('sha1', $this->caller_id . $this->called_did . $this->call_start, self::API_SECRET));
+//            if ($signature == $signatureTest) {
                 $model = new Zadarma();
                 $model->caller_id = $this->caller_id;
                 $model->called_did = $this->called_did;
@@ -131,7 +128,7 @@ class DefaultController extends Controller
                 $model->internal = $this->internal;
                 $model->destination = $this->destination;
                 $model->save();
-            }
+//            }
         }
     }
 }
