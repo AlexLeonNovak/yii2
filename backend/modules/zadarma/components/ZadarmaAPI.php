@@ -8,7 +8,7 @@ namespace backend\modules\zadarma\components;
 
 use Exception;
 
-class Zadarma{
+class ZadarmaAPI{
     const PROD_URL      = 'https://api.zadarma.com';
     const SANDBOX_URL   = 'https://api-sandbox.zadarma.com';
     private $_url;

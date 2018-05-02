@@ -4,10 +4,10 @@ namespace backend\modules\zadarma\controllers;
 
 use Yii;
 use yii\web\Controller;
-use backend\modules\zadarma\components\Zadarma as ComponentZadarma;
+use backend\modules\zadarma\components\ZadarmaAPI;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
-use backend\modules\zadarma\models\Zadarma as ModelZadarma;
+use backend\modules\zadarma\models\Zadarma;
 
 /**
  * Default controller for the `zadarma` module
@@ -57,7 +57,7 @@ class DefaultController extends Controller
             'to' => '4444',
            // 'sip' => '976463'
         ];
-        $zadarma    = new ComponentZadarma(self::API_KEY, self::API_SECRET, true);
+        $zadarma    = new ZadarmaAPI(self::API_KEY, self::API_SECRET, true);
         //$answer     = $zadarma->call('/v1/sms/send/', $params, 'post');
         $balance    = json_decode($zadarma->call('/v1/info/balance/'));
 //        $balanceModel = new ArrayDataProvider([
@@ -83,7 +83,7 @@ class DefaultController extends Controller
             'to' => '4444',
         //    'sip' => 'YOURSIP'
         ];
-        $zadarma    = new Zadarma("bde6a59e642ed33e2c76", "4b0f8da464d6c07c3234", true);
+        $zadarma    = new ZadarmaAPI("bde6a59e642ed33e2c76", "4b0f8da464d6c07c3234", true);
         $call       = $zadarma->call('/v1/request/callback/', $params);
         
     }
@@ -111,7 +111,7 @@ class DefaultController extends Controller
             $signature = Yii::$app->request->headers->get('Signature');  // Signature is send only if you have your API key and secret
             $signatureTest = base64_encode(hash_hmac('sha1', $this->caller_id . $this->called_did . $this->call_start, self::API_SECRET));
             if ($signature == $signatureTest) {
-                $model = new ModelZadarma();
+                $model = new Zadarma();
                 $model->caller_id = $this->caller_id;
                 $model->called_did = $this->called_did;
                 $model->call_start = $this->call_start;
