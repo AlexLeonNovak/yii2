@@ -16,8 +16,8 @@ class m180502_090533_create_zadarma extends Migration
             'id' => $this->primaryKey(),
             'caller_id' => $this->integer(),
             'called_did' => $this->integer(),
-            'call_start' => $this->integer(),
-            'pbx_call_id' => $this->integer(),
+            'call_start' => $this->string(20),
+            'pbx_call_id' => $this->string(50),
             'internal' => $this->integer(),
             'destination' => $this->integer(),
         ]);
