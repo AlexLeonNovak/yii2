@@ -94,8 +94,9 @@ class DefaultController extends Controller
     
     public function action0d0dfb2682192387a2e4325e97b36b32() 
     {
+        $request = Yii::$app->getRequest();
         //проверочный код для подтверждения скрипта задармой
-        if (isset($_GET['zd_echo'])) {exit($_GET['zd_echo']);}
+        if (isset($request->get('zd_echo'))) {exit($request->get('zd_echo'));}
         $request = Yii::$app->getRequest();
         if ($request->isPost) {
             // получаем переменные
