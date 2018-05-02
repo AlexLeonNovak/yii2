@@ -46,9 +46,13 @@ class DefaultController extends Controller
         ];
     }
     
-//    public function beforeAction($action) {
-//        parent::beforeAction($action);
-//    }
+    public function beforeAction($action) 
+    {
+        if ($action->id === '0d0dfb2682192387a2e4325e97b36b32') {
+            $this->enableCsrfValidation = false;
+        }
+        return parent::beforeAction($action);
+    }
 
         /**
      * Renders the index view for the module
