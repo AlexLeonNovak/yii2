@@ -46,9 +46,9 @@ class DefaultController extends Controller
         ];
     }
     
-    public function beforeAction($action) {
-        parent::beforeAction($action);
-    }
+//    public function beforeAction($action) {
+//        parent::beforeAction($action);
+//    }
 
         /**
      * Renders the index view for the module
