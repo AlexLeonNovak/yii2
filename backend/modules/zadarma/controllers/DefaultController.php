@@ -126,7 +126,8 @@ class DefaultController extends Controller
             $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
             if ($signature == $signatureTest) {
                 $model = new Zadarma();
-                $model->load(Yii::$app->request->post());
+                $params['Zadarma'] = $request->post();
+                $model->load($params);
                 $model->save();
             }
         }
