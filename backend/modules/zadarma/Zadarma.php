@@ -7,6 +7,11 @@ namespace backend\modules\zadarma;
  */
 class Zadarma extends \yii\base\Module
 {
+     /**
+     * @var string $layout Файл темы
+     */
+    public $layout = 'zadarmalayout.php'; 
+
     /**
      * @inheritdoc
      */

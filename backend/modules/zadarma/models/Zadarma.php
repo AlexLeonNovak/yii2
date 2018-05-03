@@ -52,17 +52,30 @@ class Zadarma extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'event' => 'Event',
-            'duration' => 'Duration',
-            'caller_id' => 'Caller ID',
-            'called_did' => 'Called Did',
-            'call_start' => 'Call Start',
-            'pbx_call_id' => 'Pbx Call ID',
-            'internal' => 'Internal',
-            'destination' => 'Destination',
-            'disposition' => 'Disposition',
-            'status_code' => 'Status Code',
-            'is_recorded' => 'Is recorded'
+            'event' => 'Событие',
+            'duration' => 'Длительность',
+            'caller_id' => 'Внутренний номер (кто)',
+            'called_did' => 'Внутренний номер (кому)',
+            'call_start' => 'Начало звонка',
+            'pbx_call_id' => 'ID звонка',
+            'internal' => 'Внутренний номер (опциональный)',
+            'destination' => 'Куда звонили',
+            'disposition' => 'Состояние',
+            /*
+             * 'answered' – разговор,
+             * 'busy' – занято,
+             * 'cancel' - отменен,
+             * 'no answer' - без ответа,
+             * 'failed' - не удался,
+             * 'no money' - нет средств, превышен лимит,
+             * 'unallocated number' - номер не существует,
+             * 'no limit' - превышен лимит,
+             * 'no day limit' - превышен дневной лимит,
+             * 'line limit' - превышен лимит линий,
+             * 'no money, no limit' - превышен лимит;
+             */
+            'status_code' => 'Q.931',
+            'is_recorded' => '1 - есть запись звонка, 0 - нет записи'
         ];
     }
 }

@@ -8,21 +8,14 @@ use backend\modules\zadarma\components\ZadarmaAPI;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
 use backend\modules\zadarma\models\Zadarma;
+use backend\modules\zadarma\models\ZadarmaSearch;
 
 /**
  * Default controller for the `zadarma` module
  */
 class DefaultController extends Controller
 {
-    private $caller_id;
-    private $called_did;
-    private $call_start;
-    private $pbx_call_id;
-    private $internal;
-    private $destination;
     
-    const API_SECRET = '4b0f8da464d6c07c3234';
-    const API_KEY ='bde6a59e642ed33e2c76';
     /**
      * @inheritdoc
      */
@@ -37,7 +30,7 @@ class DefaultController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'signup'],
+                        'actions' => ['settings', 'index', 'signup'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -46,6 +39,16 @@ class DefaultController extends Controller
         ];
     }
     
+    function actions(){
+        return [
+            'settings' => [
+                'class' => 'pheme\settings\SettingsAction',
+                'modelClass' => 'backend\modules\zadarma\models\ZadarmaSettings',
+                //'scenario' => 'site',	// Change if you want to re-use the model for multiple setting form.
+                'viewName' => 'settings'	// The form we need to render
+            ],
+        ];
+    }
     public function beforeAction($action) 
     {
         if ($action->id === '0d0dfb2682192387a2e4325e97b36b32') {
@@ -54,7 +57,7 @@ class DefaultController extends Controller
         return parent::beforeAction($action);
     }
 
-        /**
+    /**
      * Renders the index view for the module
      * @return string
      */
@@ -65,22 +68,20 @@ class DefaultController extends Controller
             'to' => '4444',
            // 'sip' => '976463'
         ];
-        $zadarma    = new ZadarmaAPI(self::API_KEY, self::API_SECRET, true);
+        $zadarma    = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), Yii::$app->settings->get('ZadarmaSettings.secret'), true);
         //$answer     = $zadarma->call('/v1/sms/send/', $params, 'post');
         $balance    = json_decode($zadarma->call('/v1/info/balance/'));
-//        $balanceModel = new ArrayDataProvider([
-//            'allModels' => json_decode($balance, true),
-//        ]);
-        $call       = $zadarma->call('/v1/request/callback/', $params);
-        //$answerObject = json_decode($answer);
-        //print_r(json_decode($balance));
+        //$call       = $zadarma->call('/v1/request/callback/', $params);
+        $searchModel = new ZadarmaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index',[
-            //'answerObject'  => $answerObject,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
             'balance'       => $balance,
-            //'balanceModel'  => $balanceModel,
-            'call' => $call,
+            //'call' => $call,
         ]);
     }
+
     /**
      * Функция осуществления звонка
      */
@@ -96,6 +97,10 @@ class DefaultController extends Controller
         
     }
     
+    /**
+     * Уведомления о звонках
+     * Функция записывает данные о звонках, которые совершаются через телефонию Zadarma
+     */
     public function action0d0dfb2682192387a2e4325e97b36b32() 
     {
         $request = Yii::$app->getRequest();
@@ -103,27 +108,15 @@ class DefaultController extends Controller
         if (null !== $request->get('zd_echo')) { exit($request->get('zd_echo')); }
         
         if ($request->isPost) {
-            // получаем переменные
-            // номер звонящего
-            $this->caller_id = $request->post('caller_id'); 
-            // номер, на который позвонили
-            $this->called_did = $request->post('called_did');
-            // время начала звонка
-            $this->call_start = $request->post('call_start') or die;
-            // id звонка;
-            $this->pbx_call_id = $request->post('pbx_call_id');
-            // (опциональный) внутренний номер
-            $this->internal = $request->post('internal');
-            // (опциональный) набранный номер при исходящих звонках
-            $this->destination = $request->post('destination');
-
             // высчитываем подпись
-            $signatureTest = $this->destination
+            $signatureTest = $request->post('destination')
             // при исходящих звонках
-            ? base64_encode(hash_hmac('sha1', $this->internal . $this->destination  . $this->call_start, self::API_SECRET))
+            ? base64_encode(hash_hmac('sha1', $request->post('internal') . $request->post('destination')  
+                    . $request->post('call_start'), Yii::$app->settings->get('ZadarmaSettings.secret')))
             // при входящих звонках
-            : base64_encode(hash_hmac('sha1', $this->caller_id . $this->called_did . $this->call_start, self::API_SECRET));
-            $signature = $request->headers->get('signature');  // Signature is send only if you have your API key and secret
+            : base64_encode(hash_hmac('sha1', $request->post('caller_id') . $request->post('called_did')
+                    . $request->post('call_start'), Yii::$app->settings->get('ZadarmaSettings.secret')));
+            $signature = $request->headers->get('signature');  
             if ($signature == $signatureTest) {
                 $model = new Zadarma();
                 $params['Zadarma'] = $request->post();

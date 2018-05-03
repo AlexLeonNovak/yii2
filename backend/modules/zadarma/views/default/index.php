@@ -3,35 +3,45 @@
  * @author Alex Novak <alexleonnovak@gmail.com>
  */ 
 
-use yii\widgets\DetailView;
-use yii\widgets\Pjax;
+use yii\grid\GridView;
 use yii\bootstrap\Html;
-use yii\bootstrap\ActiveForm;
 
 /* @var $balance backend\modules\zadarma\components\Zadarma */
 /* @var $this yii\web\View */
 
+$this->title = 'Журнал звонков';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 
 <div class="zadarma-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
+    <h1><?= $this->title ?></h1>
+    <?php if ($balance->status == 'success'){ ?>
+    <div class="alert alert-info">Ваш баланс составляет: <strong><?= $balance->balance . ' ' . $balance->currency ?></strong></div>
+    <?php } else { ?>
+    <div class="alert alert-danger"><strong>Невозможно проверить баланс.</strong>
+        Пожалуйста, проверьте <?= Html::a('настройки API', 'settings', ['class' => 'alert-link']); ?></div>
+    <?php } ?>
+        <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
 
-    <div>Баланс: <?=$balance->balance . ' ' . $balance->currency ?></div>
-        <?php 
+            'event',
+            'duration',
+//            'caller_id',
+//            'called_did',
+            'call_start',
+            'internal',
+            'destination',
+            'disposition',
+//            'status_code',
+//            'is_recorded',
 
-
-        echo '<br>';
-        print_r($call); 
-        ?>
-    <?php Pjax::begin(); ?>
-        <?php $form = ActiveForm::begin(); ?>
-        <?= Html::input('text', 'from'); ?>
-        <?= Html::input('text', 'to'); ?>
-        <?= Html::submitButton('Позвонить',['class' => 'btn btn-success']); ?>
-    
-        <?php ActiveForm::end(); ?>
-    <?php Pjax::end(); ?>
+            ['class' => 'yii\grid\ActionColumn'],
+        ],
+    ]); ?>
     
 
 </div>

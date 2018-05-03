@@ -51,6 +51,10 @@ AppAsset::register($this);
                     'label' => 'Сотрудники',
                     'url' => ['/users']
                 ],
+                [
+                    'label' => 'IP-телефония Zadarma',
+                    'url' => ['/zadarma']
+                ],
             ]
         ];
        // var_dump(Yii::$app->user->identity->fullNameInitials);
