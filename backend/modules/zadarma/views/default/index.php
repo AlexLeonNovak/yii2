@@ -7,6 +7,7 @@ use yii\grid\GridView;
 use yii\bootstrap\Html;
 
 /* @var $balance backend\modules\zadarma\components\Zadarma */
+/* @var $model backend\modules\zadarma\models\Zadarma */
 /* @var $this yii\web\View */
 
 $this->title = 'Журнал звонков';
@@ -22,22 +23,38 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="alert alert-danger"><strong>Невозможно проверить баланс.</strong>
         Пожалуйста, проверьте <?= Html::a('настройки API', 'settings', ['class' => 'alert-link']); ?></div>
     <?php } ?>
+    <audio controls>
+        Ваш браузер не поддерживает <code>audio</code> элемент.
+    </audio>
         <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'event',
-            'duration',
-//            'caller_id',
-//            'called_did',
+            'type',
             'call_start',
+            'answer_time',
+            'call_end',
             'internal',
             'destination',
             'disposition',
-//            'status_code',
-//            'is_recorded',
+            'status_code',
+            'duration',
+            [
+                'label' => 'audio',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if ($model->is_recorded) {
+                        return Html::button('<span class="glyphicon glyphicon-play"></span>', 
+                                [
+                                    'class' => 'btn btn-default record', 
+                                    'data-call-id' => $model->call_id_with_rec,
+                                ]);
+                    }
+                    return 'Нет записи';
+                }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
@@ -45,3 +62,20 @@ $this->params['breadcrumbs'][] = $this->title;
     
 
 </div>
+<?php
+$js = <<< JS
+        $('.record').click(function(){
+            var call_id = $(this).attr('data-call-id');
+                $.ajax({
+                    url: 'get-record',
+                    type: 'POST',
+                    cache: false,
+                    data: {call_id:call_id},
+                    success: function (data) {
+                        $('audio').attr('src', data);
+                        $('audio').trigger('play');
+                    }
+                });
+        });
+JS;
+$this->registerJs($js);

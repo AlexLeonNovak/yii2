@@ -8,18 +8,18 @@ use Yii;
  * This is the model class for table "{{%zadarma}}".
  *
  * @property int $id
- * @property string $event
- * @property int $duration
- * @property int $caller_id
- * @property int $called_did
- * @property string $call_start
+ * @property string $type
+ * @property int $call_start
+ * @property int $answer_time
+ * @property int $call_end
  * @property string $pbx_call_id
- * @property int $internal
+ * @property string $internal
  * @property string $destination
  * @property string $disposition
  * @property int $status_code
- * @property boolean $is_recorded
- * 
+ * @property int $is_recorded
+ * @property string $call_id_with_rec
+ * @property int $duration
  */
 class Zadarma extends \yii\db\ActiveRecord
 {
@@ -37,11 +37,11 @@ class Zadarma extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['caller_id', 'called_did', 'internal', 'duration', 'status_code'], 'integer'],
-            [['call_start', 'event', 'destination'], 'string', 'max' => 20],
-            [['disposition'], 'string', 'max' => 30],
-            [['pbx_call_id'], 'string', 'max' => 50],
-            [['is_recorded'], 'boolean']
+            [['call_start', 'answer_time', 'call_end', 'status_code', 'duration'], 'integer'],
+            [['type'], 'string', 'max' => 10],
+            [['pbx_call_id', 'internal', 'destination', 'disposition'], 'string', 'max' => 50],
+            [['is_recorded'], 'string', 'max' => 1],
+            [['call_id_with_rec'], 'string', 'max' => 150],
         ];
     }
 
@@ -52,30 +52,18 @@ class Zadarma extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'event' => 'Событие',
-            'duration' => 'Длительность',
-            'caller_id' => 'Внутренний номер (кто)',
-            'called_did' => 'Внутренний номер (кому)',
-            'call_start' => 'Начало звонка',
-            'pbx_call_id' => 'ID звонка',
-            'internal' => 'Внутренний номер (опциональный)',
-            'destination' => 'Куда звонили',
-            'disposition' => 'Состояние',
-            /*
-             * 'answered' – разговор,
-             * 'busy' – занято,
-             * 'cancel' - отменен,
-             * 'no answer' - без ответа,
-             * 'failed' - не удался,
-             * 'no money' - нет средств, превышен лимит,
-             * 'unallocated number' - номер не существует,
-             * 'no limit' - превышен лимит,
-             * 'no day limit' - превышен дневной лимит,
-             * 'line limit' - превышен лимит линий,
-             * 'no money, no limit' - превышен лимит;
-             */
-            'status_code' => 'Q.931',
-            'is_recorded' => '1 - есть запись звонка, 0 - нет записи'
+            'type' => 'Type',
+            'call_start' => 'Call Start',
+            'answer_time' => 'Answer Time',
+            'call_end' => 'Call End',
+            'pbx_call_id' => 'Pbx Call ID',
+            'internal' => 'Internal',
+            'destination' => 'Destination',
+            'disposition' => 'Disposition',
+            'status_code' => 'Status Code',
+            'is_recorded' => 'Is Recorded',
+            'call_id_with_rec' => 'Call Id With Rec',
+            'duration' => 'Duration',
         ];
     }
 }

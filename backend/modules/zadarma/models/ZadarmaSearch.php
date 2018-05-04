@@ -18,8 +18,8 @@ class ZadarmaSearch extends Zadarma
     public function rules()
     {
         return [
-            [['id', 'duration', 'caller_id', 'called_did', 'internal', 'status_code'], 'integer'],
-            [['event', 'call_start', 'pbx_call_id', 'destination', 'disposition', 'is_recorded'], 'safe'],
+            [['id', 'call_start', 'answer_time', 'call_end', 'status_code', 'duration'], 'integer'],
+            [['type', 'pbx_call_id', 'internal', 'destination', 'disposition', 'is_recorded', 'call_id_with_rec'], 'safe'],
         ];
     }
 
@@ -60,19 +60,20 @@ class ZadarmaSearch extends Zadarma
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'duration' => $this->duration,
-            'caller_id' => $this->caller_id,
-            'called_did' => $this->called_did,
-            'internal' => $this->internal,
+            'call_start' => $this->call_start,
+            'answer_time' => $this->answer_time,
+            'call_end' => $this->call_end,
             'status_code' => $this->status_code,
+            'duration' => $this->duration,
         ]);
 
-        $query->andFilterWhere(['like', 'event', $this->event])
-            ->andFilterWhere(['like', 'call_start', $this->call_start])
+        $query->andFilterWhere(['like', 'type', $this->type])
             ->andFilterWhere(['like', 'pbx_call_id', $this->pbx_call_id])
+            ->andFilterWhere(['like', 'internal', $this->internal])
             ->andFilterWhere(['like', 'destination', $this->destination])
             ->andFilterWhere(['like', 'disposition', $this->disposition])
-            ->andFilterWhere(['like', 'is_recorded', $this->is_recorded]);
+            ->andFilterWhere(['like', 'is_recorded', $this->is_recorded])
+            ->andFilterWhere(['like', 'call_id_with_rec', $this->call_id_with_rec]);
 
         return $dataProvider;
     }
