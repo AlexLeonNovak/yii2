@@ -1,8 +1,8 @@
 <?php
+
 /**
  * @author Alex Novak <alexleonnovak@gmail.com>
- */ 
-
+ */
 use yii\grid\GridView;
 use yii\bootstrap\Html;
 
@@ -17,21 +17,29 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="zadarma-default-index">
     <h1><?= $this->title ?></h1>
-    <?php if ($balance->status == 'success'){ ?>
-    <div class="alert alert-info">Ваш баланс составляет: <strong><?= $balance->balance . ' ' . $balance->currency ?></strong></div>
+    <?php if ($balance->status == 'success') { ?>
+        <div class="alert alert-info">
+            <div class="row">
+                <div class="col-sm-6">
+                    Ваш баланс составляет: <strong><?= $balance->balance . ' ' . $balance->currency ?></strong>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <audio controls>
+                        Ваш браузер не поддерживает <code>audio</code> элемент.
+                    </audio>
+                </div>
+            </div>
+        </div>
     <?php } else { ?>
-    <div class="alert alert-danger"><strong>Невозможно проверить баланс.</strong>
-        Пожалуйста, проверьте <?= Html::a('настройки API', 'settings', ['class' => 'alert-link']); ?></div>
+        <div class="alert alert-danger"><strong>Невозможно проверить баланс.</strong>
+            Пожалуйста, проверьте <?= Html::a('настройки API', 'settings', ['class' => 'alert-link']); ?></div>
     <?php } ?>
-    <audio controls>
-        Ваш браузер не поддерживает <code>audio</code> элемент.
-    </audio>
-        <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'type',
             'call_start',
             'answer_time',
@@ -39,27 +47,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'internal',
             'destination',
             'disposition',
-            'status_code',
             'duration',
             [
-                'label' => 'audio',
+                'label' => 'Запись',
                 'format' => 'raw',
                 'value' => function($model) {
                     if ($model->is_recorded) {
-                        return Html::button('<span class="glyphicon glyphicon-play"></span>', 
-                                [
-                                    'class' => 'btn btn-default record', 
+                        return Html::button('<span class="glyphicon glyphicon-play"></span>', [
+                                    'class' => 'btn btn-default record',
                                     'data-call-id' => $model->call_id_with_rec,
-                                ]);
+                        ]);
                     }
                     return 'Нет записи';
                 }
             ],
-
-            ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
-    
+    ]);
+    ?>
+
 
 </div>
 <?php

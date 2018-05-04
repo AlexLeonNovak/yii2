@@ -52,18 +52,18 @@ class Zadarma extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'type' => 'Type',
-            'call_start' => 'Call Start',
-            'answer_time' => 'Answer Time',
-            'call_end' => 'Call End',
+            'type' => 'Тип звонка',
+            'call_start' => 'Соединение',
+            'answer_time' => 'Начало разговора',
+            'call_end' => 'Конец разговора',
             'pbx_call_id' => 'Pbx Call ID',
-            'internal' => 'Internal',
-            'destination' => 'Destination',
-            'disposition' => 'Disposition',
+            'internal' => 'Внутренний номер',
+            'destination' => 'Абонент',
+            'disposition' => 'Состояние',
             'status_code' => 'Status Code',
             'is_recorded' => 'Is Recorded',
             'call_id_with_rec' => 'Call Id With Rec',
-            'duration' => 'Duration',
+            'duration' => 'Длительность',
         ];
     }
 }
