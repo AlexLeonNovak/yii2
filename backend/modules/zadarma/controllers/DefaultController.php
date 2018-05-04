@@ -131,9 +131,9 @@ class DefaultController extends Controller
                 if (in_array($request->post('event'), ['NOTIFY_START', 'NOTIFY_INTERNAL'])) { $type = 'Входящий'; }        //начало входящего звонка в АТС
                 //if ($request->post('event') == 'NOTIFY_INTERNAL') { $type = 'in'; }     //начало входящего звонка на внутренний номер АТС
                 if ($request->post('event') == 'NOTIFY_OUT_START') { $type = 'Исходящий'; }     //начало исходящего звонка с АТС
-                $model = new Zadarma();
                 if (isset($type)){
-                    $params['Zadarma'] = [
+                    $model = new Zadarma();
+                    $params = [
                         'type'          => $type,
                         'call_start'    => time(),
                         'pbx_call_id'   => $request->post('pbx_call_id'),
@@ -142,10 +142,10 @@ class DefaultController extends Controller
                         'internal'      => $request->post('internal') ?                     //internal    - внутренний номер (при исходящем звонке)
                             $request->post('internal') : $request->post('caller_id')        //caller_id   - внутренний номер (при входящем звонке)
                     ];
-                    $model->load($params);
+                    $model->attributes = $params;
                 }
                 if ($request->post('event') == 'NOTIFY_ANSWER') { //ответ при звонке на внутренний или на внешний номер.
-                    $model->findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
+                    $model = Zadarma::findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
                     $model->answer_time = time();
                 }
                 if(in_array($request->post('event'), ['NOTIFY_END', 'NOTIFY_OUT_END'])){    //конец входящего/исходящего звонка
@@ -163,7 +163,7 @@ class DefaultController extends Controller
                         'line limit' => 'превышен лимит линий',
                         'no money, no limit' => 'превышен лимит',
                     ];
-                    $params['Zadarma'] = [
+                    $params = [
                         'call_end'          => time(),
                         'disposition'       => array_key_exists($request->post('disposition'), $rus_disposition) 
                             ? $rus_disposition[$request->post('disposition')] : '',
@@ -172,8 +172,8 @@ class DefaultController extends Controller
                         'call_id_with_rec'  => $request->post('call_id_with_rec'),
                         'duration'          => $request->post('duration'),
                     ];
-                    $model->findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
-                    $model->load($params);
+                    $model= Zadarma::findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
+                    $model->attributes = $params;
                 }
                 $model->save();
             }
