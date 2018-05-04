@@ -145,7 +145,7 @@ class DefaultController extends Controller
                     $model->load($params);
                 }
                 if ($request->post('event') == 'NOTIFY_ANSWER') { //ответ при звонке на внутренний или на внешний номер.
-                    $model->find(['pbx_call_id' => $request->post('pbx_call_id')]);
+                    $model->findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
                     $model->answer_time = time();
                 }
                 if(in_array($request->post('event'), ['NOTIFY_END', 'NOTIFY_OUT_END'])){    //конец входящего/исходящего звонка
@@ -172,12 +172,8 @@ class DefaultController extends Controller
                         'call_id_with_rec'  => $request->post('call_id_with_rec'),
                         'duration'          => $request->post('duration'),
                     ];
-                    $model->find(['pbx_call_id' => $request->post('pbx_call_id')]);
+                    $model->findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
                     $model->load($params);
-                }
-                if ($request->post('event') == 'NOTIFY_RECORD') {  //запись звонка готова для скачивания
-                    $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), Yii::$app->settings->get('ZadarmaSettings.secret'));
-                    
                 }
                 $model->save();
             }
