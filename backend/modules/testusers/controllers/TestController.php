@@ -3,7 +3,7 @@
 namespace backend\modules\testusers\controllers;
 
 use Yii;
-use backend\modules\testusers\models\test;
+use backend\modules\testusers\models\Test;
 use backend\modules\testusers\models\TestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -68,9 +68,10 @@ class TestController extends Controller
      */
     public function actionCreate($id_theme)
     {
-        $model = new test();
+        $model = new Test();
         $model->id_theme = $id_theme;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Данные сохранены");
             return $this->actionIndex($id_theme);
         }
 
@@ -91,7 +92,11 @@ class TestController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect([
+                        'index',
+                        'id_theme' => Yii::$app->request->get('id_theme')
+                    ]);
         }
 
         return $this->render('update', [
@@ -108,9 +113,22 @@ class TestController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        try {
+            $this->findModel($id)->delete();
+            Yii::$app->session->setFlash('success', "Данные удалены");
+        } catch (\yii\db\Exception $e) {
+            Yii::$app->session->setFlash('danger',
+                     "<strong>Невозможно удалить тест, т.к. уже кто-то проходил этот тест!</strong>"
+//                     . "<hr />Мы можем "
+//                     . Html::a('посмотреть результаты', ['/testusers/options/statistic-detail', 'id' => $id],
+//                            ['class' => 'alert-link'])
+//                     . " кто проходил."
+            );
+        }
+        return $this->redirect([
+                'index',
+                'id_theme' => Yii::$app->request->get('id_theme'),
+            ]);
     }
 
     /**
@@ -122,7 +140,7 @@ class TestController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = test::findOne($id)) !== null) {
+        if (($model = Test::findOne($id)) !== null) {
             return $model;
         }
 

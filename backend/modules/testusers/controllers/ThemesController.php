@@ -5,10 +5,15 @@ namespace backend\modules\testusers\controllers;
 use Yii;
 use backend\modules\testusers\models\Themes;
 use backend\modules\testusers\models\ThemesSearch;
-use backend\modules\users\models\UsersGroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
+use backend\modules\testusers\models\Questions;
+use backend\modules\testusers\models\Answers;
+use backend\modules\testusers\models\UserAnswer;
+use backend\modules\testusers\models\Timestamp;
+use backend\modules\testusers\models\Test;
 
 /**
  * ThemesController implements the CRUD actions for Themes model.
@@ -38,9 +43,6 @@ class ThemesController extends Controller
     {
         $searchModel = new ThemesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//        $usersGroup = new UsersGroupSearch();
-//        $usersGroupName = $usersGroup->search($dataProvider->id);
-//        var_dump($dataProvider);
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -70,7 +72,8 @@ class ThemesController extends Controller
         $model = new Themes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->actionIndex();
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -90,7 +93,8 @@ class ThemesController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -101,14 +105,42 @@ class ThemesController extends Controller
     /**
      * Deletes an existing Themes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
+     * @param integer $id id_test
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        try {
+            $this->findModel($id)->delete();
+            Yii::$app->session->setFlash('success', "Данные удалены");
+        } catch (\yii\db\Exception $e) {
 
+            Yii::$app->session->setFlash('danger',
+                     "<strong>Невозможно удалить тему, т.к. уже кто-то проходил один из тестов из этой темы!</strong>"
+                     . "<hr />Мы можем "
+                     . Html::a('удалить эти записи', ['delete-test-users', 'id' => $id],
+                            [
+                                'class' => 'alert-link',
+                                'linkOptions' => [
+                                    'data-method' => 'post'
+                                    ]
+                            ])
+                     . " безвозвратно."
+            );
+        }
+        
+        return $this->redirect(['index']);
+    }
+    
+    public function actionDeleteTestUsers($id)
+    {
+        if (Timestamp::deleteUserAnswers($id)){
+            Yii::$app->session->setFlash('success', "<strong>Данные удалены</strong>"
+                    . "<br />Теперь можно удалить тему");
+        } else {
+            Yii::$app->session->setFlash('danger', "Что-то пошло не так");
+        }
         return $this->redirect(['index']);
     }
 

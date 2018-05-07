@@ -1,16 +1,17 @@
 <?php
 
-namespace app\modules\users;
+namespace backend\modules\users;
 
 /**
  * users module definition class
  */
 class Users extends \yii\base\Module
 {
+    public $layout = 'userlayout.php';
     /**
      * @inheritdoc
      */
-    public $controllerNamespace = 'app\modules\users\controllers';
+    public $controllerNamespace = 'backend\modules\users\controllers';
 
     /**
      * @inheritdoc

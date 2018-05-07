@@ -3,7 +3,7 @@
 namespace backend\modules\testusers\models;
 
 use Yii;
-use app\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersGroup;
 use \yii\helpers\ArrayHelper;
 
 /**
@@ -46,7 +46,7 @@ class Themes extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_group' => 'Група пользователей',
+            'id_group' => 'Должность сотрудников',
             'name' => 'Имя темы',
         ];
     }

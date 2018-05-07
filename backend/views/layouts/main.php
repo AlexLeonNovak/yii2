@@ -29,28 +29,44 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => Yii::$app->name . ' <small>(админ-панель)</small>',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'Главная', 'url' => ['/site/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Тесты для пользователей', 'url' => ['/testusers']];
-             
+        $menuItems[] = ['label' => 'Модули',
+            'items' => [
+                [
+                    'label' => 'Тестирование сотрудников', 
+                    'url' => ['/testusers']
+                ],
+                [
+                    'label' => 'Сотрудники',
+                    'url' => ['/users']
+                ],
+                [
+                    'label' => 'IP-телефония Zadarma',
+                    'url' => ['/zadarma']
+                ],
+            ]
+        ];
+       // var_dump(Yii::$app->user->identity->fullNameInitials);
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                'Выйти (' . Yii::$app->user->identity->fullNameInitials . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()
             . '</li>';
+        $menuItems[] = ['label' => 'Перейти в CRM', 'url' => ['/../../']];
             
     }
     echo Nav::widget([

@@ -13,7 +13,7 @@ return [
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
         'testusers' => [
-            'class' => 'app\modules\testusers\TestUsers',
+            'class' => 'frontend\modules\testusers\TestUsers',
             'as access' => [ // if you need to set access
                 'class' => 'yii\filters\AccessControl',
                 'rules' => [
@@ -59,6 +59,13 @@ return [
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
+        'assetManager' => [
+             'basePath' => '@webroot/assets',
+             'baseUrl' => '@web/assets'
+        ],  
+        'request' => [
+            'baseUrl' => ''
+        ]
 
     ],
     'params' => $params,

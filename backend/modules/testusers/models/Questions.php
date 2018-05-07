@@ -54,9 +54,9 @@ class Questions extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestAnswers()
+    public function getAnswers()
     {
-        return $this->hasMany(TestAnswers::className(), ['id_question' => 'id']);
+        return $this->hasMany(Answers::className(), ['id_question' => 'id']);
     }
 
     /**
@@ -70,8 +70,16 @@ class Questions extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestUserAswers()
+    public function getTheme()
     {
-        return $this->hasMany(TestUserAswer::className(), ['id_question' => 'id']);
+        return $this->hasOne(Themes::className(), ['id' => 'id_theme'])->via('test');
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserAnswers()
+    {
+        return $this->hasMany(UserAnswer::className(), ['id_question' => 'id']);
     }
 }

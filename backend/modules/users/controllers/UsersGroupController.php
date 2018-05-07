@@ -1,10 +1,10 @@
 <?php
 
-namespace app\modules\users\controllers;
+namespace backend\modules\users\controllers;
 
 use Yii;
-use app\modules\users\models\UsersGroup;
-use app\modules\users\models\UsersGroupSearch;
+use backend\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersGroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;

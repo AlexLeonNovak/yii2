@@ -2,14 +2,23 @@
 
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
-/* @var $model app\modules\testusers\models\Questions */
+/* @var $model backend\modules\testusers\models\Questions */
 
-$this->title = 'Создать вопрос для теста "'.$model->test_name.'"';
-$this->params['breadcrumbs'][] = ['label' => 'Вопросы', 'url' => ['index']];
+$this->title = 'Создать вопрос';
+$this->params['breadcrumbs'][] = ['label' => 'Список тем тестов', 'url' => ['/testusers']];
+$this->params['breadcrumbs'][] = [
+        'label' => $model->theme->name,
+        'url' => ['/testusers/test/index', 'id_theme' => Yii::$app->request->get('id_theme')]
+    ];
+$this->params['breadcrumbs'][] = [
+        'label' => $model->test->name,
+        'url' => ['/testusers/questions/index', 
+            'id_theme' => Yii::$app->request->get('id_theme'),
+            'id_test' => Yii::$app->request->get('id_test')]
+    ];
 $this->params['breadcrumbs'][] = $this->title;
-//var_dump($model);die;
+
 ?>
 <div class="questions-create">
 

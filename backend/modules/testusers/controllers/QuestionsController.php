@@ -9,6 +9,7 @@ use backend\modules\testusers\models\TestSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * QuestionsController implements the CRUD actions for Questions model.
@@ -73,12 +74,10 @@ class QuestionsController extends Controller
     public function actionCreate($id_test)
     {
         $model = new Questions();
-        $test = new TestSearch();
         $model->id_test = $id_test;
-        $model->test_name = $test->findOne($id_test)->name;
-        //var_dump(Yii::$app->request->post());die;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->actionIndex($id_test);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect(ArrayHelper::merge(['index'] ,Yii::$app->request->queryParams));
         }
 
         return $this->render('create', [
@@ -98,7 +97,12 @@ class QuestionsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash('success', "Данные сохранены");
+            return $this->redirect([
+                        'index',
+                        'id_test' => Yii::$app->request->get('id_test'),
+                        'id_theme' => Yii::$app->request->get('id_theme'),
+                    ]);
         }
 
         return $this->render('update', [
@@ -115,9 +119,23 @@ class QuestionsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        try {
+            $this->findModel($id)->delete();
+            Yii::$app->session->setFlash('success', "Данные удалены");
+        } catch (\yii\db\Exception $e) {
+            Yii::$app->session->setFlash('danger',
+                     "<strong>Невозможно удалить вопрос, т.к. уже кто-то отвечал на него!</strong>"
+//                     . "<hr />Мы можем "
+//                     . Html::a('посмотреть результаты', ['/testusers/options/statistic-detail', 'id' => $id],
+//                            ['class' => 'alert-link'])
+//                     . " кто проходил."
+            );
+        }
+        return $this->redirect([
+                'index',
+                'id_test' => Yii::$app->request->get('id_test'),
+                'id_theme' => Yii::$app->request->get('id_theme'),
+            ]);
     }
 
     /**

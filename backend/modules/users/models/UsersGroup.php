@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\users\models;
+namespace backend\modules\users\models;
 
 use Yii;
 
@@ -41,7 +41,7 @@ class UsersGroup extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Имя групы пользователей',
+            'name' => 'Должности сотрудников',
         ];
     }
 
@@ -59,5 +59,13 @@ class UsersGroup extends \yii\db\ActiveRecord
     public function getUsers()
     {
         return $this->hasMany(User::className(), ['id_group' => 'id']);
+    }
+    
+    /**
+     * @return Array
+     */
+    public function getUsersGroupArray()
+    {
+        return $this->find()->asArray()->all();    
     }
 }

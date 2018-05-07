@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use app\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersGroup;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\testusers\models\ThemesSearch */
@@ -12,6 +12,8 @@ use app\modules\users\models\UsersGroup;
 
 $this->title = 'Список тем тестов';
 $this->params['breadcrumbs'][] = $this->title;
+
+
 ?>
 <div class="themes-index">
 
@@ -28,7 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             
-            'name',
+            'name' => [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function($model){
+                    return Html::a($model->name, Url::to(['test/index', 'id_theme' => $model->id]),
+                                ['title' => 'Просмотр тестов']);
+                }
+            ],
             //'id',
             //'id_group',
             'group_name' => [

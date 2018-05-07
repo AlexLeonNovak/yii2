@@ -1,11 +1,11 @@
 <?php
 
-namespace app\modules\users\models;
+namespace backend\modules\users\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\users\models\UsersGroup;
+use backend\modules\users\models\UsersGroup;
 
 /**
  * UsersGroupSearch represents the model behind the search form of `app\modules\users\models\UsersGroup`.

@@ -8,6 +8,10 @@ namespace backend\modules\testusers;
 class Test extends \yii\base\Module
 {
     /**
+     * @var string $layout Файл темы
+     */
+    public $layout = 'testlayout.php'; 
+    /**
      * @inheritdoc
      */
     public $controllerNamespace = 'backend\modules\testusers\controllers';
@@ -21,4 +25,15 @@ class Test extends \yii\base\Module
         
         // custom initialization code goes here
     }
+//    public function behaviors()
+//    {
+//        return [
+//            'access' => [
+//            'class' => AccessControl::className(),
+//            'rules' => [
+//                
+//                ]
+//            ]
+//        ];
+//    }
 }

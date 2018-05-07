@@ -17,7 +17,7 @@ use common\models\User;
  * @property TestAnswers $answer
  * @property TestQuestions $question
  */
-class UserAswer extends \yii\db\ActiveRecord
+class UserAnswer extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -33,10 +33,10 @@ class UserAswer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_question', 'id_answer', 'id_timestamp'], 'required'],
-            [['id_user', 'id_question', 'id_answer', 'id_timestamp'], 'integer'],
+            //[['id_user', 'id_question', 'id_timestamp'], 'required'],
+            [['id_user', 'id_question', 'id_timestamp'], 'integer'],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id']],
-            [['id_answer'], 'exist', 'skipOnError' => true, 'targetClass' => Answers::className(), 'targetAttribute' => ['id_answer' => 'id']],
+            //[['id_answer'], 'exist', 'skipOnError' => true, 'targetClass' => Answers::className(), 'targetAttribute' => ['id_answer' => 'id']],
             [['id_question'], 'exist', 'skipOnError' => true, 'targetClass' => Questions::className(), 'targetAttribute' => ['id_question' => 'id']],
             [['id_timestamp'], 'exist', 'skipOnError' => true, 'targetClass' => Timestamp::className(), 'targetAttribute' => ['id_timestamp' => 'id']],
         ];
@@ -71,7 +71,18 @@ class UserAswer extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Answers::className(), ['id' => 'id_answer']);
     }
-
+    
+    public function getCorrectAnswers()
+    {
+        return $this->hasMany(Answers::className(), ['id_question' => 'id'])->via('question')
+                ->where(['correct' => true]);
+    }
+    
+    public function getAnswers()
+    {
+        return $this->hasMany(Answers::className(), ['id_question' => 'id'])->via('question');
+    }
+    
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -83,5 +94,15 @@ class UserAswer extends \yii\db\ActiveRecord
     public function getTimestamp()
     {
         return $this->hasOne(Timestamp::className(), ['id' => 'id_timestamp']);
+    }
+    
+    public function getTests()
+    {
+        return $this->hasMany(Test::className(), ['id' => 'id_test'])->via('question');
+    }
+    
+    public function getThemes() 
+    {
+        return $this->hasMany(Themes::className(), ['id' => 'id_theme'])->via('tests');
     }
 }

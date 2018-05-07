@@ -1,53 +1,157 @@
 <?php
 
+use yii\bootstrap\Nav;
+
 /* @var $this yii\web\View */
 
-$this->title = 'My Yii Application';
+$this->title = 'CRM';
 ?>
 <div class="site-index">
-
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
-
-        <p class="lead">You have successfully created your Yii-powered application.</p>
-
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
-
-    <div class="body-content">
-
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
-
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+    <div class="menu">
+        <div class="col-md-3">
+            <?= Nav::widget([
+            'options' => [
+                'class' => 'bg-info',
+            ],
+            'items' => [
+        /*        [
+                    'label' => 'Задания',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Отчётник',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Обязанности',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Правила',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Инструкции',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Рекомендации / замечания',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Пожелания и бонусы',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Похвала',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Контакты',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Планирование отпусков',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Похвала',
+                    'url'   => ['#'],
+                ],
+                '<li style="background:#fff;"><br /></li>',
+                [
+                    'label' => 'Общественные идеи',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Полезные функции',
+                    'items' => [
+                        [
+                            'label' => 'Работа с EMAIL',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Работа с HELP',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Настроение СОТР',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Статистика похвалы СОТР',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Отчёт о проделанной работе',
+                            'url'   => ['#'],
+                        ], */
+                        [
+                            'label' => 'Тестирование СОТР',
+                            'url'   => ['/testusers'],
+                        ],/*
+                        [
+                            'label' => 'Транслит',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Мировое время',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Онлайн графический редактор',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Декодер кириллицы',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Коды стран',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Сменить пароль',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Конвертер из JPG в PDF',
+                            'url'   => ['#'],
+                        ],
+                        [
+                            'label' => 'Скачать браузер PI',
+                            'url'   => ['#'],
+                        ],
+                    ]
+                ],
+                [
+                    'label' => 'Кандидаты',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Браузер (журнал)',
+                    'url'   => ['#'],
+                ],
+                '<li style="background:#fff;"><br /></li>',
+                [
+                    'label' => 'Клиенты',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Касса',
+                    'url'   => ['#'],
+                ],
+                [
+                    'label' => 'Фирмы',
+                    'url'   => ['#'],
+                ],*/
+            ]
+        ]); ?>
+            <li class="nav"></li>
         </div>
-
+ 
+ 
+ 
     </div>
+
 </div>

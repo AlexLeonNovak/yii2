@@ -19,7 +19,7 @@ use Yii;
 class Answers extends \yii\db\ActiveRecord
 {
     public $answers;
-    //public $corrects;
+    public $corrects;
     /**
      * @inheritdoc
      */
@@ -36,7 +36,7 @@ class Answers extends \yii\db\ActiveRecord
         return [
             [['id_question', 'answer'], 'required'],
             [['id_question'], 'integer'],
-            [['answer'], 'string', 'max' => 255, 'min' => 5],
+            [['answer'], 'string', 'max' => 255, 'min' => 1],
             [['correct'], 'boolean', 'trueValue' => true, 'falseValue' => false],
             [['id_question'], 'exist', 'skipOnError' => true, 'targetClass' => Questions::className(), 'targetAttribute' => ['id_question' => 'id']],
         ];
