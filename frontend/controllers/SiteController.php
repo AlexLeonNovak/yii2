@@ -11,15 +11,17 @@ use common\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\ContactForm;
+use common\components\RController;
 
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends RController
 {
     /**
      * @inheritdoc
      */
+/*
     public function behaviors()
     {
         return [
@@ -47,6 +49,7 @@ class SiteController extends Controller
             ],
         ];
     }
+*/
 
     /**
      * @inheritdoc
@@ -71,6 +74,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        /*
+        $id_user  = 1;
+        $userRole = Yii::$app->authManager->getRole('admin');
+        Yii::$app->authManager->assign($userRole, $id_user);
+        */
         return $this->render('index');
     }
 

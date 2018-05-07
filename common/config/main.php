@@ -22,7 +22,7 @@ return [
             'class' => 'yii\caching\FileCache',
         ],
         'authManager'  => [
-            'class' => 'yii\rbac\DbManager',
+            'class' => 'common\components\RDBManager',
         ],
         
         'settings' => [
