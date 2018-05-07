@@ -41,13 +41,37 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'type',
-            'call_start',
-            'answer_time',
-            'call_end',
+            [
+                'attribute' => 'call_start',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Yii::$app->formatter->asDatetime($model->answer_time, 'php:d.m.Y H:i:s')
+                            . ' <span class="text-success"><strong>(' 
+                            . ($model->answer_time - $model->call_start) 
+                            . ' c.)</strong></span>';
+                }
+            ],
+            [
+                'attribute' => 'answer_time',
+                'format' => ['Datetime', 'php:d.m.Y H:i:s'],
+
+            ],
+            [
+                'attribute' => 'call_end',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Yii::$app->formatter->asDatetime($model->call_end, 'php:d.m.Y H:i:s')
+                            . ' <span class="text-success"><strong>(' 
+                            . ($model->call_end - $model->answer_time) 
+                            . ' c.)</strong></span>';
+                }
+            ],
+            
+            
             'internal',
             'destination',
             'disposition',
-            'duration',
+            //'duration',
             [
                 'label' => 'Запись',
                 'format' => 'raw',
