@@ -146,7 +146,9 @@ class DefaultController extends Controller
                     $model = Zadarma::findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
                 }
                 if ($request->post('event') == 'NOTIFY_INTERNAL') {  //начало входящего звонка на внутренний номер АТС
-                    $internal = explode(',', $model->internal);
+                    if (!empty($model->internal)){
+                        $internal = explode(',', $model->internal);
+                    }
                     $internal[] = $request->post('internal');
                     $model->internal = implode(',', $internal);
                 }    
@@ -168,6 +170,9 @@ class DefaultController extends Controller
                         'line limit' => 'превышен лимит линий',
                         'no money, no limit' => 'превышен лимит',
                     ];
+                    if (empty($model->answer_time)){
+                        $model->answer_time = time();
+                    }
                     $params = [
                         'call_end'          => time(),
                         'disposition'       => array_key_exists($request->post('disposition'), $rus_disposition) 

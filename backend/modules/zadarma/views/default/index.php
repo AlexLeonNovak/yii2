@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'call_start',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Yii::$app->formatter->asDatetime($model->answer_time, 'php:d.m.Y H:i:s')
+                    return Yii::$app->formatter->asDatetime($model->call_start, 'php:d.m.Y H:i:s')
                             . ' <span class="text-success"><strong>(' 
                             . ($model->answer_time - $model->call_start) 
                             . ' c.)</strong></span>';
