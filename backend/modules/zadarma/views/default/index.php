@@ -70,6 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
             'internal',
             'destination',
+            'caller_id',
             'disposition',
             //'duration',
             [
