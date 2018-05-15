@@ -128,8 +128,7 @@ class DefaultController extends Controller
 //                    . $request->post('call_start'), Yii::$app->settings->get('ZadarmaSettings.secret')));
 //            $signature = $request->headers->get('signature');  
 //            if ($signature == $signatureTest) {
-                if (in_array($request->post('event'), ['NOTIFY_START', 'NOTIFY_INTERNAL'])) { $type = 'Входящий'; }        //начало входящего звонка в АТС
-                //if ($request->post('event') == 'NOTIFY_INTERNAL') { $type = 'in'; }     //начало входящего звонка на внутренний номер АТС
+                if ($request->post('event') == 'NOTIFY_START')     { $type = 'Входящий';  }     //начало входящего звонка в АТС
                 if ($request->post('event') == 'NOTIFY_OUT_START') { $type = 'Исходящий'; }     //начало исходящего звонка с АТС
                 if (isset($type)){
                     $model = new Zadarma();
@@ -139,13 +138,19 @@ class DefaultController extends Controller
                         'pbx_call_id'   => $request->post('pbx_call_id'),
                         'destination'   => $request->post('destination') ?                  //destination - номер, на который позвонили (при исходящем звонке)
                             $request->post('destination') : $request->post('called_did'),   //called_did  – номер, на который позвонили (при входящем звонке)
-                        'internal'      => $request->post('internal') ?                     //internal    - внутренний номер (при исходящем звонке)
-                            $request->post('internal') : $request->post('caller_id')        //caller_id   - внутренний номер (при входящем звонке)
+                        'internal'      => $request->post('internal'),                     //internal    - внутренний номер (при исходящем звонке)
+                        'caller_id'     => $request->post('caller_id'),        //caller_id   - внутренний номер (при входящем звонке)
                     ];
                     $model->attributes = $params;
-                }
-                if ($request->post('event') == 'NOTIFY_ANSWER') { //ответ при звонке на внутренний или на внешний номер.
+                } else {
                     $model = Zadarma::findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
+                }
+                if ($request->post('event') == 'NOTIFY_INTERNAL') {  //начало входящего звонка на внутренний номер АТС
+                    $internal = explode(',', $model->internal);
+                    $internal[] = $request->post('internal');
+                    $model->internal = implode(',', $internal);
+                }    
+                if ($request->post('event') == 'NOTIFY_ANSWER') { //ответ при звонке на внутренний или на внешний номер.
                     $model->answer_time = time();
                 }
                 if(in_array($request->post('event'), ['NOTIFY_END', 'NOTIFY_OUT_END'])){    //конец входящего/исходящего звонка
@@ -172,7 +177,6 @@ class DefaultController extends Controller
                         'call_id_with_rec'  => $request->post('call_id_with_rec'),
                         'duration'          => $request->post('duration'),
                     ];
-                    $model= Zadarma::findOne(['pbx_call_id' => $request->post('pbx_call_id')]);
                     $model->attributes = $params;
                 }
                 $model->save();

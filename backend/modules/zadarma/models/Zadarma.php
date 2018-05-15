@@ -15,6 +15,7 @@ use Yii;
  * @property string $pbx_call_id
  * @property string $internal
  * @property string $destination
+ * @property string $caller_id
  * @property string $disposition
  * @property int $status_code
  * @property int $is_recorded
@@ -39,7 +40,7 @@ class Zadarma extends \yii\db\ActiveRecord
         return [
             [['call_start', 'answer_time', 'call_end', 'status_code', 'duration'], 'integer'],
             [['type'], 'string', 'max' => 10],
-            [['pbx_call_id', 'internal', 'destination', 'disposition'], 'string', 'max' => 50],
+            [['pbx_call_id', 'internal', 'destination', 'disposition', 'caller_id'], 'string', 'max' => 50],
             [['is_recorded'], 'string', 'max' => 1],
             [['call_id_with_rec'], 'string', 'max' => 150],
         ];
@@ -58,7 +59,8 @@ class Zadarma extends \yii\db\ActiveRecord
             'call_end' => 'Конец разговора',
             'pbx_call_id' => 'Pbx Call ID',
             'internal' => 'Внутренний номер',
-            'destination' => 'Абонент',
+            'destination' => 'Кому звонили',
+            'caller_id' => 'Кто звонил', //при входящем звонке
             'disposition' => 'Состояние',
             'status_code' => 'Status Code',
             'is_recorded' => 'Is Recorded',
