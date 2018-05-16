@@ -70,7 +70,9 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         if ($user->save()) {
-            $role = Yii::$app->authManager->createRole($user->username . $user->id);
+            $role = Yii::$app->authManager->createRole($this->username . $user->id);
+            $role->description = $this->username;
+            Yii::$app->authManager->add($role);
             Yii::$app->authManager->assign($role, $user->id);
             return $user;
         }

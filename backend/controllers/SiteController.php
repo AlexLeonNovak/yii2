@@ -47,6 +47,13 @@ class SiteController extends RController
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            if (!Yii::$app->authManager->getRolesByUser(Yii::$app->user->identity->id)){
+                $role = Yii::$app->authManager->createRole(
+                        Yii::$app->user->identity->username . Yii::$app->user->identity->id);
+                $role->description = Yii::$app->user->identity->username;
+                Yii::$app->authManager->add($role);
+                Yii::$app->authManager->assign($role, Yii::$app->user->identity->id);
+            }
             return $this->goBack();
         } else {
             return $this->render('login', [

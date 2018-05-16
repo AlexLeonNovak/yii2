@@ -2,8 +2,8 @@
 
 namespace backend\modules\users\controllers;
 
-use yii\web\Controller;
 use common\components\RController;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use common\models\User;
 use Yii;
@@ -15,8 +15,25 @@ use backend\modules\users\models\AuthModules;
 /**
  * Default controller for the `users` module
  */
-class DefaultController extends Controller
+class DefaultController extends RController
 {
+    public function behaviors()
+    {
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'allow'   => true,
+                            'roles' => ['admin']
+                        ],
+                    ],
+                ]
+            ]
+        );
+    }
     /**
      * Справочник модуль-контроллер-действие
      */
