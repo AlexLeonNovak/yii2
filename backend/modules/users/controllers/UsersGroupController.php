@@ -7,27 +7,13 @@ use backend\modules\users\models\UsersGroup;
 use backend\modules\users\models\UsersGroupSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use common\components\RController;
 
 /**
  * UsersGroupController implements the CRUD actions for UsersGroup model.
  */
-class UsersGroupController extends Controller
+class UsersGroupController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all UsersGroup models.

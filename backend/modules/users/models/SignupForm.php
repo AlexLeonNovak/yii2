@@ -1,6 +1,7 @@
 <?php
 namespace backend\modules\users\models;
 
+use Yii;
 use yii\base\Model;
 use common\models\User;
 
@@ -68,7 +69,11 @@ class SignupForm extends Model
         $user->id_group = $this->id_group;
         $user->setPassword($this->password);
         $user->generateAuthKey();
-        
-        return $user->save() ? $user : null;
+        if ($user->save()) {
+            $role = Yii::$app->authManager->createRole($user->username . $user->id);
+            Yii::$app->authManager->assign($role, $user->id);
+            return $user;
+        }
+        return null;
     }
 }

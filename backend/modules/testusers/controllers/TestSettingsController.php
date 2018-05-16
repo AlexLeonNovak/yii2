@@ -9,26 +9,13 @@ use backend\modules\testusers\models\TestMsg;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\components\RController;
 
 /**
  * TestSettingsController implements the CRUD actions for TestSettings model.
  */
-class TestSettingsController extends Controller
+class TestSettingsController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     function actions(){
         return [

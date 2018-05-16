@@ -15,7 +15,10 @@ return [
         ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module',
-        ]
+        ],
+        'rbac' => [
+            'class' => 'common\modules\rbac\RBAC',
+        ],
     ],
     'components' => [
         'cache' => [

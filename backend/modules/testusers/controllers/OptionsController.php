@@ -9,28 +9,14 @@ use yii\filters\VerbFilter;
 use backend\modules\testusers\models\UserAnswer;
 use backend\modules\testusers\models\Timestamp;
 use backend\modules\testusers\models\TimestampSearch;
-
+use common\components\RController;
 /**
  * Description of StatisticController
  *
  * @author novak-ol
  */
-class OptionsController extends Controller {
+class OptionsController extends RController {
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
     
     public function actionStatistic(){
         $searchModel  = new TimestampSearch();

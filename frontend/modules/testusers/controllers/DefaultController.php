@@ -15,12 +15,13 @@ use backend\modules\testusers\models\TestSettings;
 use common\models\User;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use common\components\RController;
 
 
 /**
  * Default controller for the `testusers` module
  */
-class DefaultController extends Controller
+class DefaultController extends RController
 {
     const NOT_ANSWER = null; //Нет ответа на вопрос
     const TEST  = 0; //Пользователь проходил только тест

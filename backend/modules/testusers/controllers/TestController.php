@@ -9,26 +9,13 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\modules\testusers\models\ThemesSearch;
+use common\components\RController;
 
 /**
  * TestController implements the CRUD actions for test model.
  */
-class TestController extends Controller
+class TestController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all test models.

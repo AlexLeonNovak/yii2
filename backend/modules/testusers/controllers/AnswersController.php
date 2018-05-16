@@ -12,26 +12,13 @@ use yii\base\Model;
 use yii\web\Response;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
+use common\components\RController;
 
 /**
  * AnswersController implements the CRUD actions for Answers model.
  */
-class AnswersController extends Controller
+class AnswersController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all Answers models.

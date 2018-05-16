@@ -13,26 +13,13 @@ use backend\modules\users\models\UsersGroup;
 use backend\modules\users\models\UsersContact;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use common\components\RController;
 
 /**
  * UserController implements the CRUD actions for User model.
  */
-class UserController extends Controller
+class UserController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all User models.

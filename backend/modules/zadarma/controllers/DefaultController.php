@@ -3,18 +3,16 @@
 namespace backend\modules\zadarma\controllers;
 
 use Yii;
-use yii\web\Controller;
+use common\components\RController;
 use backend\modules\zadarma\components\ZadarmaAPI;
-use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use backend\modules\zadarma\models\Zadarma;
 use backend\modules\zadarma\models\ZadarmaSearch;
-
+use yii\helpers\ArrayHelper;
 /**
  * Default controller for the `zadarma` module
  */
-class DefaultController extends Controller
+class DefaultController extends RController
 {
     
     /**
@@ -22,28 +20,25 @@ class DefaultController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['0d0dfb2682192387a2e4325e97b36b32'],
-                        'allow' => true,
+        return ArrayHelper::merge(
+                parent::behaviors(), 
+                [
+                    'access' => [
+                        'class' => AccessControl::className(),
+                        'rules' => [
+                            [
+                                'actions' => ['0d0dfb2682192387a2e4325e97b36b32'],
+                                'allow' => true,
+                            ],
+//                            [
+//                                'actions' => ['settings', 'index', 'get-record'],
+//                                'allow' => true,
+//                                'roles' => ['@'],
+//                            ],
+                        ],
                     ],
-                    [
-                        'actions' => ['settings', 'index', 'get-record'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'get-record' => ['POST'],
-                ],
-            ],
-        ];
+                ]
+            );
     }
     
     function actions(){

@@ -16,20 +16,45 @@ use yii\bootstrap\Nav;
     'items' => [
         [
             'label' => 'Cотрудники',
-            'url'   => ['/users/user/index'],
-        ],
-        [
-            'label' => 'Зарегистрировать нового сотрудника',
-            'url'   => ['/users/user/signup'],
+            'items' => [
+                [
+                    'label' => 'Список сотрудников',
+                    'url'   => ['/users/user/index'],
+                ],
+                [
+                    'label' => 'Регистация нового сотрудника',
+                    'url'   => ['/users/user/signup'],
+                ],
+            ],
         ],
         [
             'label' => 'Должности сотрудников',
-            'url'   => ['/users/users-group/index'],
+            'items' => [
+                [
+                    'label' => 'Список должностей',
+                    'url'   => ['/users/users-group/index'],
+                ],
+                [
+                    'label' => 'Добавление новой должности',
+                    'url'   => ['/users/users-group/create'],
+                ],
+            ],   
         ],
         [
-            'label' => 'RBAC',
+            'label' => 'Контроль доступа <span class="label label-danger">RBAC</span>',
             'url'   => ['/users/default/index'],
-        ]
+            'items' => [
+                [
+                    'label' => 'Справочник действий',
+                    'url'   => ['/users/default/index']
+                ],
+                [
+                    'label' => 'Добавление нового действия',
+                    'url'   => ['/users/default/create']
+                ]
+            ],
+        ],
+        
     ]
 ]); ?>
 <?= $content ?>

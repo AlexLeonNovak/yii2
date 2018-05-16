@@ -8,28 +8,13 @@ use backend\modules\users\models\UsersContactSearch;
 use common\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use common\components\RController;
 
 /**
  * UsersContactController implements the CRUD actions for UsersContact model.
  */
-class UsersContactController extends Controller
+class UsersContactController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     /**
      * Lists all UsersContact models.
      * @return mixed

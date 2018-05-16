@@ -5,7 +5,11 @@
 $this->title = 'My Yii Application';
 ?>
 <div class="site-index">
-
+    <pre>
+        <?php
+        print_r(Yii::$app->getRequest()->resolve());
+    ?>
+    </pre>
     <div class="jumbotron">
         <h1>Congratulations!</h1>
 

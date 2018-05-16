@@ -13,7 +13,6 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use Yii;
 
-
 class RController extends Controller
 {
     public function behaviors()
@@ -33,9 +32,13 @@ class RController extends Controller
                         'allow'   => true,
                     ],
                     [
-                        'actions' => [],
                         'allow'   => true,
-                        'roles'   => RDBManager::getCanToActions(Yii::$app->controller->module->id, Yii::$app->controller->id, Yii::$app->controller->action->id), // --- тут указываем коды ролей, которые имеют доступ к контроллеру ---
+                        'roles'   => Yii::$app->authManager->getCanToActions() // --- тут указываем коды ролей, которые имеют доступ к контроллеру ---
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow'   => true,
+                        'roles'   => ['@'],
                     ],
                 ],
             ],

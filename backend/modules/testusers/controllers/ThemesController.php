@@ -9,31 +9,15 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
-use backend\modules\testusers\models\Questions;
-use backend\modules\testusers\models\Answers;
-use backend\modules\testusers\models\UserAnswer;
 use backend\modules\testusers\models\Timestamp;
-use backend\modules\testusers\models\Test;
+use common\components\RController;
 
 /**
  * ThemesController implements the CRUD actions for Themes model.
  */
-class ThemesController extends Controller
+class ThemesController extends RController
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+
 
     /**
      * Lists all Themes models.
