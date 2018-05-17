@@ -30,11 +30,11 @@ class DefaultController extends RController
                                 'actions' => ['0d0dfb2682192387a2e4325e97b36b32'],
                                 'allow' => true,
                             ],
-//                            [
-//                                'actions' => ['settings', 'index', 'get-record'],
-//                                'allow' => true,
-//                                'roles' => ['@'],
-//                            ],
+                            [
+                                'actions' => ['get-record'],
+                                'allow' => true,
+                                'roles' => ['@'],
+                            ],
                         ],
                     ],
                 ]

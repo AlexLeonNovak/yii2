@@ -16,6 +16,7 @@ use common\models\User;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use common\components\RController;
+use yii\filters\AccessControl;
 
 
 /**
