@@ -15,9 +15,4 @@ $('#link-show-hide').click(function(){
         $(this).text('свернуть');
     }
 });
-//$('#authmodules-name').focusout(function () {
-//    $('#authmodules-name').autocomplete({});
-//});
-//$('#authcontrollers-name').focusout(function () {
-//    $('#authcontrollers-name').autocomplete({});
-//});
+$('#authmodules-name').focus();

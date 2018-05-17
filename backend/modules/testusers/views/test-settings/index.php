@@ -36,7 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'timer',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update} {delete}'
+            ],
         ],
     ]); ?>
 </div>

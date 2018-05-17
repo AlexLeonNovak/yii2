@@ -28,17 +28,22 @@ class RController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error', 'request-password-reset'],
                         'allow'   => true,
+                        'roles'   => ['?'],
                     ],
                     [
                         'allow'   => true,
                         'roles'   => Yii::$app->authManager->getCanToActions() // --- тут указываем коды ролей, которые имеют доступ к контроллеру ---
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'reset-password'],
                         'allow'   => true,
                         'roles'   => ['@'],
+                    ],
+                    [
+                        'allow'   => true,
+                        'roles'   => ['admin'],
                     ],
                 ],
             ],

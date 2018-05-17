@@ -48,19 +48,6 @@ class TestSettingsController extends RController
     }
 
     /**
-     * Displays a single TestSettings model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new TestSettings model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
@@ -97,18 +84,7 @@ class TestSettingsController extends RController
             'model' => $model,
         ]);
     }
-//    public function actionMsgUpdate()
-//    {
-////        $model = TestMsg
-////        var_dump($model);
-////        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-////            return $this->redirect(['index']);
-////        }
-//
-//        return $this->render('msg-update', [
-//            'model' => $model,
-//        ]);
-//    }
+
     /**
      * Deletes an existing TestSettings model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

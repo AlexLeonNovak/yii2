@@ -56,25 +56,6 @@ class UserController extends RController
     }
 
     /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new User();
-        //$contacts = $model->getContacts()->all();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        var_dump($contacts);
-        return $this->render('create', [
-            'model' => $model,
-          //  'contacts' => $contacts,
-        ]);
-    }
-
-    /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id

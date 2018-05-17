@@ -26,8 +26,9 @@ class DefaultController extends RController
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'allow'   => true,
-                            'roles' => ['admin']
+                            'actions'   => ['modal', 'list'],
+                            'allow'     => true,
+                            'roles'     => ['@'],
                         ],
                     ],
                 ]
@@ -119,9 +120,9 @@ class DefaultController extends RController
                             ? $paramControllers['id'] : $modelControllers->id;
                     $modelActions->save();
                     Yii::$app->session->setFlash('success', 'Действие сохранено');
-                } else {
-                    Yii::$app->session->setFlash('danger', 'Ошибка сохранения!');
                 }
+            } else {
+                Yii::$app->session->setFlash('danger', 'Ошибка сохранения!');
             }
         }
         $modelModules = new AuthModules();

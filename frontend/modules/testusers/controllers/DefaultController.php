@@ -29,6 +29,29 @@ class DefaultController extends RController
     const DEFAULT_TIMER = 60; // Время по-умолчанию в с. для показа вопроса если не указано в настройках
     private $ids_answer = [];       //массив с ид ответами, на которые пользователь ответил
     private $questions_showed = []; //массив с ид вопросами, которые были показаны
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return ArrayHelper::merge(
+                parent::behaviors(), 
+                [
+                    'access' => [
+                        'class' => AccessControl::className(),
+                        'rules' => [
+                            [
+                                'actions' => ['total'],
+                                'allow' => true,
+                                'roles' => ['@'],
+                            ],
+                        ],
+                    ],
+                ]
+            );
+    }
+    
     /**
      * Renders the index view for the module
      * @return string

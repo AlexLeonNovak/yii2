@@ -51,12 +51,16 @@ class AuthActionsSearch extends AuthActions
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 50
+            ]
         ]);
+        $dataProvider->sort->enableMultiSort = true;
         $dataProvider->setSort([
             'attributes' =>[
                 'module_name' => [
-                    'asc'  => ['auth_modules.name' => SORT_ASC],
-                    'desc' => ['auth_modules.name' => SORT_DESC],
+                    'asc'  => ['auth_modules.name' => SORT_ASC, 'auth_controllers.name' => SORT_ASC],
+                    'desc' => ['auth_modules.name' => SORT_DESC, 'auth_controllers.name' => SORT_DESC],
                 ],
                 'controller_name' => [
                     'asc'  => ['auth_controllers.name' => SORT_ASC],
@@ -71,6 +75,7 @@ class AuthActionsSearch extends AuthActions
                 'module_name' => SORT_ASC
             ]
         ]);
+
         $this->load($params);
 
         if (!$this->validate()) {
