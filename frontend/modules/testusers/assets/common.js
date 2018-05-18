@@ -38,7 +38,7 @@ if (timer) {
             $('#loader').show();
             clearInterval(counterBack);
             $.post('total' + strGET, {out:true});
-            onsole.log('the mouse left the window');
+            console.log('the mouse left the window');
         }
     });
 }
