@@ -146,8 +146,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->lastName 
                 ? $this->lastName . ' '
-                . StringHelper::truncate($this->firstName, 1, '. ') 
-                . $this->middleName ? StringHelper::truncate($this->middleName, 1, '.') : ''
+                . StringHelper::truncate($this->firstName, 1, '.') 
+                . ($this->middleName ? ' ' . StringHelper::truncate($this->middleName, 1, '.') : '')
                 : $this->username;
     }
     
