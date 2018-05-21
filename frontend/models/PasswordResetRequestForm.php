@@ -42,7 +42,7 @@ class PasswordResetRequestForm extends Model
             'status' => User::STATUS_ACTIVE,
             'email' => $this->email,
         ]);
-
+        
         if (!$user) {
             return false;
         }
@@ -62,7 +62,7 @@ class PasswordResetRequestForm extends Model
             )
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
             ->setTo($this->email)
-            ->setSubject('Password reset for ' . Yii::$app->name)
+            ->setSubject('Сброс пароля "' . Yii::$app->name . '"')
             ->send();
     }
 }

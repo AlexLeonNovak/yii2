@@ -40,6 +40,19 @@ return [
                 ],
             ],
         ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@common/mail',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.beget.com', // SMTP сервер почтовика
+                'username' => 'crm_bot@czholding.ru', // Логин (адрес электронной почты)
+                'password' => 'l0&Wc8Ik', // Пароль
+                'port' => '465', // Порт
+                'encryption' => 'ssl', // Шифрование
+            ],
+        ],
 //        'as access' => [
 //            'class' => 'mdm\admin\components\AccessControl',
 //            'allowActions' => [
