@@ -52,16 +52,6 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
     
-//    public function beforeSave($param) 
-//    {        var_dump($param);
-//        // Ставим обработчик который после успешной проверки данных в пользовательском формате вернет дату в формат для mysql
-//        $this->on(ActiveRecord::EVENT_BEFORE_UPDATE, function () {
-//            if ($this->dateOfBirth){
-//                $this->dateOfBirth = \DateTime::createFromFormat('d.m.Y', $this->dateOfBirth)->format('Y-m-d');
-//            }
-//        });        var_dump($this->dateOfBirth);
-//        parent::save();
-//    }
     
     /**
      * @inheritdoc
@@ -80,12 +70,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function validateDateOfBirth($attribute)
     {
-        $date = \DateTime::createFromFormat('d.m.Y', $this->dateOfBirth);
+        $date = \DateTime::createFromFormat('d.m.Y', $attribute);
         $errors = \DateTime::getLastErrors();
         if (!empty($errors['warning_count'])) {
             $this->addError($attribute, 'Неверная дата');
-        } else {
-            $this->dateOfBirth = $date->format('Y-m-d');
         }
     }
 
