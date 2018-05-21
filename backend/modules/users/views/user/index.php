@@ -55,8 +55,41 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'dateOfBirth',
                 'format' => ['Datetime', 'php:d.m.Y'],
             ],
-            'status',
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'attribute' => 'status',
+                'format' => 'raw',
+                'value' => function($model) {
+                        if ($model->status === $model::STATUS_ACTIVE){
+                            return '<span class="glyphicon glyphicon-ok text-success"></span>';
+                        } else {
+                            return '<span class="glyphicon glyphicon-remove text-danger"></span>';
+                        }
+                    },
+                'filter' => Html::activeDropDownList($searchModel, 'status', [
+                    '0' => 'Неактивный',
+                    '10' => 'Активный',
+                ],['class'=>'form-control', 'prompt' => 'Все']),
+                'contentOptions' => [
+                    'class' => 'col-sm-1',
+                ],
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Действия',
+                'template' => '{view} {update} {active}',
+                'buttons' => [
+                    'active' => function($url, $model){
+                        return Html::a('<span class="label label-primary"><span class="glyphicon glyphicon-ok-sign"></span>'
+                                . ' <span class="glyphicon glyphicon-remove-sign"></span></span>',
+                                Url::to(['activate', 'id' => $model->id]),
+                                ['title' => 'Активация/деактивация']
+                                );
+                    },
+                ],
+                'contentOptions' => [
+                    'class' => 'col-sm-1',
+                ],
+            ],
         ],
     ]); ?>
 </div>

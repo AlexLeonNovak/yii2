@@ -41,7 +41,8 @@ AppAsset::register($this);
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Вход', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = ['label' => 'Модули',
+        $menuItems[] = [
+            'label' => 'Модули',
             'items' => [
                 [
                     'label' => 'Тестирование сотрудников', 
@@ -49,7 +50,7 @@ AppAsset::register($this);
                 ],
                 [
                     'label' => 'Сотрудники',
-                    'url' => ['/users']
+                    'url' => ['/users'],
                 ],
                 [
                     'label' => 'IP-телефония Zadarma',

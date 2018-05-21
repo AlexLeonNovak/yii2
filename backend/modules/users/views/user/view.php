@@ -39,7 +39,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'usersGroup.name',
                     'username',
                     'email:email',
-                    'status',
+                    [
+                        'attribute' => 'status',
+                        'value' => $model->status == $model::STATUS_ACTIVE ? 'Активный' : 'Неактивен',
+                    ],
                     'created_at:datetime',
                     'updated_at:datetime',
                 ],

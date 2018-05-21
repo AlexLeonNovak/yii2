@@ -14,16 +14,10 @@ return [
     'modules' => [
         'testusers' => [
             'class' => 'frontend\modules\testusers\TestUsers',
-            'as access' => [ // if you need to set access
-                'class' => 'yii\filters\AccessControl',
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'] // all auth users
-                    ],
-                ],
-            ],
-        ],  
+        ],
+        'zadarma' => [
+            'class' => 'frontend\modules\zadarma\Zadarma',
+        ],
     ],
     'components' => [
         'request' => [

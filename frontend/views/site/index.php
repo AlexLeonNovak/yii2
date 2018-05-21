@@ -89,7 +89,12 @@ $this->title = 'CRM';
                         [
                             'label' => 'Тестирование СОТР',
                             'url'   => ['/testusers'],
-                        ],/*
+                        ],
+                        [
+                            'label' => 'IP-телефония Zadarma',
+                            'url'   => ['/zadarma'],
+                        ],
+                /*
                         [
                             'label' => 'Транслит',
                             'url'   => ['#'],

@@ -135,5 +135,17 @@ class UserController extends RController
             'group' => $group
         ]);
     }
-
+    
+    public function actionActivate($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->status == User::STATUS_ACTIVE){
+            $model->status = User::STATUS_DELETED;
+        } else {
+            $model->status = User::STATUS_ACTIVE;
+        }
+        $model->save();
+        
+        return $this->redirect(['index']);
+    }
 }
