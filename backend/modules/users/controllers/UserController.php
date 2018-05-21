@@ -69,12 +69,6 @@ class UserController extends RController
         if ($model->dateOfBirth){
             $model->dateOfBirth = \DateTime::createFromFormat('Y-m-d', $model->dateOfBirth)->format('d.m.Y');
         }
-        // Ставим обработчик который после успешной проверки данных в пользовательском формате вернет дату в формат для mysql
-        $model->on(ActiveRecord::EVENT_BEFORE_UPDATE, function () use ($model) {
-            if ($model->dateOfBirth){
-                $model->dateOfBirth = \DateTime::createFromFormat('d.m.Y', $model->dateOfBirth)->format('Y-m-d');
-            }
-        });
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }

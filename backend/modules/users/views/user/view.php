@@ -35,7 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'model' => $model,
                 'attributes' => [
                     'fullName',
-                    'dateOfBirth',
+                    [
+                        'attribute' => 'dateOfBirth',
+                        'format' => 'date',
+                    ],
+                    
                     'usersGroup.name',
                     'username',
                     'email:email',

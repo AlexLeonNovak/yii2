@@ -53,13 +53,13 @@ class User extends ActiveRecord implements IdentityInterface
     }
     
 //    public function beforeSave($param) 
-//    {
-//        
-//        if ($this->dateOfBirth){
-//            //var_dump($this->dateOfBirth);
-//            $this->dateOfBirth = date('Y-m-d', strtotime($this->dateOfBirth));
-//            //var_dump($this->dateOfBirth);
-//        }var_dump($this);
+//    {        var_dump($param);
+//        // Ставим обработчик который после успешной проверки данных в пользовательском формате вернет дату в формат для mysql
+//        $this->on(ActiveRecord::EVENT_BEFORE_UPDATE, function () {
+//            if ($this->dateOfBirth){
+//                $this->dateOfBirth = \DateTime::createFromFormat('d.m.Y', $this->dateOfBirth)->format('Y-m-d');
+//            }
+//        });        var_dump($this->dateOfBirth);
 //        parent::save();
 //    }
     
@@ -73,8 +73,20 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['id_group'], 'exist', 'skipOnError' => true, 'targetClass' => UsersGroup::className(), 'targetAttribute' => ['id_group' => 'id']],
             [['firstName', 'middleName', 'lastName'], 'string', 'max' => 50],
-            [['dateOfBirth'], 'date', 'format' => 'dd.mm.yyyy'],
+//            [['dateOfBirth'], 'date', 'format' => 'yyyy-mm-dd'],
+            [['dateOfBirth'], 'validateDateOfBirth']
         ];
+    }
+
+    public function validateDateOfBirth($attribute)
+    {
+        $date = \DateTime::createFromFormat('d.m.Y', $this->dateOfBirth);
+        $errors = \DateTime::getLastErrors();
+        if (!empty($errors['warning_count'])) {
+            $this->addError($attribute, 'Неверная дата');
+        } else {
+            $this->dateOfBirth = $date->format('Y-m-d');
+        }
     }
 
     /**
@@ -94,7 +106,7 @@ class User extends ActiveRecord implements IdentityInterface
             'fullName'      => 'ФИО',
             'fullNameInitials' => 'ФИО',
             'created_at'    => 'Зарегистрирован',
-            'updated_at'    => 'Обновление данных'
+            'updated_at'    => 'Обновление данных',
         ];
     }
     
