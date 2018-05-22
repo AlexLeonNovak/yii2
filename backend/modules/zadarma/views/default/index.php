@@ -80,8 +80,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return implode('<br>', $internals);
                 }
             ],
-            
-            'internal',
             'destination',
             'caller_id',
             'disposition',
