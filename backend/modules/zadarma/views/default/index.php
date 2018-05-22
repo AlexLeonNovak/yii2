@@ -9,6 +9,7 @@ use yii\bootstrap\Html;
 /* @var $balance backend\modules\zadarma\components\Zadarma */
 /* @var $model backend\modules\zadarma\models\Zadarma */
 /* @var $this yii\web\View */
+/* @var $usersContactArray array */
 
 $this->title = 'Журнал звонков';
 $this->params['breadcrumbs'][] = $this->title;
@@ -66,7 +67,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             . ' c.)</strong></span>';
                 }
             ],
-            
+            [
+                'attribute' => 'internal',
+                'format' => 'raw',
+                'value' => function ($model) use ($usersContactArray){
+                    $internals = explode(',', $model->internal);
+                    foreach ($internals as $key => $val){
+                        if (array_key_exists($val, $usersContactArray)){
+                            $internals[$key] = $usersContactArray[$val];
+                        }
+                    }
+                    return implode('<br>', $internals);
+                }
+            ],
             
             'internal',
             'destination',

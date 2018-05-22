@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 
-<div class="statistic-detail-view">
+<div class="statistic-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

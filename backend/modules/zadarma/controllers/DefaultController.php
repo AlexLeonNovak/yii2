@@ -9,6 +9,9 @@ use yii\filters\AccessControl;
 use backend\modules\zadarma\models\Zadarma;
 use backend\modules\zadarma\models\ZadarmaSearch;
 use yii\helpers\ArrayHelper;
+use common\models\User;
+use backend\modules\users\models\UsersContact;
+
 /**
  * Default controller for the `zadarma` module
  */
@@ -65,22 +68,16 @@ class DefaultController extends RController
      */
     public function actionIndex()
     {
-        $params = [
-            'call_id' => '1525425018.3415344',
-        ];
-        $zadarma    = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), Yii::$app->settings->get('ZadarmaSettings.secret'));
-        //$answer     = $zadarma->call('/v1/sms/send/', $params, 'post');
-        $balance    = json_decode($zadarma->call('/v1/info/balance/'));
-        //$call       = $zadarma->call('/v1/request/callback/', $params);
-        $record = json_decode($zadarma->call('/v1/pbx/record/request/', $params, 'get'));
+        $usersContactArray = ArrayHelper::map(UsersContact::findAll(['type' => 'zadarma']), 'value', 'user.fullNameInitials');
+        $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), Yii::$app->settings->get('ZadarmaSettings.secret'));
+        $balance = json_decode($zadarma->call('/v1/info/balance/'));
         $searchModel = new ZadarmaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index',[
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'balance'       => $balance,
-            //'call' => $call,
-            'record' => $record,
+            'searchModel'       => $searchModel,
+            'dataProvider'      => $dataProvider,
+            'balance'           => $balance,
+            'usersContactArray' => $usersContactArray,
         ]);
     }
 

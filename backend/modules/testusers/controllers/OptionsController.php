@@ -18,7 +18,8 @@ use common\components\RController;
 class OptionsController extends RController {
 
     
-    public function actionStatistic(){
+    public function actionStatistic()
+    {
         $searchModel  = new TimestampSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('statistic', [
@@ -30,8 +31,6 @@ class OptionsController extends RController {
     public function actionView($id)
     {
         $model = Timestamp::findOne($id);
-//        $dataProvider = new ActiveDataProvider([
-//            'query' =>  $model->getQuestions()]);
         $dataProvider = new ActiveDataProvider([
             'query' =>  $model->getUserAnswers(),
             'pagination' => [
@@ -52,7 +51,19 @@ class OptionsController extends RController {
             'user_answers'          => $user_answers,
         ]);
     }
-    public function actionDelete($id){
+    
+    public function actionDetail($id_user) 
+    {
+        $model = UserAnswer::findAll(['id_user' => $id_user]);
+        
+        return $this->render('detail', [
+            'model'                 => $model,
+            //'dataProvider'          => $dataProvider,
+        ]);
+    }
+    
+    public function actionDelete($id)
+    {
         UserAnswer::deleteAll(['id_timestamp' => $id]);
         Timestamp::deleteAll(['id' => $id]);
         return $this->redirect(['statistic']);

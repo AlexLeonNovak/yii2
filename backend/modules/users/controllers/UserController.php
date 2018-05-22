@@ -6,20 +6,36 @@ use Yii;
 use common\models\User;
 use backend\modules\users\models\UserSearch;
 use backend\modules\users\models\SignupForm;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use backend\modules\users\models\UsersGroup;
-use backend\modules\users\models\UsersContact;
-use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
 use common\components\RController;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 
 /**
  * UserController implements the CRUD actions for User model.
  */
 class UserController extends RController
 {
+    public function behaviors()
+    {
+        return ArrayHelper::merge(
+            parent::behaviors(),
+            [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions'   => ['activate'],
+                            'allow'     => true,
+                            'roles'     => ['@'],
+                        ],
+                    ],
+                ]
+            ]
+        );
+    }
 
     /**
      * Lists all User models.
