@@ -18,10 +18,11 @@ class DefaultController extends RController
      */
     public function actionIndex()
     {
-        $searchModel = new ZadarmaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
         $internal = UsersContact::find()->where(['type' => 'zadarma', 'id_user' => Yii::$app->user->id])->one();
         if (isset($internal)) {
+            $searchModel = new ZadarmaSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             $dataProvider->query->andWhere([
                 'OR',
                 ['internal' => $internal->value],
@@ -29,10 +30,11 @@ class DefaultController extends RController
                 ['like', 'internal', ',' . $internal->value],
                 ['like', 'internal', $internal->value . ','],
             ]);
+            return $this->render('index',[
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
         }
-        return $this->render('index',[
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        return $this->render('index');
     }
 }

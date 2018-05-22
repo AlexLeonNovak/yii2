@@ -10,6 +10,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="zadarma-default-index">
     <h1><?= $this->title ?></h1>
+    <?php if (!isset($dataProvider)){ ?>
+    <div class="alert alert-danger">Нет доступа</div>
+    <?php } else { ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -64,5 +67,5 @@ $this->params['breadcrumbs'][] = $this->title;
 //            ],
         ],
     ]);
-    ?>
+    } ?>
 </div>
