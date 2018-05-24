@@ -23,6 +23,7 @@ class TimestampSearch extends Timestamp
 //    public $questions_count;
 //    public $answers_count;
 //    public $answers_correct_count;
+    public $userAnswersCount;
     /**
      * @inheritdoc
      */
@@ -30,6 +31,7 @@ class TimestampSearch extends Timestamp
     {
         return [
             [['id', 'id_theme_test', 'timestamp', 'id_user', 'id_group'], 'integer'],
+            [['userAnswersCount'], 'safe'],
 //            [['username', 'group_name', 'date', 'for', 'questions_count', 
 //                'answers_count', 'answers_correct_count'], 'safe'],
 //            [['themeOrTest'],'string'],
@@ -54,8 +56,8 @@ class TimestampSearch extends Timestamp
      */
     public function search($params)
     {
-        $query = Timestamp::find()->with(['userAnswers'])->joinWith(['user', 'answer'], false);
-                
+        $query = Timestamp::find()->with(['userAnswers'])->joinWith(['user', 'answer']);
+        //$query->addSelect(['userAnswersCount' => $this->userAnswersCount]);
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -72,7 +74,10 @@ class TimestampSearch extends Timestamp
                 ],
                 'timestamp',
                 'for',
-//                'themeOrTest'
+                'themeOrTest.name' => [
+                    'asc' => ['for' => SORT_ASC, 'id_theme_test' => SORT_ASC],
+                    'desc' => ['for' => SORT_DESC, 'id_theme_test' => SORT_DESC],
+                ],
             ],
         ]);
         $this->load($params);

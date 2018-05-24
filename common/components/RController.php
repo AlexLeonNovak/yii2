@@ -30,7 +30,6 @@ class RController extends Controller
                     [
                         'actions' => ['login', 'error', 'request-password-reset'],
                         'allow'   => true,
-                        'roles'   => ['?'],
                     ],
                     [
                         'allow'   => true,

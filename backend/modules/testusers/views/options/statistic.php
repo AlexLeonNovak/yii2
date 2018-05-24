@@ -59,13 +59,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 return $model->for ? 'Тема: ' . $model->themeOrTest->name : 'Тест: ' . $model->themeOrTest->name;
             },
             'label' => 'Тема/Тест',
-//            'filter' => Html::activeDropDownList($searchModel,
-//                        'for',
-//                        ArrayHelper::map($model->getThemeOrTest()->all(), 'id', 'name' , $model->for),
-//                        $arrayFilterThemeAndTest,
-//                        //[0 => 'Тест', 1 => 'Тема'],
-//                        ['class' => 'form-control','prompt' => 'Все']
-//                        ),
         ],
 //        [
 //            'attribute' => 'themeOrTest.name',

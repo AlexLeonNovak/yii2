@@ -90,6 +90,10 @@ class Timestamp extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserAnswer::className(), ['id_timestamp' => 'id']);
     }
+    public function getUserAnswersCount()
+    {
+        return $this->hasMany(UserAnswer::className(), ['id_timestamp' => 'id'])->count();
+    }
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'id_user'])->via('userAnswers');

@@ -20,7 +20,17 @@ use yii\bootstrap\Nav;
         ],
         [
             'label' => '<span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Статистика',
-            'url'   => ['/testusers/options/statistic'],
+            'items' => [
+                [
+                    'label' => 'Общая статистика',
+                    'url'   => ['/testusers/options/statistic'],
+                ],
+                [
+                    'label' => 'Сводная статистика',
+                    'url'   => ['/testusers/options/detail'],
+                ],
+            ],
+            
         ],
         [
             'label' => '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Настройки таймера',

@@ -177,6 +177,8 @@ class DefaultController extends RController
                     $model->attributes = $params;
                 }
                 $model->save();
+            } else {
+                echo 'Zadarma request must been a POST';
             }
 //        }
     }

@@ -10,6 +10,8 @@ use backend\modules\testusers\models\UserAnswer;
 use backend\modules\testusers\models\Timestamp;
 use backend\modules\testusers\models\TimestampSearch;
 use common\components\RController;
+use yii\helpers\ArrayHelper;
+use common\models\User;
 /**
  * Description of StatisticController
  *
@@ -52,14 +54,27 @@ class OptionsController extends RController {
         ]);
     }
     
-    public function actionDetail($id_user) 
+    public function actionDetail() 
     {
-        $model = UserAnswer::findAll(['id_user' => $id_user]);
-        
-        return $this->render('detail', [
-            'model'                 => $model,
-            //'dataProvider'          => $dataProvider,
-        ]);
+        $params['user_list'] = ArrayHelper::map(User::find()->all(), 'id', 'fullName', 'usersGroup.name');
+        $request = Yii::$app->getRequest();
+        if ($request->isPost) {
+            $query = UserAnswer::find();
+            $times = $query->select(['ids' => 'id_timestamp'])
+                ->distinct()
+                ->where(['id_user' => $request->post('id_user')])
+                ->column();
+            $params['selected'] = $request->post('id_user');
+            if ($times) {
+                $searchModel  = new TimestampSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+                $dataProvider->query->andFilterWhere([Timestamp::tableName().'.id' => $times]);
+                $dataProvider->pagination->pageSize = 50;
+                $dataProvider->sort->defaultOrder= ['themeOrTest.name' => SORT_ASC, 'timestamp' => SORT_ASC];
+                $params['dataProvider']  = $dataProvider;
+            }
+        }
+        return $this->render('detail', $params);
     }
     
     public function actionDelete($id)
