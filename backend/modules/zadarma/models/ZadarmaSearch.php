@@ -48,7 +48,7 @@ class ZadarmaSearch extends Zadarma
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $dataProvider->sort->defaultOrder= ['id' => SORT_DESC];
         $this->load($params);
 
         if (!$this->validate()) {

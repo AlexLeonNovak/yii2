@@ -5,8 +5,6 @@ namespace backend\modules\users\controllers;
 use Yii;
 use backend\modules\users\models\UsersContact;
 use backend\modules\users\models\UsersContactSearch;
-use common\models\User;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use common\components\RController;
 
@@ -60,7 +58,7 @@ class UsersContactController extends RController
     {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/users/user/view', 'id' => $model->id_user]);
         }
 
         return $this->render('update', [

@@ -128,13 +128,13 @@ class User extends ActiveRecord implements IdentityInterface
     
     public static function getCurrentUserGroupId(){
         
-        $user_group = self::find()->where(['id' => Yii::$app->user->identity->id])->one();
+        $user_group = static::find()->where(['id' => Yii::$app->user->identity->id])->one();
         return $user_group->id_group;
     }
     
     public static function getUserListArray() 
     {
-        return ArrayHelper::map(self::find()->all(), 'id', 'fullName', 'usersGroup.name');
+        return ArrayHelper::map(static::find()->all(), 'id', 'fullName', 'usersGroup.name');
     }
     
     public function getUsersGroup()
