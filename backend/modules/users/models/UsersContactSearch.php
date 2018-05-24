@@ -12,6 +12,7 @@ use backend\modules\users\models\UsersContact;
  */
 class UsersContactSearch extends UsersContact
 {
+    public $fullName;
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class UsersContactSearch extends UsersContact
     {
         return [
             [['id', 'id_user'], 'integer'],
-            [['type', 'value'], 'safe'],
+            [['type', 'value', 'fullName'], 'safe'],
         ];
     }
 
@@ -41,14 +42,25 @@ class UsersContactSearch extends UsersContact
      */
     public function search($params)
     {
-        $query = UsersContact::find();
+        $query = UsersContact::find()->joinWith('user');
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
-
+        $dataProvider->setSort([
+            'attributes' => [
+                'id',
+                'id_user' => [     //сортировка ФИО
+                    'asc' => ['user.lastName' => SORT_ASC, 'user.firstName' => SORT_ASC, 'user.middleName' => SORT_ASC],
+                    'desc' => ['user.lastName' => SORT_DESC, 'user.firstName' => SORT_DESC, 'user.middleName' => SORT_DESC],
+                    'default' => SORT_ASC
+                ],
+                'type',
+                'value',
+            ]
+        ]);
         $this->load($params);
 
         if (!$this->validate()) {

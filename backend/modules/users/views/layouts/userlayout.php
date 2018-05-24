@@ -25,6 +25,10 @@ use yii\bootstrap\Nav;
                     'label' => 'Регистация нового сотрудника',
                     'url'   => ['/users/user/signup'],
                 ],
+                [
+                    'label' => 'Список контактов',
+                    'url'   => ['/users/users-contact/index'],
+                ],
             ],
         ],
         [

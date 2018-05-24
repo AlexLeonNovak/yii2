@@ -2,12 +2,14 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\models\User;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\modules\users\models\UsersContactSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Users Contacts';
+$this->title = 'Список контактов';
+$this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['/users/user/index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-contact-index">
@@ -16,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Users Contact', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php //echo Html::a('Создать контакт', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,8 +27,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'id_user',
+            [
+                'attribute' => 'id_user',
+                'value' => 'user.fullName',
+                'filter' => User::getUserListArray(),
+            ],
+            
             'type',
             'value',
 

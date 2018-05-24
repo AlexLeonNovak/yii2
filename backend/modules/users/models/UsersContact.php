@@ -46,7 +46,7 @@ class UsersContact extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_user' => 'Id User',
+            'id_user' => 'Сотрудник',
             'type' => 'Тип контакта',
             'value' => 'Значение',
         ];

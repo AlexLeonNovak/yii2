@@ -9,7 +9,7 @@ use yii\helpers\Html;
 $this->title = 'Создать контакт';
 $this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['/users/user/index']];
 $this->params['breadcrumbs'][] = [
-            'label' => $model->user->lastName ? $model->user->fullNameInitials : $model->user->username, 
+            'label' => $model->user->fullName, 
             'url' => ['/users/user/view', 'id' => $model->id_user]
         ];
 $this->params['breadcrumbs'][] = $this->title;

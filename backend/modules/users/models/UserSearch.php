@@ -53,8 +53,8 @@ class UserSearch extends User
             'attributes' => [
                 'id',
                 'fullName' => [     //сортировка ФИО
-                    'asc' => ['firstName' => SORT_ASC, 'lastName' => SORT_ASC, 'middleName' => SORT_ASC],
-                    'desc' => ['firstName' => SORT_DESC, 'lastName' => SORT_DESC, 'middleName' => SORT_DESC],
+                    'asc' => ['lastName' => SORT_ASC, 'firstName' => SORT_ASC, 'middleName' => SORT_ASC],
+                    'desc' => ['lastName' => SORT_DESC, 'firstName' => SORT_DESC, 'middleName' => SORT_DESC],
                     'default' => SORT_ASC
                 ],
                 'username',

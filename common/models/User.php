@@ -9,6 +9,7 @@ use yii\web\IdentityInterface;
 use backend\modules\users\models\UsersGroup;
 use backend\modules\users\models\UsersContact;
 use yii\helpers\StringHelper;
+use yii\helpers\ArrayHelper;
 
 /**
  * User model
@@ -127,8 +128,13 @@ class User extends ActiveRecord implements IdentityInterface
     
     public static function getCurrentUserGroupId(){
         
-        $user_group = User::find()->where(['id' => Yii::$app->user->identity->id])->one();
+        $user_group = self::find()->where(['id' => Yii::$app->user->identity->id])->one();
         return $user_group->id_group;
+    }
+    
+    public static function getUserListArray() 
+    {
+        return ArrayHelper::map(self::find()->all(), 'id', 'fullName', 'usersGroup.name');
     }
     
     public function getUsersGroup()
