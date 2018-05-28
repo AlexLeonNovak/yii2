@@ -12,14 +12,15 @@ use backend\modules\testusers\models\Themes;
  */
 class ThemesSearch extends Themes
 {
+    public $id_group;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'id_group'], 'integer'],
-            [['name'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'id_group'], 'safe'],
         ];
     }
 
@@ -41,7 +42,7 @@ class ThemesSearch extends Themes
      */
     public function search($params)
     {
-        $query = Themes::find();
+        $query = Themes::find()->joinWith('groups');
 
         // add conditions that should always apply here
 
@@ -60,11 +61,16 @@ class ThemesSearch extends Themes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'id_group' => $this->id_group,
+        ]);
+        $query->filterWhere([
+            'OR',
+            ['users_group.id' => $this->id_group],
+            ['test_themes.id_group' => $this->id_group]
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);
-
+        $query->distinct(['id']);
+        
         return $dataProvider;
     }
 }

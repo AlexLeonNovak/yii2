@@ -63,7 +63,14 @@ class DefaultController extends RController
         $searchModel = new ThemesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $user_group = User::getCurrentUserGroupId();
-        $themes = Themes::findAll(['id_group' => $user_group]);
+        $themes = Themes::find()
+                ->joinWith('groups')
+                ->where([
+                        'OR',
+                        ['users_group.id' => $user_group],
+                        ['test_themes.id_group' => $user_group]
+                    ])
+                ->all();
         foreach ($themes as $theme){
             $themes_ids[] = $theme->id;
         }

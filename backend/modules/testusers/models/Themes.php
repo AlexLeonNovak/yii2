@@ -3,31 +3,30 @@
 namespace backend\modules\testusers\models;
 
 use Yii;
-use backend\modules\users\models\UsersGroup;
-use \yii\helpers\ArrayHelper;
+use \backend\modules\users\models\UsersGroup;
 
 /**
- * This is the model class for table "test_themes".
+ * This is the model class for table "{{%test_themes}}".
  *
  * @property int $id
  * @property int $id_group
  * @property string $name
  *
  * @property Test[] $tests
- * @property UsersGroup $group
+ * @property TestThemesUsersGroup[] $testThemesUsersGroups
  */
 class Themes extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'test_themes';
+        return '{{%test_themes}}';
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -40,13 +39,13 @@ class Themes extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'id_group' => 'Должность сотрудников',
+            'id_group' => 'Основная должность сотрудников',
             'name' => 'Имя темы',
         ];
     }
@@ -62,17 +61,21 @@ class Themes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getTestThemesUsersGroups()
+    {
+        return $this->hasMany(TestThemesUsersGroup::className(), ['id_theme' => 'id']);
+    }
+    
+    public function getGroups() 
+    {
+        return $this->hasMany(UsersGroup::className(), ['id' => 'id_group'])->via('testThemesUsersGroups');
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getGroup()
     {
         return $this->hasOne(UsersGroup::className(), ['id' => 'id_group']);
     }
-    
-    /*
-     * Получаем имя групы пользователей
-     */
-//    public static function getGroups() {
-//        $result = ArrayHelper::map($this->hasMany(UsersGroup::className()), 'id', 'name');
-//        return $result;
-//        //$this->hasMany(UsersGroup::className(), ['id' => 'id_group']);
-//    }
 }

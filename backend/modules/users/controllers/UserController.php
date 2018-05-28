@@ -82,9 +82,9 @@ class UserController extends RController
     {
         $model = $this->findModel($id);
         // Приводим дату к пользовательскому формату
-        if ($model->dateOfBirth){
-            $model->dateOfBirth = \DateTime::createFromFormat('Y-m-d', $model->dateOfBirth)->format('d.m.Y');
-        }
+//        if ($model->dateOfBirth){
+//            $model->dateOfBirth = \DateTime::createFromFormat('Y-m-d', $model->dateOfBirth)->format('d.m.Y');
+//        }
 //        // Ставим обработчик который после успешной проверки данных в пользовательском формате вернет дату в формат для mysql
 //        $model->on(ActiveRecord::EVENT_BEFORE_UPDATE, function () use ($model) {
 //            if ($model->dateOfBirth){

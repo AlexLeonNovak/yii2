@@ -48,10 +48,10 @@ class UsersGroup extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTestThemes()
-    {
-        return $this->hasMany(TestThemes::className(), ['id_group' => 'id']);
-    }
+//    public function getTestThemes()
+//    {
+//        return $this->hasMany(TestThemes::className(), ['id_group' => 'id']);
+//    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -67,5 +67,13 @@ class UsersGroup extends \yii\db\ActiveRecord
     public function getUsersGroupArray()
     {
         return $this->find()->asArray()->all();    
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTestThemesUsersGroups()
+    {
+        return $this->hasMany(TestThemesUsersGroup::className(), ['id_group' => 'id']);
     }
 }

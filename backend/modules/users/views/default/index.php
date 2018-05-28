@@ -72,7 +72,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     return implode('<br>', ArrayHelper::map(
                                     User::findAll([
                                         'id' => Yii::$app->authManager->getUserByActionId($model->id)
-                                    ]), 'id', 'fullNameInitials'));
+                                    ]), 
+                            'id', 'fullNameInitials'));
                 },
                 'contentOptions' => [
                     'class' => 'add-user',

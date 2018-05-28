@@ -1,15 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dimav
- * Date: 07.05.2018
- * Time: 14:17
- */
 
 namespace common\components;
+
 use yii\rbac\DbManager;
 use yii\db\Query;
 use Yii;
+use yii\db\Expression;
 
 
 class RDBManager extends DbManager
@@ -110,17 +106,12 @@ class RDBManager extends DbManager
      */
     public function getUserByActionId($id_action)
     {
-        $query = new Query();
         // получаем все записи из БД
-        $all_actions = $query->from($this->userActionsTable)->all($this->db);
-        $ids_users = []; // объявляем пустой массив, для записи ид юзеров
-        foreach ($all_actions as $action){ // прохрдим по всех записях
-            $arr_actions = explode(',', $action['ids_actions']); // получаем массив екшнов
-            if (in_array($id_action, $arr_actions)){ // проверяем, есть ли ид екшна в массиве
-                $ids_users[] = $action['id_user']; // записываем ид юзеров в массив
-            }
-        }
-        return $ids_users;
+        return (new Query())->from($this->userActionsTable)
+                ->select('id_user')
+                ->where(new Expression('FIND_IN_SET(:ids_actions, ids_actions)'))
+                ->addParams([':ids_actions' => $id_action])
+                ->column($this->db);
     }
     
     /**
@@ -165,10 +156,10 @@ class RDBManager extends DbManager
     {
         // ищем все екшны доступные юзеру
         $actions = $this->getAccessArrayActionsByUserId($id_user);
-        $query = new Query();
         if (!$actions){ //если массив пустой - то удалять нечего
             return false;
         }
+        $query = new Query();
         if (in_array($id_action, $actions)){ // проверяем, есть ли данный ид екшна в массиве доступных
             unset($actions[array_search($id_action, $actions)]); // извлекаем из массива этот ид
             if (count($actions)){ // если массив не пустой, то обновляем запись в БД

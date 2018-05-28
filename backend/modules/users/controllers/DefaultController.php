@@ -147,7 +147,7 @@ class DefaultController extends RController
             $modelActions->load($request->post());
             if ($modelActions->save() && $modelControllers->save() && $modelModules->save()) {
                 Yii::$app->session->setFlash('success', 'Изменения сохранены');
-                return $this->redirect('directory');
+                return $this->redirect('index');
             } else {
                 Yii::$app->session->setFlash('danger', 'Ошибка сохранения!');
             }

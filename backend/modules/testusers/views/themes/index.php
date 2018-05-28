@@ -30,30 +30,40 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             
-            'name' => [
+            [
                 'attribute' => 'name',
                 'format' => 'raw',
                 'value' => function($model){
                     return Html::a($model->name, Url::to(['test/index', 'id_theme' => $model->id]),
                                 ['title' => 'Просмотр тестов']);
-                }
+                },
+                'contentOptions' => [
+                    'class' => 'col-sm-3',
+                ]
             ],
-            //'id',
-            //'id_group',
-            'group_name' => [
+            [
                 'attribute' => 'id_group',
-                'format'=>'text',
+                'format'=>'raw',
                 'value' => function($model){
-                    return $model->group->name;
+                    return '<span class="label label-success">' . $model->group->name 
+                            . '</span> <span class="label label-def">'
+                            . implode('</span> <span class="label label-def">'
+                                    , ArrayHelper::getColumn($model->groups, 'name'))
+                            . '</span>';
                 },
                 'filter' => Html::activeDropDownList($searchModel,
                         'id_group',
                         ArrayHelper::map(UsersGroup::find()->all(), 'id', 'name'),
                         ['class' => 'form-control','prompt' => 'Все']
                         ),
+                'label' => 'Должности сотрудников',
+                'contentOptions' => [
+                    'style' => 'font-size:16px',
+                ]
             ],
 
-            ['class' => 'yii\grid\ActionColumn',
+            [
+                'class' => 'yii\grid\ActionColumn',
                 'header'=> 'Действия',
                 'template' => '{view} {update} {delete} {addtest}',
                 'buttons' => [
@@ -70,7 +80,22 @@ $this->params['breadcrumbs'][] = $this->title;
                                 );
                     },
                 ],
+                'contentOptions' => [
+                    'class' => 'col-sm-1',
+                ]
             ],
         ],
     ]); ?>
 </div>
+<?php
+$css = <<< CSS
+.label-def{
+    color: #555555;
+    background: #f5f5f5;
+    border: 0.1em solid #ccc;
+    cursor: default;
+    padding: 0.1em .6em 0.2em;
+}
+CSS;
+
+$this->registerCss($css);

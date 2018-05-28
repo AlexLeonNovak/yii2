@@ -5,12 +5,13 @@ namespace backend\modules\testusers\controllers;
 use Yii;
 use backend\modules\testusers\models\Themes;
 use backend\modules\testusers\models\ThemesSearch;
-use yii\web\Controller;
+use backend\modules\testusers\models\TestThemesUsersGroup;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use backend\modules\testusers\models\Timestamp;
 use common\components\RController;
+use yii\base\Model;
 
 /**
  * ThemesController implements the CRUD actions for Themes model.
@@ -41,14 +42,15 @@ class ThemesController extends RController
     public function actionCreate()
     {
         $model = new Themes();
-
+        $groups = new TestThemesUsersGroup();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $this->saveThemeGroups($model);
             Yii::$app->session->setFlash('success', "Данные сохранены");
             return $this->redirect(['index']);
         }
-
         return $this->render('create', [
             'model' => $model,
+            'groups' => $groups,
         ]);
     }
 
@@ -62,15 +64,33 @@ class ThemesController extends RController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $groups = $model->groups;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $this->saveThemeGroups($model);
             Yii::$app->session->setFlash('success', "Данные сохранены");
             return $this->redirect(['index']);
         }
-
         return $this->render('update', [
             'model' => $model,
+            'groups' => $groups,
         ]);
+    }
+    
+    public function saveThemeGroups($theme) 
+    {
+        if (empty($data = Yii::$app->request->post('TestThemesUsersGroup', []))){
+            return false;
+        } else {
+            TestThemesUsersGroup::deleteAll(['id_theme' => $theme->id]);
+            foreach ($data['id_group'] as $dat){
+                if ($dat != $theme->id_group){
+                    $group = new TestThemesUsersGroup();
+                    $group->id_group = $dat;
+                    $group->id_theme = $theme->id;
+                    $group->save();
+                }
+            }
+        }
     }
 
     /**
