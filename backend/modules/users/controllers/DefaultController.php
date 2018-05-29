@@ -48,25 +48,50 @@ class DefaultController extends RController
         ]);
     }
     
-    public function actionModal($id)
+    public function actionModal()
     {
-        $ids_user = Yii::$app->authManager->getUserByActionId($id);
+        $request = Yii::$app->getRequest();
         $user_list = ArrayHelper::map(User::find()->all(), 'id', 'fullName');
-        if (Yii::$app->request->isAjax){
-            $model = AuthActions::findOne($id);
+        if ($request->isAjax){
+            if ($request->get('action')){
+                $ids_user = Yii::$app->authManager->getUserByActionId($request->get('action'));
+                $module['auth'] = 'action';
+                $module['name'] = AuthActions::findOne($request->get('action'))->getModuleControllerAction();
+            } else {
+                $ids_user = null;
+                if ($request->get('controller')){
+                    $cont = AuthControllers::findOne($request->get('controller'));
+                    $module['auth'] = 'controller';
+                    $module['name'] = $cont->module->name . '/' . $cont->name;
+                } else {
+                    $module['auth'] = 'module';
+                    $module['name'] = AuthModules::findOne($request->get('module'))->name;
+                }
+            }
             return $this->renderAjax('_modal-form',[
-                'model' => $model,
+                'module' => $module,
                 'ids_user' => $ids_user,
                 'user_list' => $user_list,
             ]);
         }
         if (Yii::$app->request->isPost) {
+            if ($request->get('module')){
+                $module = AuthModules::findOne($request->get('module'));
+                $ids_action = ArrayHelper::getColumn($module->authActions, 'id');
+            } elseif ($request->get('controller')){
+                $controller = AuthControllers::findOne($request->get('controller'));
+                $ids_action = ArrayHelper::getColumn($controller->authActions, 'id');
+            } else {
+                $ids_action[] = $request->get('action');
+            }
             foreach ($user_list as $id_user => $name){
-                if (null != Yii::$app->request->post('ids') && 
-                        in_array($id_user, Yii::$app->request->post('ids'))){
-                    Yii::$app->authManager->setActionToUser($id, $id_user);
-                } else {
-                    Yii::$app->authManager->deleteActionByUser($id, $id_user);
+                foreach ($ids_action as $id) {
+                    if (null != $request->post('ids') && 
+                            in_array($id_user, $request->post('ids'))){
+                        Yii::$app->authManager->setActionToUser($id, $id_user);
+                    } else {
+                        Yii::$app->authManager->deleteActionByUser($id, $id_user);
+                    }
                 }
             }
             $this->redirect('index');

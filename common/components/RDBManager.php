@@ -63,7 +63,7 @@ class RDBManager extends DbManager
      */
     public function getUserListAccess($id_user) 
     {
-        if (!$access_array = $this->getAccessArrayActionsByUserId($id_user)){
+        if (!($access_array = $this->getAccessArrayActionsByUserId($id_user))){
             return false;
         }
         $query = new Query();
@@ -191,4 +191,29 @@ class RDBManager extends DbManager
         return true;
     }
     
+    /**
+     * Проверяет есть ли доступ к определенному модулю
+     * 
+     * @param string $module_name
+     * @return boolean
+     */
+    public function canModule($module_name) 
+    {
+        if (!($access_array = $this->getAccessArrayActionsByUserId(Yii::$app->user->identity->id))){
+            return false;
+        }
+        $access_module = (new Query())
+            ->from($this->actionsTable)
+            ->leftJoin($this->controllersTable, $this->controllersTable.'.`id` = '.$this->actionsTable.'.`id_controller`')
+            ->leftJoin($this->modulesTable, $this->modulesTable.'.`id` = '.$this->controllersTable.'.`id_module`')
+            ->where([
+                    $this->modulesTable.'.`name`' => $module_name,
+                    $this->actionsTable.'.`id`' => $access_array,
+                ])
+            ->one($this->db);
+        if ($access_module){
+            return true;
+        }
+        return false;
+    }
 }

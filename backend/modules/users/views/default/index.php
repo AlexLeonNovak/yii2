@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
@@ -42,6 +43,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'label' => 'Модуль',        
                 'group' => true,
+                'contentOptions' => function ($model) {
+                    return [
+                            'data-module' => $model->module->id,
+                            'class' => 'add-user',
+                        ];
+                },
             ],
             [
                 'attribute' => 'controller_name',
@@ -52,6 +59,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'label' => 'Контроллер',
                 'group' => true,
+                'contentOptions' => function ($model) {
+                    return [
+                            'data-controller' => $model->controller->id,
+                            'class' => 'add-user',
+                        ];
+                },
             ],
             [
                 'attribute' => 'name',
@@ -60,9 +73,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->name . '<br><small class = "text-muted"><b>Описание:</b> '
                             . $model->description . '</small>';
                 },
-                'contentOptions' => [
-                    'class' => 'add-user',
-                ]
+                'contentOptions' => function ($model) {
+                    return [
+                            'data-action' => $model->id,
+                            'class' => 'add-user',
+                        ];
+                },
             ],
             [
                 'attribute' => 'id_user',
@@ -75,9 +91,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                     ]), 
                             'id', 'fullNameInitials'));
                 },
-                'contentOptions' => [
-                    'class' => 'add-user',
-                ],
+                'contentOptions' => function ($model) {
+                    return [
+                            'data-action' => $model->id,
+                            'class' => 'add-user',
+                        ];
+                },
                 'filter' => Html::activeDropDownList($searchModel, 'id_user',
                         ArrayHelper::map(User::find()->all(), 'id', 'fullNameInitials', 'usersGroup.name'),
                         ['class' => 'form-control', 'prompt' => 'Все']),
@@ -101,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $css = <<< CSS
         .add-user:hover {
             color: #3c763d;
-            background-color: #dff0d8;
+            background-color: #dff0d8!important;
             cursor: pointer;
         }
 CSS;
@@ -110,9 +129,18 @@ $this->registerCss($css);
 
 $js = <<< JS
         $('.add-user').click(function(){
-            var data = $(this).closest('tr').data();
+            var data = $(this).data();
+            if (data.action) {
+                var str_load = 'modal?action=' + data.action;
+            }
+            if (data.controller) {
+                var str_load = 'modal?controller=' + data.controller;
+            }
+            if (data.module) {
+                var str_load = 'modal?module=' + data.module;
+            }
+            $('#modalAddUserAccess').load(str_load);
             $('#modalAddUserAccess').modal('show');
-            $('#modalAddUserAccess').load('modal?id=' + data.key);
         });
 JS;
 

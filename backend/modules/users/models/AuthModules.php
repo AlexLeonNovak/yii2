@@ -53,4 +53,13 @@ class AuthModules extends \yii\db\ActiveRecord
     {
         return $this->hasMany(AuthControllers::className(), ['id_module' => 'id']);
     }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuthActions()
+    {
+        return $this->hasMany(AuthActions::className(), ['id_controller' => 'id'])
+                ->viaTable(AuthControllers::tableName(), ['id_module' => 'id']);
+    }
 }

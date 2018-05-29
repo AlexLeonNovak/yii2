@@ -51,6 +51,15 @@ AppAsset::register($this);
             )
             . Html::endForm()
             . '</li>';
+        if (Yii::$app->authManager->canModule('app-backend')){
+            $menuItems[] = [
+                'label' => 'Админ-панель', 
+                'url' => '/admin',
+                'options'=> [
+                    'class'=> 'list-group-item-danger'
+                ],
+            ];
+        }
     }
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
