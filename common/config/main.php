@@ -1,7 +1,7 @@
 <?php
 use \kartik\datecontrol\Module;
 return [
-    'name' => 'PERSPEKTIVA IMPEREAL',
+    'name' => 'PERSPEKTIVA IMPEREAL s.r.o.',
     'sourceLanguage' => 'ru-RU',
     'language' => 'ru-RU',
     'aliases' => [

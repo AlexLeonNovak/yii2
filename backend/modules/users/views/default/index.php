@@ -86,9 +86,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function ($model) {
                     return implode('<br>', ArrayHelper::map(
-                                    User::findAll([
+                                    User::find([
                                         'id' => Yii::$app->authManager->getUserByActionId($model->id)
-                                    ]), 
+                                    ])->orderBy('lastname')->all(), 
                             'id', 'fullNameInitials'));
                 },
                 'contentOptions' => function ($model) {

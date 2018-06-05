@@ -6,12 +6,12 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
-/* @var $model backend\modules\users\models\UsersContact */
+/* @var $model backend\modules\users\models\UsersInfo */
 /* @var $form yii\widgets\ActiveForm */
 
-// Массив для выбора типа контакта
+// Массив для выбора типа информации
 $data = array_unique(ArrayHelper::merge($model->find()->select('type')->groupBy('type')->column(), 
-        ['Телефон', 'Skype', 'WhatsApp', 'Viber', 'Telegram', 'Zadarma', 'e-mail']));
+        ['Задачи', 'Резюме', 'Увлечения', 'Комментарий']));
 sort($data); //Сортировка
 $data = array_combine($data, $data); // Заполнение массива ключ => значение, где ключ = значение
 ?>
@@ -25,12 +25,12 @@ $data = array_combine($data, $data); // Заполнение массива кл
 
     <?= $form->field($model, 'type')->widget(Select2::className(), [
             'data' => $data,
-            'options' => ['placeholder' => 'Выберете тип контакта или введите новый'],
+            'options' => ['placeholder' => 'Выберете тип информации или введите новый'],
             'pluginOptions' => [
                 'maximumInputLength' => 20,
             ],
-        ])->hint('Если хотите добавить новый тип контакта, то напишите и нажмите клавишу "Enter"'); ?>
-    <?= $form->field($model, 'value')->textInput(['maxlength' => true]) ?>
+        ])->hint('Если хотите добавить новый тип информации, то напишите и нажмите клавишу "Enter"'); ?>
+    <?= $form->field($model, 'value')->textarea() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

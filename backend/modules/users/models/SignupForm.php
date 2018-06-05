@@ -14,6 +14,7 @@ class SignupForm extends Model
     public $email;
     public $password;
     public $id_group;
+    public $password_repeat;
 
 
     /**
@@ -33,9 +34,12 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'Пользователь с таким адресом электронной почты уже существует.'],
 
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            [['password', 'password_repeat'], 'required'],
+            [['password', 'password_repeat'], 'string', 'min' => 6],
+            ['password_repeat', 'compare', 'compareAttribute' => 'password', 'message' => 'Введенные пароли не совпадают'],
+            
             ['id_group', 'integer'],
+            ['id_group', 'required', 'message' => 'Необходимо выбрать «{attribute}»'],
         ];
     }
 
@@ -49,6 +53,7 @@ class SignupForm extends Model
             'email'     => 'Электронная почта',
             'id_group'  => 'Должность',
             'password'  => 'Пароль',
+            'password_repeat' => 'Повтор пароля',
         ];
     }
 

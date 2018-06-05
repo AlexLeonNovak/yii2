@@ -24,8 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'email') ?>
-                <?= $form->field($model, 'id_group')->dropDownList(ArrayHelper::map($group, 'id', 'name')) ?>
+                <?= $form->field($model, 'id_group')
+                    ->dropDownList(ArrayHelper::map($group, 'id', 'name'), [
+                            'prompt' => 'Выберете должность...'
+                        ]) ?> 
                 <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password_repeat')->passwordInput() ?>
             
                 <div class="form-group">
                     <?= Html::submitButton('Зарегистрировать', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>

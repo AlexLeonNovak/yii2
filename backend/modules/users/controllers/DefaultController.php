@@ -51,7 +51,7 @@ class DefaultController extends RController
     public function actionModal()
     {
         $request = Yii::$app->getRequest();
-        $user_list = ArrayHelper::map(User::find()->all(), 'id', 'fullName');
+        $user_list = ArrayHelper::map(User::find()->orderBy('lastname')->all(), 'id', 'fullName');
         if ($request->isAjax){
             if ($request->get('action')){
                 $ids_user = Yii::$app->authManager->getUserByActionId($request->get('action'));

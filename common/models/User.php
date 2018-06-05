@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use backend\modules\users\models\UsersGroup;
 use backend\modules\users\models\UsersContact;
+use backend\modules\users\models\UsersInfo;
 use yii\helpers\StringHelper;
 use yii\helpers\ArrayHelper;
 
@@ -63,7 +64,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['id_group'], 'exist', 'skipOnError' => true, 'targetClass' => UsersGroup::className(), 'targetAttribute' => ['id_group' => 'id']],
-            [['firstName', 'middleName', 'lastName'], 'string', 'max' => 50],
+            [['firstName', 'middleName', 'lastName', 'worktime_start', 'worktime_end'], 'string', 'max' => 50],
 //            [['dateOfBirth'], 'date', 'format' => 'yyyy-mm-dd'],
             [['dateOfBirth'], 'validateDateOfBirth']
         ];
@@ -96,6 +97,8 @@ class User extends ActiveRecord implements IdentityInterface
             'fullNameInitials' => 'ФИО',
             'created_at'    => 'Зарегистрирован',
             'updated_at'    => 'Обновление данных',
+            'worktime_start'=> 'worktime_start',
+            'worktime_end'  => 'worktime_end'
         ];
     }
     
@@ -163,6 +166,13 @@ class User extends ActiveRecord implements IdentityInterface
     public function getContacts() 
     {
         return $this->hasMany(UsersContact::className(), ['id_user' => 'id']);
+        
+    }
+    
+        
+    public function getInfos() 
+    {
+        return $this->hasMany(UsersInfo::className(), ['id_user' => 'id']);
         
     }
     

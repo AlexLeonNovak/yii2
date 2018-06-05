@@ -3,23 +3,39 @@
 namespace backend\modules\users\controllers;
 
 use Yii;
-use backend\modules\users\models\UsersContact;
-use backend\modules\users\models\UsersContactSearch;
+use backend\modules\users\models\UsersInfo;
+use backend\modules\users\models\UsersInfoSearch;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use common\components\RController;
+use yii\filters\VerbFilter;
 
 /**
- * UsersContactController implements the CRUD actions for UsersContact model.
+ * UsersInfoController implements the CRUD actions for UsersInfo model.
  */
-class UsersContactController extends RController
+class UsersInfoController extends Controller
 {
     /**
-     * Lists all UsersContact models.
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Lists all UsersInfo models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new UsersContactSearch();
+        $searchModel = new UsersInfoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -29,15 +45,28 @@ class UsersContactController extends RController
     }
 
     /**
-     * Creates a new UsersContact model.
+     * Displays a single UsersInfo model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Creates a new UsersInfo model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate($id_user)
     {
-        $model = new UsersContact();
+        $model = new UsersInfo();
         $model->id_user = $id_user;
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/users/user/view', 'id' => $id_user]);
         }
@@ -48,7 +77,7 @@ class UsersContactController extends RController
     }
 
     /**
-     * Updates an existing UsersContact model.
+     * Updates an existing UsersInfo model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -57,6 +86,7 @@ class UsersContactController extends RController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['/users/user/view', 'id' => $model->id_user]);
         }
@@ -67,7 +97,7 @@ class UsersContactController extends RController
     }
 
     /**
-     * Deletes an existing UsersContact model.
+     * Deletes an existing UsersInfo model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -78,20 +108,20 @@ class UsersContactController extends RController
         $model = $this->findModel($id);
         $id_user = $model->id_user;
         $model->delete();
-        Yii::$app->session->setFlash('success', 'Контакт успешно удален');
+        Yii::$app->session->setFlash('success', 'Информация успешно удалена');
         return $this->redirect(['/users/user/view', 'id' => $id_user]);
     }
 
     /**
-     * Finds the UsersContact model based on its primary key value.
+     * Finds the UsersInfo model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return UsersContact the loaded model
+     * @return UsersInfo the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = UsersContact::findOne($id)) !== null) {
+        if (($model = UsersInfo::findOne($id)) !== null) {
             return $model;
         }
 

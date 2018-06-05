@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
 
-$this->title = 'Редактор данных о сотруднике';
+$this->title = 'Редактирование данных о сотруднике';
 $this->params['breadcrumbs'][] = ['label' => 'Сотрудники', 'url' => ['index']];
 $this->params['breadcrumbs'][] = [
             'label' => $model->lastName ? $model->fullNameInitials : $model->username,

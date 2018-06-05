@@ -62,12 +62,16 @@ class UserController extends RController
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $dataProvider = new ActiveDataProvider([
+        $dataProviderContact = new ActiveDataProvider([
             'query' => $model->getContacts(),
+        ]);
+        $dataProviderInfo = new ActiveDataProvider([
+            'query' => $model->getInfos(),
         ]);
         return $this->render('view', [
             'model' => $model,
-            'dataProvider' => $dataProvider,
+            'dataProviderContact' => $dataProviderContact,
+            'dataProviderInfo' => $dataProviderInfo,
         ]);
     }
 
