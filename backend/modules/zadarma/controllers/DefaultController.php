@@ -195,23 +195,22 @@ class DefaultController extends RController
                     'type' => 'zadarma',
                     'value' => $model->internal,
                 ]);
-
         $id_user_o = (new Query())->from('users')
                 ->select('id')
                 ->where(['login' => $userContact->user->username])
                 ->one(Yii::$app->oldDB);
-        $last_report = (new \yii\db\Query)->from('report_real')
+        $last_report = (new Query)->from('report_real')
                 ->where(['user' => $id_user_o])
                 ->orderBy('id DESC')
                 ->one(Yii::$app->oldDB);
         (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
-                    'date'      => $last_report->date,
-                    'user'      => $id_user_o,
+                    'date'      => $last_report['date'],
+                    'user'      => $id_user_o['id'],
                     'pay'       => 'on',
-                    'h1'        => $last_report->h2,
-                    'm1'        => $last_report->m2,
-                    's1'        => $last_report->s2,
+                    'h1'        => $last_report['h2'],
+                    'm1'        => $last_report['m2'],
+                    's1'        => $last_report['s2'],
                     'h2'        => date('H'),
                     'm2'        => date('i'),
                     's2'        => date('s'),
