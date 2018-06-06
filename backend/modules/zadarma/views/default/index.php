@@ -5,6 +5,9 @@
  */
 use yii\grid\GridView;
 use yii\bootstrap\Html;
+use backend\modules\zadarma\models\Zadarma;
+use kartik\date\DatePicker;
+
 
 /* @var $balance backend\modules\zadarma\components\Zadarma */
 /* @var $model backend\modules\zadarma\models\Zadarma */
@@ -39,9 +42,20 @@ $this->params['breadcrumbs'][] = $this->title;
     GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions' => function($model){
+            if($model->disposition == 'разговор'){
+                return ['class' => 'success'];
+            }
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'type',
+            [
+                'attribute' => 'type',
+                'filter' => [
+                    'Исходящий' => 'Исходящий',
+                    'Входящий' => 'Входящий'
+                ]
+            ],
             [
                 'attribute' => 'call_start',
                 'format' => 'raw',
@@ -50,12 +64,19 @@ $this->params['breadcrumbs'][] = $this->title;
                             . ' <span class="text-success"><strong>(' 
                             . ($model->answer_time - $model->call_start) 
                             . ' c.)</strong></span>';
-                }
+                },
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'call_start_date',
+                ]),
             ],
             [
                 'attribute' => 'answer_time',
                 'format' => ['Datetime', 'php:d.m.Y H:i:s'],
-
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'answer_time_date',
+                ]),
             ],
             [
                 'attribute' => 'call_end',
@@ -65,7 +86,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             . ' <span class="text-success"><strong>(' 
                             . ($model->call_end - $model->answer_time) 
                             . ' c.)</strong></span>';
-                }
+                },
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'call_end_date',
+                ]),
             ],
             [
                 'attribute' => 'internal',
@@ -78,13 +103,23 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                     }
                     return implode('<br>', $internals);
-                }
+                },
+                'filter' => $usersContactArray,
             ],
             'destination',
             'caller_id',
-            'disposition',
+            [
+                'attribute' => 'disposition',
+                'filter' => Zadarma::find()->select('disposition')
+                        ->distinct('disposition')
+                        ->orderBy('disposition')
+                        ->indexBy('disposition')
+                        ->column(),
+            ],
+            
             //'duration',
             [
+                'attribute' => 'is_recorded',
                 'label' => 'Запись',
                 'format' => 'raw',
                 'value' => function($model) {
@@ -95,7 +130,11 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     }
                     return 'Нет записи';
-                }
+                },
+                'filter' => [
+                    0 => 'Нет записи',
+                    1 => 'Есть запись',
+                ],
             ],
         ],
     ]);
@@ -108,7 +147,7 @@ $js = <<< JS
         $('.record').click(function(){
             var call_id = $(this).attr('data-call-id');
                 $.ajax({
-                    url: 'get-record',
+                    url: '/zadarma/default/get-record',
                     type: 'POST',
                     cache: false,
                     data: {call_id:call_id},

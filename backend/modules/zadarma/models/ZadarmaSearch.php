@@ -12,14 +12,19 @@ use backend\modules\zadarma\models\Zadarma;
  */
 class ZadarmaSearch extends Zadarma
 {
+    public $call_start_date;
+    public $answer_time_date;
+    public $call_end_date;
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'call_start', 'answer_time', 'call_end', 'status_code', 'duration'], 'integer'],
-            [['type', 'pbx_call_id', 'internal', 'destination', 'disposition', 'is_recorded', 'call_id_with_rec'], 'safe'],
+            [['id', 'status_code', 'duration'], 'integer'],
+            [['type', 'pbx_call_id', 'internal', 'destination', 'disposition', 'is_recorded',
+                'caller_id', 'call_start_date', 'answer_time_date', 'call_end_date'], 'safe'],
         ];
     }
 
@@ -60,20 +65,23 @@ class ZadarmaSearch extends Zadarma
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'call_start' => $this->call_start,
-            'answer_time' => $this->answer_time,
-            'call_end' => $this->call_end,
             'status_code' => $this->status_code,
             'duration' => $this->duration,
+            'is_recorded' => $this->is_recorded,
+            'disposition' => $this->disposition,
+            'type' => $this->type,
         ]);
-
-        $query->andFilterWhere(['like', 'type', $this->type])
-            ->andFilterWhere(['like', 'pbx_call_id', $this->pbx_call_id])
+        
+        $query->andFilterWhere(['like', 'pbx_call_id', $this->pbx_call_id])
             ->andFilterWhere(['like', 'internal', $this->internal])
             ->andFilterWhere(['like', 'destination', $this->destination])
-            ->andFilterWhere(['like', 'disposition', $this->disposition])
-            ->andFilterWhere(['like', 'is_recorded', $this->is_recorded])
-            ->andFilterWhere(['like', 'call_id_with_rec', $this->call_id_with_rec]);
+            ->andFilterWhere(['like', 'caller_id', $this->caller_id])
+            ->andFilterWhere(['>=', 'call_start', $this->call_start_date ? strtotime($this->call_start_date . ' 00:00:00') : null])
+            ->andFilterWhere(['<=', 'call_start', $this->call_start_date ? strtotime($this->call_start_date . ' 23:59:59') : null])
+            ->andFilterWhere(['>=', 'answer_time', $this->answer_time_date ? strtotime($this->answer_time_date . ' 00:00:00') : null])
+            ->andFilterWhere(['<=', 'answer_time', $this->answer_time_date ? strtotime($this->answer_time_date . ' 23:59:59') : null])
+            ->andFilterWhere(['>=', 'call_end', $this->call_end_date ? strtotime($this->call_end_date . ' 00:00:00') : null])
+            ->andFilterWhere(['<=', 'call_end', $this->call_end_date ? strtotime($this->call_end_date . ' 23:59:59') : null]); 
 
         return $dataProvider;
     }

@@ -63,7 +63,7 @@ class Zadarma extends \yii\db\ActiveRecord
             'caller_id' => 'Кто звонил', //при входящем звонке
             'disposition' => 'Состояние',
             'status_code' => 'Status Code',
-            'is_recorded' => 'Is Recorded',
+            'is_recorded' => 'Запись',
             'call_id_with_rec' => 'Call Id With Rec',
             'duration' => 'Длительность',
         ];

@@ -6,6 +6,7 @@ use Yii;
 use common\components\RController;
 use backend\modules\zadarma\models\ZadarmaSearch;
 use backend\modules\users\models\UsersContact;
+use yii\helpers\ArrayHelper;
 
 /**
  * Default controller for the `zadarma` module
@@ -18,7 +19,7 @@ class DefaultController extends RController
      */
     public function actionIndex()
     {
-        
+        $usersContactArray = ArrayHelper::map(UsersContact::findAll(['type' => 'zadarma']), 'value', 'user.fullNameInitials');
         $internal = UsersContact::find()->where(['type' => 'zadarma', 'id_user' => Yii::$app->user->id])->one();
         if (isset($internal)) {
             $searchModel = new ZadarmaSearch();
@@ -33,6 +34,7 @@ class DefaultController extends RController
             return $this->render('index',[
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
+                'usersContactArray' => $usersContactArray,
             ]);
         }
         return $this->render('index');
