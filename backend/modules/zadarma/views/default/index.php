@@ -3,11 +3,11 @@
 /**
  * @author Alex Novak <alexleonnovak@gmail.com>
  */
+
 use yii\grid\GridView;
 use yii\bootstrap\Html;
 use backend\modules\zadarma\models\Zadarma;
 use kartik\date\DatePicker;
-
 
 /* @var $balance backend\modules\zadarma\components\Zadarma */
 /* @var $model backend\modules\zadarma\models\Zadarma */
@@ -47,10 +47,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 return ['class' => 'success'];
             }
         },
+        'tableOptions' => [
+            'class' => 'table table-bordered table-condensed'
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'type',
+                'value' => function ($model) {
+                    if ($model->type === 'Исходящий') {
+                        return 'Исх.';
+                    } else {
+                        return 'Вход.';
+                    }
+                },
                 'filter' => [
                     'Исходящий' => 'Исходящий',
                     'Входящий' => 'Входящий'
@@ -61,36 +71,45 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function ($model) {
                     return Yii::$app->formatter->asDatetime($model->call_start, 'php:d.m.Y H:i:s')
-                            . ' <span class="text-success"><strong>(' 
-                            . ($model->answer_time - $model->call_start) 
-                            . ' c.)</strong></span>';
+                            . '<br><span class="text-success"><strong>(' 
+                            . date("i:s", $model->answer_time - $model->call_start)
+                            . ')</strong></span>';
                 },
                 'filter' => DatePicker::widget([
                     'model' => $searchModel,
                     'attribute' => 'call_start_date',
                 ]),
+                'contentOptions' => [
+                    'class' => 'col-sm-1',
+                ]
             ],
             [
                 'attribute' => 'answer_time',
-                'format' => ['Datetime', 'php:d.m.Y H:i:s'],
+                'format' => ['Datetime', 'php:H:i:s'],
                 'filter' => DatePicker::widget([
                     'model' => $searchModel,
                     'attribute' => 'answer_time_date',
                 ]),
+                'contentOptions' => [
+                    'class' => 'col-sm-1',
+                ]
             ],
             [
                 'attribute' => 'call_end',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Yii::$app->formatter->asDatetime($model->call_end, 'php:d.m.Y H:i:s')
-                            . ' <span class="text-success"><strong>(' 
-                            . ($model->call_end - $model->answer_time) 
-                            . ' c.)</strong></span>';
+                    return Yii::$app->formatter->asDatetime($model->call_end, 'php:H:i:s')
+                            . '<br><span class="text-success"><strong>(' 
+                            . date("i:s", $model->call_end - $model->answer_time)
+                            . ')</strong></span>';
                 },
                 'filter' => DatePicker::widget([
                     'model' => $searchModel,
                     'attribute' => 'call_end_date',
                 ]),
+                'contentOptions' => [
+                    'class' => 'col-sm-1',
+                ]
             ],
             [
                 'attribute' => 'internal',
@@ -105,6 +124,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     return implode('<br>', $internals);
                 },
                 'filter' => $usersContactArray,
+                'contentOptions' => [
+                    'class' => 'col-sm-2',
+                ]
             ],
             'destination',
             'caller_id',
