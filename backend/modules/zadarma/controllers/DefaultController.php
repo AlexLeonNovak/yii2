@@ -11,6 +11,7 @@ use backend\modules\zadarma\models\ZadarmaSearch;
 use yii\helpers\ArrayHelper;
 use common\models\User;
 use backend\modules\users\models\UsersContact;
+use yii\db\Query;
 
 /**
  * Default controller for the `zadarma` module
@@ -177,9 +178,48 @@ class DefaultController extends RController
                     $model->attributes = $params;
                 }
                 $model->save();
+                //переносим данные в старую БД
+                if ($request->post('disposition') === 'answered' 
+                        && $model->type === 'Исходящий'){
+                    $this->saveInOldDB($model);
+                }  
             } else {
                 echo 'Zadarma request must been a POST';
             }
 //        }
     }
+    
+    public function saveInOldDB($model)
+    {
+        $userContact = UsersContact::findOne([
+                    'type' => 'zadarma',
+                    'value' => $model->internal,
+                ]);
+
+        $id_user_o = (new Query())->from('users')
+                ->select('id')
+                ->where(['login' => $userContact->user->username])
+                ->one(Yii::$app->oldDB);
+        $last_report = (new \yii\db\Query)->from('report_real')
+                ->where(['user' => $id_user_o])
+                ->orderBy('id DESC')
+                ->one();
+        (new Query())->createCommand(Yii::$app->oldDB)
+                ->insert('report_real', [
+                    'date'      => $last_report->date,
+                    'user'      => $id_user_o,
+                    'pay'       => 'on',
+                    'h1'        => $last_report->h2,
+                    'm1'        => $last_report->m2,
+                    's1'        => $last_report->s2,
+                    'h2'        => date('H'),
+                    'm2'        => date('i'),
+                    's2'        => date('s'),
+                    'minutes'   => ($model->duration / 60),
+                    'action'    => 952,
+                    'text'      => 'Исходящий звонок Zadarma',
+                ])
+                ->execute();
+    }
+    
 }
