@@ -203,7 +203,7 @@ class DefaultController extends RController
         $last_report = (new \yii\db\Query)->from('report_real')
                 ->where(['user' => $id_user_o])
                 ->orderBy('id DESC')
-                ->one();
+                ->one(Yii::$app->oldDB);
         (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
                     'date'      => $last_report->date,
