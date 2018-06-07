@@ -86,10 +86,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'answer_time',
                 'format' => ['Datetime', 'php:H:i:s'],
-                'filter' => DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'answer_time_date',
-                ]),
+//                'filter' => DatePicker::widget([
+//                    'model' => $searchModel,
+//                    'attribute' => 'answer_time_date',
+//                ]),
                 'contentOptions' => [
                     'class' => 'col-sm-1',
                 ]
@@ -103,10 +103,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             . date("i:s", $model->call_end - $model->answer_time)
                             . ')</strong></span>';
                 },
-                'filter' => DatePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'call_end_date',
-                ]),
+//                'filter' => DatePicker::widget([
+//                    'model' => $searchModel,
+//                    'attribute' => 'call_end_date',
+//                ]),
                 'contentOptions' => [
                     'class' => 'col-sm-1',
                 ]
