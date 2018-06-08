@@ -169,7 +169,7 @@ $js = <<< JS
         $('.record').click(function(){
             var call_id = $(this).attr('data-call-id');
                 $.ajax({
-                    url: '/zadarma/default/get-record',
+                    url: '/admin/zadarma/default/get-record',
                     type: 'POST',
                     cache: false,
                     data: {call_id:call_id},
