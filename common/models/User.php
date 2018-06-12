@@ -64,21 +64,47 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['id_group'], 'exist', 'skipOnError' => true, 'targetClass' => UsersGroup::className(), 'targetAttribute' => ['id_group' => 'id']],
-            [['firstName', 'middleName', 'lastName', 'worktime_start', 'worktime_end'], 'string', 'max' => 50],
+            [['firstName', 'middleName', 'lastName'], 'string', 'max' => 50],
+//            [['worktime_start'], 'time', 'format' => 'H:i', 'timestampAttribute' => 'worktime_start'],
+//            [['worktime_end'], 'time', 'format' => 'H:i', 'timestampAttribute' => 'worktime_end'],
+//            [['worktime_end'], 'compare', 'operator' => '>', 'type' => 'number', 'compareAttribute' => 'worktime_start'],
 //            [['dateOfBirth'], 'date', 'format' => 'yyyy-mm-dd'],
+            ['worktime_start', 'validateTime'],
+            ['worktime_end', 'validateTime'],
             [['dateOfBirth'], 'validateDateOfBirth']
         ];
     }
 
     public function validateDateOfBirth($attribute)
     {
-        $date = \DateTime::createFromFormat('d.m.Y', $attribute);
+        \DateTime::createFromFormat('d.m.Y', $attribute);
         $errors = \DateTime::getLastErrors();
         if (!empty($errors['warning_count'])) {
             $this->addError($attribute, 'Неверная дата');
         }
     }
 
+    public function validateTime($attribute)
+    {
+        if (strtotime($this->worktime_start) > strtotime($this->worktime_end)){
+            $this->addError($attribute, 'Время конца рабочего времени не должно быть больше начала');
+            //$this->addError('worktime_start', 'Время конца рабочего времени не должно быть больше начала');
+        } 
+    }
+    
+//    public function beforeSave($param)
+//    {
+//        $this->worktime_start = date('H:i', $this->worktime_start);
+//        $this->worktime_end = date('H:i', $this->worktime_end);
+//        parent::beforeSave($param);
+//    }
+//    public function beforeValidate()
+//    {
+//        if (strtotime($this->worktime_start) > strtotime($this->worktime_end)){
+//            $this->addError('worktime_end', 'Время конца рабочего времени не должно быть больше начала');
+//        }
+//        return parent::beforeValidate();
+//    }
     /**
      * @inheritdoc
      */
@@ -97,8 +123,8 @@ class User extends ActiveRecord implements IdentityInterface
             'fullNameInitials' => 'ФИО',
             'created_at'    => 'Зарегистрирован',
             'updated_at'    => 'Обновление данных',
-            'worktime_start'=> 'worktime_start',
-            'worktime_end'  => 'worktime_end'
+            'worktime_start'=> 'Начало работы',
+            'worktime_end'  => 'Конец работы'
         ];
     }
     
