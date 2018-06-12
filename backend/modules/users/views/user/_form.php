@@ -110,6 +110,9 @@ $js = <<<JS
                 $('#user-worktime_start-error .help-block').text('');
             }
         });
-        
+        if ($('.field-user-worktime_start').hasClass('has-error') || $('.field-user-worktime_end').hasClass('has-error')){
+            $('#user-worktime_start-error').addClass('has-error');
+            $('#user-worktime_start-error .help-block').text('Время конца рабочего времени не должно быть больше начала');
+        }
 JS;
 $this->registerJs($js);
