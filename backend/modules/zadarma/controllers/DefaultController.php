@@ -216,7 +216,7 @@ class DefaultController extends RController
                     's2'        => date('s'),
                     'minutes'   => ((strtotime(date('H').':'.date('i').':'.date('s')) 
                         - strtotime($last_report['h2'].':'.$last_report['m2'].':'.$last_report['s2']))/60),
-                    'action'    => 952,
+                    'action'    => 956,
                     'text'      => 'Исходящий звонок Zadarma',
                 ])
                 ->execute();
