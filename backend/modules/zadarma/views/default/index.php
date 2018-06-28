@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'internal',
                 'format' => 'raw',
                 'value' => function ($model) use ($usersContactArray){
-                    $internals = explode(',', $model->internal);
+                    $internals = array_unique(explode(',', $model->internal));
                     foreach ($internals as $key => $val){
                         if (array_key_exists($val, $usersContactArray)){
                             $internals[$key] = $usersContactArray[$val];
