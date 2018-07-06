@@ -91,20 +91,7 @@ class User extends ActiveRecord implements IdentityInterface
             //$this->addError('worktime_start', 'Время конца рабочего времени не должно быть больше начала');
         } 
     }
-    
-//    public function beforeSave($param)
-//    {
-//        $this->worktime_start = date('H:i', $this->worktime_start);
-//        $this->worktime_end = date('H:i', $this->worktime_end);
-//        parent::beforeSave($param);
-//    }
-//    public function beforeValidate()
-//    {
-//        if (strtotime($this->worktime_start) > strtotime($this->worktime_end)){
-//            $this->addError('worktime_end', 'Время конца рабочего времени не должно быть больше начала');
-//        }
-//        return parent::beforeValidate();
-//    }
+
     /**
      * @inheritdoc
      */

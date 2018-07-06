@@ -6,6 +6,7 @@ use Yii;
 use common\models\User;
 use backend\modules\users\models\UserSearch;
 use backend\modules\users\models\SignupForm;
+use backend\modules\users\models\UserChangePassword;
 use yii\web\NotFoundHttpException;
 use backend\modules\users\models\UsersGroup;
 use yii\data\ActiveDataProvider;
@@ -45,7 +46,6 @@ class UserController extends RController
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        //var_dump($searchModel->dateOfBirth);
        
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -168,4 +168,18 @@ class UserController extends RController
         
         return $this->redirect(['index']);
     }
+    
+    public function actionChangePassword($id)
+    {
+        $model = UserChangePassword::findOne($id);
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+            Yii::$app->session->setFlash('success', 'Новый пароль сохранен.');
+
+            return $this->redirect('index');
+        }
+        return $this->render('change-password', [
+            'model' => $model,
+        ]);
+    }
+
 }

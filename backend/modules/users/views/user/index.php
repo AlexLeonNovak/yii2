@@ -69,14 +69,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     '0' => 'Неактивный',
                     '10' => 'Активный',
                 ],['class'=>'form-control', 'prompt' => 'Все']),
-                'contentOptions' => [
+                'headerOptions' => [
                     'class' => 'col-sm-1',
                 ],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Действия',
-                'template' => '{view} {update} {active}',
+                'template' => '{view} {update} {active} {chpass}',
                 'buttons' => [
                     'active' => function($url, $model){
                         return Html::a('<span class="label label-primary"><span class="glyphicon glyphicon-ok-sign"></span>'
@@ -85,9 +85,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ['title' => 'Активация/деактивация']
                                 );
                     },
-                ],
-                'contentOptions' => [
-                    'class' => 'col-sm-1',
+                    'chpass' => function ($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-lock"></span>',
+                                Url::to(['change-password', 'id' => $model->id]),
+                                ['title' => 'Сменить пароль']
+                                );
+                        
+                    }
+                    ],
+                'headerOptions' => [
+                    'class' => 'col-sm-2',
                 ],
             ],
         ],
