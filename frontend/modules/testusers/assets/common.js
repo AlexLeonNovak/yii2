@@ -27,14 +27,15 @@ if (timer) {
     	btn_click = true;
     });
     $('button[type="submit"]').one('click', function(){
+        clearInterval(counterBack);
+        btn_click = true;
         $('#loader').show();
         $.post('total', {totaltime:(t-i)/10});
-        btn_click = true;
     });
     $('body').mouseleave(function(e){
-        var strGET = window.location.search; 
         console.log('click: '+btn_click);
         if (e.relatedTarget === null && btn_click === false && (t-i) > 5) {
+            var strGET = window.location.search; 
             $('#loader').show();
             clearInterval(counterBack);
             $.post('total' + strGET, {out:true});
