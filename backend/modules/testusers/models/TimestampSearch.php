@@ -18,8 +18,8 @@ class TimestampSearch extends Timestamp
     public $id_user;
     public $id_group;
     public $answersCorrectCount;
-//    public $date;
-//    public $for;
+    public $date;
+    public $for_tt;
 //    public $questions_count;
 //    public $answers_count;
 //    public $answers_correct_count;
@@ -31,7 +31,7 @@ class TimestampSearch extends Timestamp
     {
         return [
             [['id', 'id_theme_test', 'timestamp', 'id_user', 'id_group'], 'integer'],
-            [['userAnswersCount'], 'safe'],
+            [['userAnswersCount', 'date', 'for_tt'], 'safe'],
 //            [['username', 'group_name', 'date', 'for', 'questions_count', 
 //                'answers_count', 'answers_correct_count'], 'safe'],
 //            [['themeOrTest'],'string'],
@@ -79,6 +79,9 @@ class TimestampSearch extends Timestamp
                     'desc' => ['for' => SORT_DESC, 'id_theme_test' => SORT_DESC],
                 ],
             ],
+            'defaultOrder' => [
+                'timestamp' => SORT_DESC
+            ],
         ]);
         $this->load($params);
 
@@ -92,12 +95,12 @@ class TimestampSearch extends Timestamp
             'id' => $this->id,
             'for' => $this->for,
             'id_theme_test' => $this->id_theme_test,
-            'timestamp' => $this->timestamp,
             'user.id' => $this->id_user,
             'user.id_group' => $this->id_group,
 //            'themeOrTest.name' => $this->themeOrTest->name,
-        ]);
-        
+        ])
+        ->andFilterWhere(['>=', 'timestamp', $this->date ? strtotime($this->date . ' 00:00:00') : null])
+        ->andFilterWhere(['<=', 'timestamp', $this->date ? strtotime($this->date . ' 23:59:59') : null]);
         $query->distinct(['id']);
         //$query->andFilterWhere(['like', 'user.id', $this->id_user]);
 

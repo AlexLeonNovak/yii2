@@ -81,6 +81,7 @@ class OptionsController extends RController {
     {
         UserAnswer::deleteAll(['id_timestamp' => $id]);
         Timestamp::deleteAll(['id' => $id]);
-        return $this->redirect(['statistic']);
+        Yii::$app->session->setFlash('success','Удалено успешно');
+        return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
     }
 }
