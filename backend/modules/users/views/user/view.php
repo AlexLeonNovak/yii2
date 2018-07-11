@@ -1,9 +1,8 @@
 <?php
 
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
-use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
@@ -15,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    
+    <p>
                 <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
                 <?=
                 Html::a('Удалить', ['delete', 'id' => $model->id], [
@@ -26,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ])
                 ?>
+    </p>
     <div class="row">
         <div class="col-md-6">
             <h3>Основная информация</h3>

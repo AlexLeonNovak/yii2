@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use yii\widgets\ActiveForm;
 use backend\modules\users\models\UsersGroup;
 use yii\helpers\ArrayHelper;

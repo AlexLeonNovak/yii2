@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use kartik\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use kartik\datecontrol\DateControl;

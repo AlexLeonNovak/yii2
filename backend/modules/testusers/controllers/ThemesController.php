@@ -8,7 +8,7 @@ use backend\modules\testusers\models\ThemesSearch;
 use backend\modules\testusers\models\TestThemesUsersGroup;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use backend\modules\testusers\models\Timestamp;
 use common\components\RController;
 use yii\base\Model;

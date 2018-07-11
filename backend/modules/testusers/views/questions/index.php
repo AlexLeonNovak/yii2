@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Collapse;
 use yii\helpers\Url;

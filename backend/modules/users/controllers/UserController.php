@@ -117,7 +117,8 @@ class UserController extends RController
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        Yii::$app->session->setFlash('success','Удалено успешно');
+        return Yii::$app->request->referrer ? $this->redirect(Yii::$app->request->referrer) : $this->goHome();
     }
 
     /**

@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             [
-                'attribute' => 'user.username',
+                'attribute' => 'user.fullName',
                 'contentOptions' => [
                     'class' => 'col-sm-8',
                 ],
@@ -60,7 +60,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'totaltime',
-                'value' => $model->totaltime ? $model->totaltime . ' с.' : '0 с.',
+                'value' => $model->totaltime ? date('i:s',$model->totaltime) . ' (м:с)' : '0 с.',
+                'contentOptions' => [
+                    'title' => 'Минуты : Секунды',
+                ],
             ],
             [
                 'value' => $model->totaltime ? round($model->totaltime / count($model->userAnswers), 2) . ' с.' : '0 с.',

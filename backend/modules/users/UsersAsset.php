@@ -20,5 +20,7 @@ class UsersAsset extends AssetBundle {
     public $depends = [
         'yii\web\JqueryAsset',
         'yii\jui\JuiAsset',
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
     ];
 }
