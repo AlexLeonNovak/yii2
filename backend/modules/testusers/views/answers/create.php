@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="answers-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <h3><?=$models[0]->question->question ?></h3>
     <?= $this->render('_form', [
         'models' => $models,
     ]) ?>

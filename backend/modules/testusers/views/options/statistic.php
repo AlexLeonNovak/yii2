@@ -81,9 +81,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => 'Ответы (П/Н/%)',
             'format' => 'html',
             'value' => function ($model){
-                $percent = count($model->userAnswers) ? round($model->answersCorrectCount/count($model->userAnswers)*100) : 0;
+                $percent = $model->userAnswersCount ? round($model->answersCorrectCount/$model->userAnswersCount*100) : 0;
                 return '<span class="text-success">' . $model->answersCorrectCount . '</span> / '
-                       .'<span class="text-danger">' . (count($model->userAnswers) - $model->answersCorrectCount) . '</span> / '
+                       .'<span class="text-danger">' . ($model->userAnswersCount - $model->answersCorrectCount) . '</span> / '
                        .'<b>' .  $percent . '%</b>' ;
             },
             'headerOptions' => [
