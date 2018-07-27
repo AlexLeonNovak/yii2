@@ -195,13 +195,28 @@ class DefaultController extends RController
                     'type' => 'zadarma',
                     'value' => $model->internal,
                 ]);
+        //поиск ид юзера и статус работы плагина по его логину в старой БД
         $id_user_o = (new Query())->from('users')
-                ->select('id')
+                ->select(['id', 'plugin_is_started'])
                 ->where(['login' => $userContact->user->username])
                 ->one(Yii::$app->oldDB);
+        // ищем последний отчет
         $last_report = (new Query)->from('report_real')
                 ->where(['user' => $id_user_o])
                 ->orderBy('id DESC')
+                ->one(Yii::$app->oldDB);
+        //ищем ид клиента по номеру телефона
+        $id_client_o = (new Query)->from('future_client')
+                ->select('id')
+                ->where([
+                    'or',
+                    ['like', 'phone', $model->destination],
+                    ['like', 'phone2', $model->destination],
+                    ['like', 'phone3', $model->destination],
+                    ['like', 'phone4', $model->destination],
+                    ['like', 'phone5', $model->destination],
+                    ['like', 'phone6', $model->destination],
+                ])
                 ->one(Yii::$app->oldDB);
         (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
@@ -214,9 +229,10 @@ class DefaultController extends RController
                     'h2'        => date('H'),
                     'm2'        => date('i'),
                     's2'        => date('s'),
-                    'minutes'   => ((strtotime(date('H').':'.date('i').':'.date('s')) 
+                    'minutes'   => $id_user_o['plugin_is_started'] ? 0 : ((strtotime(date('H').':'.date('i').':'.date('s')) 
                         - strtotime($last_report['h2'].':'.$last_report['m2'].':'.$last_report['s2']))/60),
                     'action'    => 956,
+                    'client'    => $id_client_o['id'],
                     'text'      => 'Исходящий звонок Zadarma',
                 ])
                 ->execute();
