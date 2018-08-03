@@ -203,6 +203,7 @@ class DefaultController extends RController
         // ищем последний отчет
         $last_report = (new Query)->from('report_real')
                 ->where(['user' => $id_user_o['id']])
+                ->andWhere(['!=', 'h2', 0])
                 ->orderBy('id DESC')
                 ->one(Yii::$app->oldDB);
         //ищем ид клиента по номеру телефона
