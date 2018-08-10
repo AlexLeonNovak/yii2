@@ -16,6 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="alert alert-danger">Ув. <?= Yii::$app->user->identity->fullName ?>, Вам не подключен номер от компании Zadarma. 
         В случае необходимости, обратитесь пожалуйста к Руководству.<br>Благодарим, администрация.</div>
     <?php } else { ?>
+    <audio controls>
+        Ваш браузер не поддерживает <code>audio</code> элемент.
+    </audio>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -96,25 +99,42 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             
             //'duration',
-//            [
-//                'attribute' => 'is_recorded',
-//                'label' => 'Запись',
-//                'format' => 'raw',
-//                'value' => function($model) {
-//                    if ($model->is_recorded) {
-//                        return Html::button('<span class="glyphicon glyphicon-play"></span>', [
-//                                    'class' => 'btn btn-default record',
-//                                    'data-call-id' => $model->call_id_with_rec,
-//                        ]);
-//                    }
-//                    return 'Нет записи';
-//                },
-//                'filter' => [
-//                    0 => 'Нет записи',
-//                    1 => 'Есть запись',
-//                ],
-//            ],
+            [
+                'attribute' => 'is_recorded',
+                'label' => 'Запись',
+                'format' => 'raw',
+                'value' => function($model) {
+                    if ($model->is_recorded) {
+                        return Html::button('<span class="glyphicon glyphicon-play"></span>', [
+                                    'class' => 'btn btn-default record',
+                                    'data-call-id' => $model->call_id_with_rec,
+                        ]);
+                    }
+                    return 'Нет записи';
+                },
+                'filter' => [
+                    0 => 'Нет записи',
+                    1 => 'Есть запись',
+                ],
+            ],
         ],
     ]);
     } ?>
 </div>
+<?php
+$js = <<< JS
+        $('.record').click(function(){
+            var call_id = $(this).attr('data-call-id');
+                $.ajax({
+                    url: '/admin/zadarma/default/get-record',
+                    type: 'POST',
+                    cache: false,
+                    data: {call_id:call_id},
+                    success: function (data) {
+                        $('audio').attr('src', data);
+                        $('audio').trigger('play');
+                    }
+                });
+        });
+JS;
+$this->registerJs($js);

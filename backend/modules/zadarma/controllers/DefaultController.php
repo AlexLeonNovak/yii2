@@ -230,7 +230,7 @@ class DefaultController extends RController
                     'h2'        => date('H'),
                     'm2'        => date('i'),
                     's2'        => date('s'),
-                    'minutes'   => $id_user_o['plugin_is_started'] ? 0 : ((strtotime(date('H').':'.date('i').':'.date('s')) 
+                    'minutes'   => $id_user_o['plugin_is_started'] ? 0 : ((strtotime(date('H:i:s')) 
                         - strtotime($last_report['h2'].':'.$last_report['m2'].':'.$last_report['s2']))/60),
                     'action'    => 956,
                     'client'    => $id_client_o['id'],
