@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 use common\models\User;
 use backend\modules\users\models\UsersContact;
 use yii\db\Query;
+use yii\helpers\VarDumper;
 
 /**
  * Default controller for the `zadarma` module
@@ -200,6 +201,7 @@ class DefaultController extends RController
                 ->select(['id', 'plugin_is_started'])
                 ->where(['login' => $userContact->user->username])
                 ->one(Yii::$app->oldDB);
+             VarDumper::dump($id_user_o);        
         // ищем последний отчет
         $last_report = (new Query)->from('report_real')
                 ->where(['user' => $id_user_o['id']])
