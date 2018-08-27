@@ -221,19 +221,21 @@ class DefaultController extends RController
                     ['like', 'phone6', $model->destination],
                 ])
                 ->one(Yii::$app->oldDB);
+        $lr_m = $last_report['m2'] ?? '00';
+        $lr_s = $last_report['s2'] ?? '00';
         (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
                     'date'      => $last_report['date'],
                     'user'      => $id_user_o['id'],
                     'pay'       => 'on',
                     'h1'        => $last_report['h2'],
-                    'm1'        => $last_report['m2'],
-                    's1'        => $last_report['s2'],
+                    'm1'        => $lr_m,
+                    's1'        => $lr_s,
                     'h2'        => date('H'),
                     'm2'        => date('i'),
                     's2'        => date('s'),
                     'minutes'   => $id_user_o['plugin_is_started'] ? 0 : ((strtotime(date('H:i:s')) 
-                        - strtotime($last_report['h2'].':'.$last_report['m2'].':'.$last_report['s2']))/60),
+                        - strtotime($last_report['h2'].':'.$lr_m.':'.$lr_s))/60),
                     'action'    => 956,
                     'client'    => $id_client_o['id'],
                     'text'      => 'Исходящий звонок Zadarma',
