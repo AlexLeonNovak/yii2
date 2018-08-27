@@ -180,8 +180,7 @@ class DefaultController extends RController
                 }
                 $model->save();
                 //переносим данные в старую БД
-                if ($request->post('disposition') === 'answered' 
-                        && $model->type === 'Исходящий'){
+                if ($model->type === 'Исходящий'){
                     $this->saveInOldDB($model);
                 }  
             } else {
