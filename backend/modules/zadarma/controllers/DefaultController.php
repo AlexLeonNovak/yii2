@@ -30,14 +30,15 @@ class DefaultController extends RController
                 [
                     'class' => Cors::className(),
                     'cors' => [
-                        'Origin' => ['https://crm.czholding.ru'],
+                        'Origin' => ['https://crm.czholding.ru', 'https://praga-crm.loc'],
                         'Access-Control-Request-Method' => ['POST'],
+                        'Access-Control-Request-Headers' => ['*'],
                     ],
-                    'actions' => [
-                        'get-record' => [
-                            'Access-Control-Allow-Credentials' => true,
-                        ]
-                    ]
+//                    'actions' => [
+//                        'get-record' => [
+//                            'Access-Control-Allow-Credentials' => true,
+//                        ]
+//                    ]
                 ],
                 parent::behaviors(), 
                 [
