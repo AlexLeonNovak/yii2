@@ -33,6 +33,11 @@ class DefaultController extends RController
                         'Origin' => ['http://crm.czholding.ru'],
                         'Access-Control-Request-Method' => ['POST'],
                     ],
+                    'actions' => [
+                        'get-record' => [
+                            'Access-Control-Allow-Credentials' => true,
+                        ]
+                    ]
                 ],
                 parent::behaviors(), 
                 [
