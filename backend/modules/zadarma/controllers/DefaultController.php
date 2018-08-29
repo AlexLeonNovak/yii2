@@ -26,7 +26,7 @@ class DefaultController extends RController
      */
     public function behaviors()
     {
-        return ArrayHelper::merge(
+        return ArrayHelper::merge([
                 [
                     'class' => Cors::className(),
                     'cors' => [
@@ -40,6 +40,7 @@ class DefaultController extends RController
 //                        ]
 //                    ]
                 ],
+            ],
                 parent::behaviors(), 
                 [
                     'access' => [
