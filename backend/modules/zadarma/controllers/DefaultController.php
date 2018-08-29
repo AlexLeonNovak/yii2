@@ -13,6 +13,7 @@ use common\models\User;
 use backend\modules\users\models\UsersContact;
 use yii\db\Query;
 use yii\helpers\VarDumper;
+use yii\filters\Cors;
 
 /**
  * Default controller for the `zadarma` module
@@ -26,6 +27,13 @@ class DefaultController extends RController
     public function behaviors()
     {
         return ArrayHelper::merge(
+                [
+                    'class' => Cors::className(),
+                    'cors' => [
+                        'Origin' => ['http://crm.czholding.ru'],
+                        'Access-Control-Request-Method' => ['POST'],
+                    ],
+                ],
                 parent::behaviors(), 
                 [
                     'access' => [
