@@ -47,14 +47,14 @@ class DefaultController extends RController
                         'class' => AccessControl::className(),
                         'rules' => [
                             [
-                                'actions' => ['0d0dfb2682192387a2e4325e97b36b32'],
+                                'actions' => ['0d0dfb2682192387a2e4325e97b36b32', 'get-record'],
                                 'allow' => true,
                             ],
-                            [
-                                'actions' => ['get-record'],
-                                'allow' => true,
-                                'roles' => ['@'],
-                            ],
+//                            [
+//                                'actions' => ['get-record'],
+//                                'allow' => true,
+//                                'roles' => ['@'],
+//                            ],
                         ],
                     ],
                 ]
