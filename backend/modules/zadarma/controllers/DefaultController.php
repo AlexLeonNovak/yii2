@@ -104,7 +104,7 @@ class DefaultController extends RController
     public function actionGetRecord() 
     {
         $request = Yii::$app->getRequest();
-        if ($request->isPost && $request->isAjax) {            
+        if ($request->isPost) {            
             $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), 
                     Yii::$app->settings->get('ZadarmaSettings.secret'));
             $audio = json_decode($zadarma->call('/v1/pbx/record/request/', 
