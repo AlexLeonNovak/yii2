@@ -73,7 +73,7 @@ class DefaultController extends RController
     }
     public function beforeAction($action) 
     {
-        if ($action->id === '0d0dfb2682192387a2e4325e97b36b32') {
+        if (in_array($action->id, ['0d0dfb2682192387a2e4325e97b36b32', 'get-record'])) {
             $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
