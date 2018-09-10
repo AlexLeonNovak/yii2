@@ -187,7 +187,7 @@ class DefaultController extends RController
                         'disposition'       => array_key_exists($request->post('disposition'), $rus_disposition) 
                             ? $rus_disposition[$request->post('disposition')] : '',
                         'status_code'       => $request->post('status_code'), // код статуса звонка Q.931
-                        'is_recorded'       => $request->post('is_recorded'),
+                        'is_recorded'       => ($request->post('is_recorded') && $request->post('disposition') == 'answered') ? 1 : 0,
                         'call_id_with_rec'  => $request->post('call_id_with_rec'),
                         'duration'          => $request->post('duration'),
                     ];
@@ -195,7 +195,7 @@ class DefaultController extends RController
                 }
                 $model->save();
                 //переносим данные в старую БД
-                if ($model->type === 'Исходящий'){
+                if (in_array($request->post('event'), ['NOTIFY_END', 'NOTIFY_OUT_END'])){
                     $this->saveInOldDB($model);
                 }  
             } else {
@@ -210,20 +210,27 @@ class DefaultController extends RController
                     'type' => 'zadarma',
                     'value' => $model->internal,
                 ]);
-        //поиск ид юзера и статус работы плагина по его логину в старой БД
+        //поиск ид юзера и ид часового пояса по его логину в старой БД
         $id_user_o = (new Query())->from('users')
-                ->select(['id', 'plugin_is_started'])
+                ->select(['id', 'id_country'])
                 ->where(['login' => $userContact->user->username])
+                ->one(Yii::$app->oldDB);      
+//        // ищем последний отчет
+//        $last_report = (new Query)->from('report_real')
+//                ->where(['user' => $id_user_o['id']])
+//                ->andWhere(['!=', 'h2', 0])
+//                ->orderBy('id DESC')
+//                ->one(Yii::$app->oldDB);
+//      //ищем часовой пояс юзера
+        $timezome_o = (new Query())->from('country_code')
+                ->select('title_pojas')
+                ->where(['id' => $id_user_o['id_country']])
                 ->one(Yii::$app->oldDB);
-             VarDumper::dump($id_user_o);        
-        // ищем последний отчет
-        $last_report = (new Query)->from('report_real')
-                ->where(['user' => $id_user_o['id']])
-                ->andWhere(['!=', 'h2', 0])
-                ->orderBy('id DESC')
-                ->one(Yii::$app->oldDB);
+        //применяем часовой пояс
+        $tz = $timezome_o['title_pojas'] ?? 'Europe/Kiev';
+        date_default_timezone_set($tz);
         //ищем ид клиента по номеру телефона
-        $id_client_o = (new Query)->from('future_client')
+        $id_client_o = (new Query())->from('future_client')
                 ->select('id')
                 ->where([
                     'or',
@@ -235,24 +242,28 @@ class DefaultController extends RController
                     ['like', 'phone6', $model->destination],
                 ])
                 ->one(Yii::$app->oldDB);
-        $lr_m = $last_report['m2'] ?? '00';
-        $lr_s = $last_report['s2'] ?? '00';
+        if ($model->type == 'Исходящий'){
+            $action = 956;
+            $text = 'Исходящий звонок Zadarma (' . $model->disposition . ')';
+        } else {
+            $action = 952;
+            $text = 'Входящий звонок Zadarma (' . $model->disposition . ')';
+        }
         (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
-                    'date'      => $last_report['date'],
+                    'date'      => date('Ymd', $model->call_start),
                     'user'      => $id_user_o['id'],
-                    'pay'       => 'on',
-                    'h1'        => $last_report['h2'],
-                    'm1'        => $lr_m,
-                    's1'        => $lr_s,
-                    'h2'        => date('H'),
-                    'm2'        => date('i'),
-                    's2'        => date('s'),
-                    'minutes'   => $id_user_o['plugin_is_started'] ? 0 : ((strtotime(date('H:i:s')) 
-                        - strtotime($last_report['h2'].':'.$lr_m.':'.$lr_s))/60),
-                    'action'    => 956,
+                    'pay'       => 'zd',
+                    'h1'        => date('H', $model->call_start),
+                    'm1'        => date('i', $model->call_start),
+                    's1'        => date('s', $model->call_start),
+                    'h2'        => date('H', $model->call_end),
+                    'm2'        => date('i', $model->call_end),
+                    's2'        => date('s', $model->call_end),
+                    'minutes'   => (($model->call_end - $model->call_start)/60),
+                    'action'    => $action,
                     'client'    => $id_client_o['id'],
-                    'text'      => 'Исходящий звонок Zadarma',
+                    'text'      => $text,
                 ])
                 ->execute();
     }
