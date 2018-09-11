@@ -183,9 +183,9 @@ class DefaultController extends RController
                         $model->answer_time = time();
                     }
                     if ($request->post('is_recorded') && $request->post('disposition') == 'answered'){
-                        $is_recorded = 1;
+                        $is_recorded = '1';
                     } else {
-                        $is_recorded = 0;
+                        $is_recorded = '0';
                     }
                     $params = [
                         'call_end'          => time(),
