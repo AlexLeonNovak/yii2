@@ -182,17 +182,13 @@ class DefaultController extends RController
                     if (empty($model->answer_time)){
                         $model->answer_time = time();
                     }
-                    if ($request->post('is_recorded') && $request->post('disposition') == 'answered'){
-                        $is_recorded = '1';
-                    } else {
-                        $is_recorded = '0';
-                    }
                     $params = [
                         'call_end'          => time(),
                         'disposition'       => array_key_exists($request->post('disposition'), $rus_disposition) 
                             ? $rus_disposition[$request->post('disposition')] : '',
                         'status_code'       => $request->post('status_code'), // код статуса звонка Q.931
-                        'is_recorded'       => $is_recorded,
+                        'is_recorded'       => ($request->post('is_recorded') 
+                                && $request->post('disposition') == 'answered') ? '1' : '0',
                         'call_id_with_rec'  => $request->post('call_id_with_rec'),
                         'duration'          => $request->post('duration'),
                     ];
