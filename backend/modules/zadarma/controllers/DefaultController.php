@@ -9,10 +9,8 @@ use yii\filters\AccessControl;
 use backend\modules\zadarma\models\Zadarma;
 use backend\modules\zadarma\models\ZadarmaSearch;
 use yii\helpers\ArrayHelper;
-use common\models\User;
 use backend\modules\users\models\UsersContact;
 use yii\db\Query;
-use yii\helpers\VarDumper;
 use yii\filters\Cors;
 
 /**
@@ -243,13 +241,6 @@ class DefaultController extends RController
                     ['like', 'phone6', $model->destination],
                 ])
                 ->one(Yii::$app->oldDB);
-        if ($model->type == 'Исходящий'){
-            $action = 956;
-            $text = 'Исходящий звонок Zadarma (' . $model->disposition . ')';
-        } else {
-            $action = 952;
-            $text = 'Входящий звонок Zadarma (' . $model->disposition . ')';
-        }
         (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
                     'date'      => date('Ymd', $model->call_start),
@@ -262,9 +253,9 @@ class DefaultController extends RController
                     'm2'        => date('i', $model->call_end),
                     's2'        => date('s', $model->call_end),
                     'minutes'   => (($model->call_end - $model->call_start)/60),
-                    'action'    => $action,
+                    'action'    => ($model->type == 'Исходящий') ? 956 : 952,
                     'client'    => $id_client_o['id'],
-                    'text'      => $text,
+                    'text'      => $model->type . ' звонок Zadarma (' . $model->destination . ', ' . $model->disposition . ')',
                 ])
                 ->execute();
     }
