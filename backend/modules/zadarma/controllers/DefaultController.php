@@ -104,7 +104,7 @@ class DefaultController extends RController
     {
         $request = Yii::$app->getRequest();
         if ($request->isPost) {
-            $old_crm_link = 'https://crm.czholding.ru/yadisk/';
+            $old_crm_link = 'https://crm.czholding.ru/yadisk/zadarma_call/';
             $yadisk_zadarma = '/var/www/crm.czholding.ru/yadisk/zadarma_call/';
             if (!file_exists($yadisk_zadarma . $request->post('call_id') . '.mp3')){
                 $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), 
