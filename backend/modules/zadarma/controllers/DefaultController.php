@@ -12,6 +12,7 @@ use yii\helpers\ArrayHelper;
 use backend\modules\users\models\UsersContact;
 use yii\db\Query;
 use yii\filters\Cors;
+use yii\helpers\Url;
 
 /**
  * Default controller for the `zadarma` module
@@ -102,14 +103,20 @@ class DefaultController extends RController
     public function actionGetRecord() 
     {
         $request = Yii::$app->getRequest();
-        if ($request->isPost) {            
-            $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), 
-                    Yii::$app->settings->get('ZadarmaSettings.secret'));
-            $audio = json_decode($zadarma->call('/v1/pbx/record/request/', 
-                    ['call_id' => $request->post('call_id')], 'get'));
-            if ($audio->status == 'success'){
-                return $audio->link;
+        if ($request->isPost) {
+            $old_crm_link = 'https://crm.czholding.ru/yadisk/';
+            $yadisk_zadarma = '/var/www/crm.czholding.ru/yadisk/zadarma_call/';
+            if (!file_exists($yadisk_zadarma . $request->post('call_id') . '.mp3')){
+                $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), 
+                        Yii::$app->settings->get('ZadarmaSettings.secret'));
+                $audio = json_decode($zadarma->call('/v1/pbx/record/request/', 
+                        ['call_id' => $request->post('call_id')], 'get'));
+                if ($audio->status == 'success'){
+                    $newfile = $yadisk_zadarma . $request->post('call_id') . '.mp3';
+                    copy($audio->link, $newfile);
+                }
             }
+            return $old_crm_link . $request->post('call_id') . '.mp3';
         }
         return 'false';
     }

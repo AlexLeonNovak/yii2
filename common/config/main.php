@@ -69,6 +69,9 @@ return [
                 'encryption' => 'ssl', // Шифрование
             ],
         ],
+        'assetManager' => [
+            'appendTimestamp' => true,
+        ], 
 //        'as access' => [
 //            'class' => 'mdm\admin\components\AccessControl',
 //            'allowActions' => [
