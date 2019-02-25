@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     return Yii::$app->formatter->asDatetime($model->call_start, 'php:d.m.Y H:i:s')
                             . ' <span class="text-success"><strong>(' 
-                            . ($model->answer_time - $model->call_start) 
+                            . date("i:s", $model->answer_time - $model->call_start) 
                             . ' c.)</strong></span>';
                 },
                 'filter' => DatePicker::widget([
@@ -66,8 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function ($model) {
                     return Yii::$app->formatter->asDatetime($model->call_end, 'php:d.m.Y H:i:s')
                             . ' <span class="text-success"><strong>(' 
-                            . ($model->call_end - $model->answer_time) 
-                            . ' c.)</strong></span>';
+                            . date("i:s", $model->call_end - $model->answer_time) 
+                            . ')</strong></span>';
                 },
                 'filter' => DatePicker::widget([
                     'model' => $searchModel,
@@ -109,6 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::button('<span class="glyphicon glyphicon-play"></span>', [
                                     'class' => 'btn btn-default record',
                                     'data-call-id' => $model->call_id_with_rec,
+                                    'data-seconds' => $model->call_end - $model->answer_time
                         ]);
                     }
                     return 'Нет записи';
@@ -132,11 +133,12 @@ $this->params['breadcrumbs'][] = $this->title;
 $js = <<< JS
         $('.record').click(function(){
             var call_id = $(this).attr('data-call-id');
+            var seconds = $(this).attr('data-seconds');
                 $.ajax({
                     url: '/admin/zadarma/default/get-record',
                     type: 'POST',
                     cache: false,
-                    data: {call_id:call_id},
+                    data: {call_id:call_id,seconds:seconds},
                     success: function (data) {
                         $('audio').attr('src', data);
                         $('audio').trigger('play');

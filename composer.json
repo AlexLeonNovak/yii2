@@ -33,7 +33,8 @@
         "kartik-v/yii2-field-range": "*",
         "kartik-v/yii2-widget-timepicker": "*",
         "kartik-v/yii2-widget-activeform": "1.4.9",
-        "kartik-v/yii2-widgets": "*"
+        "kartik-v/yii2-widgets": "*",
+        "aws/aws-sdk-php": "^3.87"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

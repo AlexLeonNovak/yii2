@@ -13,6 +13,7 @@ use backend\modules\users\models\UsersContact;
 use yii\db\Query;
 use yii\filters\Cors;
 use yii\helpers\Url;
+use common\components\S3;
 
 /**
  * Default controller for the `zadarma` module
@@ -104,21 +105,30 @@ class DefaultController extends RController
     {
         $request = Yii::$app->getRequest();
         if ($request->isPost) {
-            $old_crm_link = 'https://crm.czholding.ru/yadisk/zadarma_call/';
-            $yadisk_zadarma = '/var/www/crm.czholding.ru/yadisk/zadarma_call/';
-            if (!file_exists($yadisk_zadarma . $request->post('call_id') . '.mp3')){
-                $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), 
-                        Yii::$app->settings->get('ZadarmaSettings.secret'));
-                $audio = json_decode($zadarma->call('/v1/pbx/record/request/', 
-                        ['call_id' => $request->post('call_id')], 'get'));
-                if ($audio->status == 'success'){
-                    $newfile = $yadisk_zadarma . $request->post('call_id') . '.mp3';
-                    copy($audio->link, $newfile);
-                }
-            }
-            return $old_crm_link . $request->post('call_id') . '.mp3';
+            return $this->recordToS3(
+                    $request->post('call_id'), 
+                    $request->post('seconds') + 120
+                );
         }
         return 'false';
+    }
+    
+    public function recordToS3($call_id, $sec = 120)
+    {
+        $s3 = new S3();
+        $name = 'vps/zadarma_call/'.$call_id.'.mp3';
+        if (!$s3->exist($name)){
+            $zadarma = new ZadarmaAPI(Yii::$app->settings->get('ZadarmaSettings.key'), 
+                        Yii::$app->settings->get('ZadarmaSettings.secret'));
+            $audio = json_decode($zadarma->call('/v1/pbx/record/request/', 
+                    ['call_id' => $call_id], 'get'));
+            if ($audio->status == 'success'){
+                $file = '/tmp/'.$call_id . '.mp3';
+                copy($audio->link, $file);
+                $s3->upload($name, $file);
+            }
+        }
+        return $s3->getUrl($name, "+$sec seconds");
     }
     
     /**
@@ -199,7 +209,13 @@ class DefaultController extends RController
                     ];
                     $model->attributes = $params;
                 }
-                $model->save();
+                if ($request->post('event') == 'NOTIFY_RECORD'){
+                    if ($model->is_recorded){
+                        $this->recordToS3($model->call_id_with_rec);
+                    }
+                } else {
+                    $model->save();
+                }
                 //переносим данные в старую БД
                 if (in_array($request->post('event'), ['NOTIFY_END', 'NOTIFY_OUT_END'])){
                     $this->saveInOldDB($model);
