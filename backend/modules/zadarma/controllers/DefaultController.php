@@ -228,59 +228,59 @@ class DefaultController extends RController
     
     public function saveInOldDB($model)
     {
-        $userContact = UsersContact::findOne([
-                    'type' => 'zadarma',
-                    'value' => $model->internal,
-                ]);
-        //поиск ид юзера и ид часового пояса по его логину в старой БД
-        $id_user_o = (new Query())->from('users')
+        //ищем ид клиента по номеру телефона
+        $id_client_o = (new Query())->from('future_client')
+            ->select('id')
+            ->where([
+                'or',
+                ['like', 'phone', $model->destination],
+                ['like', 'phone2', $model->destination],
+                ['like', 'phone3', $model->destination],
+                ['like', 'phone4', $model->destination],
+                ['like', 'phone5', $model->destination],
+                ['like', 'phone6', $model->destination],
+            ])
+            ->one(Yii::$app->oldDB);
+
+        //Получаем внутренние номера
+        $internals = array_unique(explode(',', $model->internal));
+        foreach ($internals as $internal) {
+            $userContact = UsersContact::findOne([
+                'type' => 'zadarma',
+                'value' => $internal,
+            ]);
+            //поиск ид юзера и ид часового пояса по его логину в старой БД
+            $id_user_o = (new Query())->from('users')
                 ->select(['id', 'id_country'])
                 ->where(['login' => $userContact->user->username])
-                ->one(Yii::$app->oldDB);      
-//        // ищем последний отчет
-//        $last_report = (new Query)->from('report_real')
-//                ->where(['user' => $id_user_o['id']])
-//                ->andWhere(['!=', 'h2', 0])
-//                ->orderBy('id DESC')
-//                ->one(Yii::$app->oldDB);
-//      //ищем часовой пояс юзера
-        $timezome_o = (new Query())->from('country_code')
+                ->one(Yii::$app->oldDB);
+            //ищем часовой пояс юзера
+            $timezome_o = (new Query())->from('country_code')
                 ->select('title_pojas')
                 ->where(['id' => $id_user_o['id_country']])
                 ->one(Yii::$app->oldDB);
-        //применяем часовой пояс
-        $tz = $timezome_o['title_pojas'] ?? 'Europe/Kiev';
-        date_default_timezone_set($tz);
-        //ищем ид клиента по номеру телефона
-        $id_client_o = (new Query())->from('future_client')
-                ->select('id')
-                ->where([
-                    'or',
-                    ['like', 'phone', $model->destination],
-                    ['like', 'phone2', $model->destination],
-                    ['like', 'phone3', $model->destination],
-                    ['like', 'phone4', $model->destination],
-                    ['like', 'phone5', $model->destination],
-                    ['like', 'phone6', $model->destination],
-                ])
-                ->one(Yii::$app->oldDB);
-        (new Query())->createCommand(Yii::$app->oldDB)
+            //применяем часовой пояс
+            $tz = $timezome_o['title_pojas'] ?? 'Europe/Kiev';
+            date_default_timezone_set($tz);
+            //Пишем в отчетник
+            (new Query())->createCommand(Yii::$app->oldDB)
                 ->insert('report_real', [
-                    'date'      => date('Ymd', $model->call_start),
-                    'user'      => $id_user_o['id'],
-                    'pay'       => 'zd',
-                    'h1'        => date('H', $model->call_start),
-                    'm1'        => date('i', $model->call_start),
-                    's1'        => date('s', $model->call_start),
-                    'h2'        => date('H', $model->call_end),
-                    'm2'        => date('i', $model->call_end),
-                    's2'        => date('s', $model->call_end),
-                    'minutes'   => (($model->call_end - $model->call_start)/60),
-                    'action'    => ($model->type == 'Исходящий') ? 956 : 952,
-                    'client'    => $id_client_o['id'],
-                    'text'      => $model->type . ' звонок Zadarma (' . $model->destination . ', ' . $model->disposition . ')',
+                    'date' => date('Ymd', $model->call_start),
+                    'user' => $id_user_o['id'],
+                    'pay' => 'zd',
+                    'h1' => date('H', $model->call_start),
+                    'm1' => date('i', $model->call_start),
+                    's1' => date('s', $model->call_start),
+                    'h2' => date('H', $model->call_end),
+                    'm2' => date('i', $model->call_end),
+                    's2' => date('s', $model->call_end),
+                    'minutes' => (($model->call_end - $model->call_start) / 60),
+                    'action' => ($model->type == 'Исходящий') ? 956 : 952,
+                    'client' => $id_client_o['id'],
+                    'text' => $model->type . ' звонок Zadarma (' . $model->destination . ', ' . $model->disposition . ')',
                 ])
                 ->execute();
+        }
     }
     
 }
